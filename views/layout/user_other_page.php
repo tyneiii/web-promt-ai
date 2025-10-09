@@ -21,7 +21,7 @@
                 <!-- <p class="name"><b>An Trương</b></p> -->
 
                 <div class="buttons">
-                    <button class="add-btn">Theo dõi</button>
+                    <button id="follow-btn" class="add-btn">Theo dõi</button>
                     
                 </div>
 
@@ -36,10 +36,10 @@
 
         <!-- Tabs -->
         <div class="tabs">
-            <span class="active">🔁 Bài viết</span>
-            <span>❤️ Yêu thích</span>
-            <span >🔒 Đã Lưu</span>
+            <div class="tab active">🔁 Bài viết</div>
+            <div class="tab">❤️ Yêu thích</div>
         </div>
+
 
         <!-- Lưới video -->
         <div class="write-container">
@@ -95,3 +95,35 @@
     </div>
 </body>
 </html>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const followBtn = document.getElementById("follow-btn");
+    let isFollowing = false;
+
+    followBtn.addEventListener("click", function() {
+        isFollowing = !isFollowing;
+
+        if (isFollowing) {
+            followBtn.innerHTML = '<i class="fa-solid fa-user-check"></i> Đã follow';
+            followBtn.classList.add("followed");
+        } else {
+            followBtn.innerHTML = 'Theo dõi';
+            followBtn.classList.remove("followed");
+        }
+    });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const tabs = document.querySelectorAll(".tabs .tab");
+
+    tabs.forEach(tab => {
+        tab.addEventListener("click", function() {
+            // Xóa class active của tất cả tab
+            tabs.forEach(t => t.classList.remove("active"));
+            // Thêm active cho tab đang bấm
+            this.classList.add("active");
+        });
+    });
+});
+</script>
