@@ -9,15 +9,15 @@ body {
 /* Tổng thể */
 .profile-container {
     width: 80%;
-    margin: auto;
+    margin: 2vh auto;
 }
 
 /* Phần hồ sơ */
 .header {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+    flex-direction: column;      
+    align-items: center;         
+    text-align: center;          
 }
 
 .avatar {
@@ -28,7 +28,7 @@ body {
     margin-bottom: 10px;
 }
 
-.profile-info h2 {
+.profile-info h2{
     margin: 0;
     margin-bottom: 1.5vh;
     font-size: 1.5rem;
@@ -49,7 +49,7 @@ body {
 }
 
 button {
-
+    
     border: none;
     padding: 8px 14px;
     border-radius: 6px;
@@ -58,19 +58,18 @@ button {
 }
 
 .edit-btn {
-
+    
     background-color: #fae206;
     color: #151515;
 }
 
 .add-btn {
-
+    
     background-color: #e5145d;
     color: #fff;
 }
 
-.setting-btn,
-.share-btn {
+.setting-btn, .share-btn {
     background-color: #222;
     color: #fff;
 }
@@ -100,9 +99,14 @@ button {
     justify-content: center;
     gap: 40px;
     border-bottom: 1px solid #333;
-    margin-top: 30px;
-    padding-bottom: 10px;
+    margin-top: 10px;
+    padding-top: 20px;
+    padding-bottom: 15px;
     color: #aaa;
+    position: sticky;  
+    top: 0;             
+    background-color: #000; 
+    z-index: 999;       
 }
 
 .tabs .active {
@@ -115,7 +119,7 @@ button {
 .write-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: left;
     gap: 20px;
     margin-top: 40px;
     padding-bottom: 40px;
@@ -123,46 +127,59 @@ button {
 
 /* Card Reddit style */
 .write-item {
-    position: relative;
-    /* cần thiết để định vị phần con */
+    position: relative;              /* cần thiết để định vị phần con */
     background-color: #1a1a1a;
     border: 1px solid #2c2c2c;
     border-radius: 12px;
     padding: 16px;
-    width: 400px;
-    min-height: 150px;
-    /* giúp card cao đều */
+    width: 350px;
+    min-height: 150px;               /* giúp card cao đều */
     color: #e0e0e0;
     text-align: left;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
 
 .write-item:hover {
     background-color: #222;
     border-color: #3a3a3a;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     transform: translateY(-3px);
 }
 
 .write-item h3 {
     font-size: 16px;
-    margin-bottom: 32px;
-    /* chừa khoảng trống cho phần like/comment */
+    margin-bottom: 32px;             /* chừa khoảng trống cho phần like/comment */
     color: #ffffff;
     line-height: 1.4;
 }
 
 .write-item span {
-    position: absolute;
-    /* cố định vị trí */
-    bottom: 10px;
-    /* sát cạnh dưới */
-    right: 16px;
-    /* căn phải */
+    position: absolute;              /* cố định vị trí */
+    bottom: 10px;                    /* sát cạnh dưới */
+    right: 16px;                     /* căn phải */
     display: flex;
     align-items: center;
     gap: 8px;
     font-size: 14px;
     color: #aaa;
+}
+
+.back-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    z-index: 1000;
+}
+
+.back-btn:hover {
+    background-color: #555;
 }
