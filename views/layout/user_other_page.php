@@ -5,8 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hồ sơ người dùng khác</title>
     <link rel="stylesheet" href="../css/user_other_page.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <button class="back-btn" onclick="window.history.back()" title="Trang chủ">
+        <i class="fa-solid fa-arrow-left"></i>
+    </button>
     <div class="profile-container">
         
         <!-- Hồ sơ -->
@@ -17,7 +21,7 @@
                 <!-- <p class="name"><b>An Trương</b></p> -->
 
                 <div class="buttons">
-                    <button class="edit-btn">Theo dõi</button>
+                    <button id="follow-btn" class="add-btn">Theo dõi</button>
                     
                 </div>
 
@@ -32,10 +36,10 @@
 
         <!-- Tabs -->
         <div class="tabs">
-            <span class="active">🔁 Bài viết</span>
-            <span>❤️ Yêu thích</span>
-            <span >🔒 Đã Lưu</span>
+            <div class="tab active">🔁 Bài viết</div>
+            <div class="tab">❤️ Yêu thích</div>
         </div>
+
 
         <!-- Lưới video -->
         <div class="write-container">
@@ -55,7 +59,71 @@
                 <h3>“Tạo hình ảnh poster game hành động với nhân vật chính mặc áo giáp tương lai, phông nền là thành phố đổ nát.”</h3>
                 <span>20K ❤️ • 809 comments</span>
             </div>
+            <div class="write-item">
+                <h3>“Giải thích ngắn gọn cho tôi biết API là gì và cho ví dụ thực tế dễ hiểu.”</h3>
+                <span>13,5K ❤️ • 810 comments</span>
+            </div>
+            <div class="write-item">
+                <h3>“Viết caption TikTok ngắn, vui nhộn về việc học code khuya nhưng vẫn tỉnh táo, kèm 3 hashtag phù hợp.”</h3>
+                <span>3,9K ❤️ • 714 comments</span>
+            </div>
+            <div class="write-item">
+                <h3>“Viết bài blog 300 từ về ‘Cách duy trì động lực học lập trình’, giọng văn tích cực và gần gũi.”</h3>
+                <span>9,8K ❤️ • 809 comments</span>
+            </div>
+            <div class="write-item">
+                <h3>“Tạo hình ảnh poster game hành động với nhân vật chính mặc áo giáp tương lai, phông nền là thành phố đổ nát.”</h3>
+                <span>20K ❤️ • 809 comments</span>
+            </div>
+            <div class="write-item">
+                <h3>“Giải thích ngắn gọn cho tôi biết API là gì và cho ví dụ thực tế dễ hiểu.”</h3>
+                <span>13,5K ❤️ • 810 comments</span>
+            </div>
+            <div class="write-item">
+                <h3>“Viết caption TikTok ngắn, vui nhộn về việc học code khuya nhưng vẫn tỉnh táo, kèm 3 hashtag phù hợp.”</h3>
+                <span>3,9K ❤️ • 714 comments</span>
+            </div>
+            <div class="write-item">
+                <h3>“Viết bài blog 300 từ về ‘Cách duy trì động lực học lập trình’, giọng văn tích cực và gần gũi.”</h3>
+                <span>9,8K ❤️ • 809 comments</span>
+            </div>
+            <div class="write-item">
+                <h3>“Tạo hình ảnh poster game hành động với nhân vật chính mặc áo giáp tương lai, phông nền là thành phố đổ nát.”</h3>
+                <span>20K ❤️ • 809 comments</span>
+            </div>
         </div>
     </div>
 </body>
 </html>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const followBtn = document.getElementById("follow-btn");
+    let isFollowing = false;
+
+    followBtn.addEventListener("click", function() {
+        isFollowing = !isFollowing;
+
+        if (isFollowing) {
+            followBtn.innerHTML = '<i class="fa-solid fa-user-check"></i> Đã follow';
+            followBtn.classList.add("followed");
+        } else {
+            followBtn.innerHTML = 'Theo dõi';
+            followBtn.classList.remove("followed");
+        }
+    });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const tabs = document.querySelectorAll(".tabs .tab");
+
+    tabs.forEach(tab => {
+        tab.addEventListener("click", function() {
+            // Xóa class active của tất cả tab
+            tabs.forEach(t => t.classList.remove("active"));
+            // Thêm active cho tab đang bấm
+            this.classList.add("active");
+        });
+    });
+});
+</script>
