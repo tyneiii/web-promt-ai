@@ -40,9 +40,9 @@
 
         <!-- Tabs -->
         <div class="tabs">
-            <span class="active">🔁 Bài viết</span>
-            <span>❤️ Yêu thích</span>
-            <span>🔒 Đã Lưu</span>
+            <div class="tab active">🔁 Bài viết</div>
+            <div class="tab">❤️ Yêu thích</div>
+            <div class="tab">🔖 Đã Lưu</div>
         </div>
             <!-- Lưới video -->
             <div class="write-container">
@@ -99,3 +99,19 @@
 </body>
 
 </html>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const tabs = document.querySelectorAll(".tabs .tab");
+
+    tabs.forEach(tab => {
+        tab.addEventListener("click", function() {
+            // Xóa class active của tất cả tab
+            tabs.forEach(t => t.classList.remove("active"));
+            // Thêm active cho tab đang bấm
+            this.classList.add("active");
+        });
+    });
+});
+</script>
+

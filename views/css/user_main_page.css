@@ -58,13 +58,13 @@ button {
 }
 
 .edit-btn {
-    
+    font-size: 1rem;
     background-color: #fae206;
     color: #151515;
 }
 
 .add-btn {
-    
+    font-size: 1rem;
     background-color: #e5145d;
     color: #fff;
 }
@@ -97,23 +97,36 @@ button {
 .tabs {
     display: flex;
     justify-content: center;
+    font-size: 1.3rem;
     gap: 40px;
     border-bottom: 1px solid #333;
     margin-top: 10px;
     padding-top: 20px;
-    padding-bottom: 15px;
+    padding-bottom: 20px;
     color: #aaa;
     position: sticky;  
     top: 0;             
     background-color: #000; 
     z-index: 999;       
 }
-
-.tabs .active {
-    color: #fff;
-    border-bottom: 2px solid #fff;
+.tabs .tab {
+    cursor: pointer;
+    color: #aaa;
+    transition: color 0.3s, border-bottom-color 0.3s;
     padding-bottom: 4px;
+    border-bottom: 2px solid transparent; /* 👈 luôn có border, tránh giật */
 }
+
+.tabs .tab.active {
+    color: #fff;
+    border-bottom-color: #fff; /* 👈 chỉ đổi màu, không đổi độ dày */
+}
+
+.tabs .tab:focus {
+    outline: none; /* tránh viền xanh khi click */
+}
+
+
 
 /* Lưới video */
 .write-container {
@@ -121,8 +134,8 @@ button {
     flex-wrap: wrap;
     justify-content: left;
     gap: 20px;
-    margin-top: 40px;
-    padding-bottom: 40px;
+    margin-top: 30px;
+    padding-bottom: 20px;
 }
 
 /* Card Reddit style */
@@ -149,15 +162,14 @@ button {
 
 .write-item h3 {
     font-size: 16px;
-    margin-bottom: 32px;             /* chừa khoảng trống cho phần like/comment */
-    color: #ffffff;
+    margin-bottom: 32px;             
     line-height: 1.4;
 }
 
 .write-item span {
-    position: absolute;              /* cố định vị trí */
-    bottom: 10px;                    /* sát cạnh dưới */
-    right: 16px;                     /* căn phải */
+    position: absolute;             
+    bottom: 10px;                    
+    right: 16px;                     
     display: flex;
     align-items: center;
     gap: 8px;
