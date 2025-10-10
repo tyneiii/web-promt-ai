@@ -114,18 +114,17 @@ button {
     color: #aaa;
     transition: color 0.3s, border-bottom-color 0.3s;
     padding-bottom: 4px;
-    border-bottom: 2px solid transparent; /* 👈 luôn có border, tránh giật */
+    border-bottom: 2px solid transparent; 
 }
 
 .tabs .tab.active {
     color: #fff;
-    border-bottom-color: #fff; /* 👈 chỉ đổi màu, không đổi độ dày */
+    border-bottom-color: #fff; 
 }
 
 .tabs .tab:focus {
-    outline: none; /* tránh viền xanh khi click */
+    outline: none; 
 }
-
 
 
 /* Lưới video */

@@ -68,8 +68,8 @@ button {
     background-color: #e5145d;
     color: #fff;
      width: 110px;   
-     height: 40px;           /* 👈 đảm bảo luôn đủ chỗ cho chữ dài nhất */
-    white-space: nowrap;       /* 👈 không xuống dòng */
+     height: 40px;          
+    white-space: nowrap;       
     transition: all 0.3s ease;
 }
 /* Khi đã follow */

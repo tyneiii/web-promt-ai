@@ -37,7 +37,6 @@
     </div>
    <div>
       <form action="../manager/account.php" method="post">
-        <!-- ../manager/QlyTaiKhoan.php -->
         <button type="submit" title="Đến trang quản lý" class="gear-btn">
           <i class="fa-solid fa-gears"></i>
         </button>
