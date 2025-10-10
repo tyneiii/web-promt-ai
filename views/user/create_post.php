@@ -8,7 +8,7 @@
 </head>
 <body>
   <main class="composer-wrap">
-    <button type="button" class="close-btn" title="Hủy bài viết mới" onclick="confirmCancel()">×</button>
+    <button type="button" class="close-btn" title="Hủy bài viết mới" onclick="confirmCancel()">x</button>
     <div class="composer card">
       <div class="composer-top">
         <div class="top-left">
