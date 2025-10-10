@@ -1,4 +1,3 @@
-<<<<<<< HEAD:views/layout/user_other_page.php
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -12,10 +11,8 @@
     <button class="back-btn" onclick="window.history.back()" title="Trang chủ">
         <i class="fa-solid fa-arrow-left"></i>
     </button>
-=======
 <?php include_once __DIR__ . '/../layout/header.php'; ?>
     <link rel="stylesheet" href="../../public/css/profile.css">
->>>>>>> 06303720573d11281668a856d2bd54ac98c6f46a:views/user/profile.php
     <div class="profile-container">
         <div class="header" style="background-image: url('../../public/img/bg.jpg');">
             <img src="../../public/img/anh_user_1.jpeg" alt="Avatar" class="avatar">
@@ -23,17 +20,14 @@
         <div class="profile-info">
                 <h2>An Trương</h2>
                 <div class="buttons">
-<<<<<<< HEAD:views/layout/user_other_page.php
                     <button id="follow-btn" class="add-btn">Theo dõi</button>
                     
-=======
                     <form action="">
                         <input type="submit" value="Sửa hồ sơ" class="edit-btn"> 
                     </form>
                     <form action="create_post.php">
                         <input type="submit" value="📝 Viết bài" class="add-btn"> 
                     </form>
->>>>>>> 06303720573d11281668a856d2bd54ac98c6f46a:views/user/profile.php
                 </div>
             </div>
         <div class="stats">
@@ -42,20 +36,17 @@
                 </div>
                 <p class="bio">Chào mừng bạn đến với trang cá nhân của mình! Hãy theo dõi để xem những prompt thú vị nhé! 😊</p>
         <div class="tabs">
-<<<<<<< HEAD:views/layout/user_other_page.php
             <div class="tab active">🔁 Bài viết</div>
             <div class="tab">❤️ Yêu thích</div>
         </div>
 
 
         <!-- Lưới video -->
-=======
             <span class="active">🔁 Bài viết</span>
             <span>❤️ Yêu thích</span>
             <span>🔒 Đã Lưu</span>
         </div>
 
->>>>>>> 06303720573d11281668a856d2bd54ac98c6f46a:views/user/profile.php
         <div class="write-container">
             <div class="write-item">
                 <h3>“Giải thích ngắn gọn cho tôi biết API là gì và cho ví dụ thực tế dễ hiểu.”</h3>
@@ -107,7 +98,6 @@
             </div>
         </div>
     </div>
-<<<<<<< HEAD:views/layout/user_other_page.php
 </body>
 </html>
 <script>
@@ -142,5 +132,3 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 </script>
-=======
->>>>>>> 06303720573d11281668a856d2bd54ac98c6f46a:views/user/profile.php
