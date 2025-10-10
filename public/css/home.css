@@ -4,8 +4,6 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
 }
-
-/* Navbar */
 .navbar {
   position: fixed;
   top: 0;
@@ -16,29 +14,54 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
+  flex-wrap: wrap;           
+  padding: 10px 1.5% 10px 3%;
   z-index: 1000;
+  gap: 10px;                
 }
 
 .logo {
   font-weight: bold;
   font-size: 1.3rem;
-  color: #0d6efd;
+  color: red;
+  text-decoration: none;
+}
+
+.logo:hover {
+  text-decoration: underline;
+}
+
+.navbar-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
 }
 
 .search-bar {
-  width: 350px;
-  padding: 6px 10px;
+  width: 100%;
+  max-width: 600px;
+  min-width: 150px;          /* nhỏ hơn để không bị vỡ khi thu nhỏ */
+  padding: 8px 14px;
   border: none;
-  border-radius: 20px;
+  border-radius: 30px;
   background-color: #222;
   color: #fff;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.search-bar:focus {
+  outline: none;
+  background-color: #2d2d2d;
+  box-shadow: 0 0 0 2px red;
 }
 
 .navbar-right {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
+  flex-wrap: wrap;           
+  justify-content: flex-end;
 }
 
 select {
@@ -55,14 +78,52 @@ select {
   cursor: pointer;
 }
 
-.avatar {
-  width: 35px;
-  height: 35px;
-  background-color: gray;
-  border-radius: 50%;
+.dropdown {
+  position: relative;
+  display: inline-block;
 }
 
-/* Sidebar trái */
+.dropbtn {
+  background-color: gray;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #222;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  min-width: 160px;
+}
+
+.dropdown-content form {
+  margin: 0;
+}
+
+.dropdown-content input[type="submit"] {
+  width: 100%;
+  background: none;
+  color: #fff;
+  border: none;
+  text-align: left;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.dropdown-content input[type="submit"]:hover {
+  background-color: #333;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
 .left-sidebar {
   position: fixed;
   top: 60px;
@@ -88,8 +149,6 @@ select {
   color: #0d6efd;
   transform: scale(1.2);
 }
-
-/* Sidebar phải */
 .right-sidebar {
   position: fixed;
   top: 70px;
@@ -114,8 +173,6 @@ select {
   background-color: #333;
   border-radius: 8px;
 }
-
-/* Nội dung chính */
 .main-content {
   margin-top: 70px;
   margin-left: 80px;
@@ -174,4 +231,83 @@ select {
 
 .card-buttons button:hover {
   background-color: #666;
+}
+
+.user-menu {
+  background-color: #222;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.user-menu:hover {
+  background-color: #333;
+}
+.gear-btn {
+  display: inline-flex;          /* giúp canh giữa text/icon */
+  justify-content: center;
+  align-items: center;
+  width: 40px;                   /* cố định chiều rộng */
+  height: 40px;                  /* cố định chiều cao */
+  background-color: #111;
+  border: 2px solid #ffffffbe;
+  color: white;
+  font-size: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.gear-btn:hover {
+  border-color: black;           /* sửa border: black -> border-color */
+  background-color: red;
+  color: #000;
+  transform: scale(1.3);         /* phóng to nút, không ảnh hưởng layout */
+}
+
+
+.gear-btn:active {
+  transform: scale(0.95);
+}
+@media (max-width: 768px) {
+  .navbar {
+    height: auto;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 8px 4%;
+  }
+
+  .navbar-center {
+    order: 3;
+    width: 100%;
+  }
+
+  .navbar-right {
+    order: 2;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .navbar-left {
+    order: 1;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+  }
+
+  .search-bar {
+    width: 100%;
+  }
+
+  .left-sidebar,
+  .right-sidebar {
+    display: none;
+  }
+
+  .main-content {
+    margin: 130px 10px 20px 10px;
+  }
 }
