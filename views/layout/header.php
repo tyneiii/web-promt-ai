@@ -26,7 +26,7 @@
       <div class="dropdown">
         <button class="dropbtn"></button>
         <div class="dropdown-content">
-          <form action="../user/profile.php" method="post">
+          <form action="../user/user_main_page.php" method="post">
             <input type="submit" value="Xem trang cá nhân">
           </form>
           <form action="../user/logout.php" method="post">
