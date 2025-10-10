@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Prompt AI Share</title>
-  <link rel="stylesheet" href="/web-promt-ai/public/css/home.css">
+  <!-- <link rel="stylesheet" href="/web-promt-ai/public/css/home.css"> -->
+  <link rel="stylesheet" href="../../public/css/home.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -35,7 +36,8 @@
         </div>
     </div>
    <div>
-      <form action="../manager/QlyTaiKhoan.php" method="post">
+      <form action="../manager/account.php" method="post">
+        <!-- ../manager/QlyTaiKhoan.php -->
         <button type="submit" title="Đến trang quản lý" class="gear-btn">
           <i class="fa-solid fa-gears"></i>
         </button>
