@@ -1,11 +1,14 @@
-<?php include_once __DIR__ . '/layout/header.php'; ?>
 
+<?php include_once __DIR__ . '/../layout/header.php'; ?>
 <!-- Sidebar trái -->
 <div class="left-sidebar">
   <i class="fa-regular fa-heart"></i>
-  <i class="fa-solid fa-plus"></i>
+  <a href="create_post.php" class="sidebar-btn" title="Tạo bài viết mới">
+    <i class="fa-solid fa-plus"></i>
+  </a>
   <i class="fa-regular fa-comment"></i>
 </div>
+
 
 <!-- Sidebar phải -->
 <div class="right-sidebar">
@@ -46,4 +49,4 @@
   </div>
 </div>
 
-<?php include_once __DIR__ . '/layout/footer.php'; ?>
+<?php include_once __DIR__ . '/../layout/footer.php'; ?>

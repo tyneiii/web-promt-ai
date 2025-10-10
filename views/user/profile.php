@@ -1,43 +1,31 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hồ sơ người dùng</title>
-    <link rel="stylesheet" href="../css/user_main_page.css">
-</head>
-<body>
+<?php include_once __DIR__ . '/../layout/header.php'; ?>
+    <link rel="stylesheet" href="../../public/css/profile.css">
     <div class="profile-container">
-        
-        <!-- Hồ sơ -->
-        <div class="header">
-            <img src="../img/anh_user_1.jpeg" alt="Avatar" class="avatar">
-            <div class="profile-info">
-                <h2 >An Trương</h2>
-                <!-- <p class="name"><b>An Trương</b></p> -->
-
+        <div class="header" style="background-image: url('../../public/img/bg.jpg');">
+            <img src="../../public/img/anh_user_1.jpeg" alt="Avatar" class="avatar">
+        </div>
+        <div class="profile-info">
+                <h2>An Trương</h2>
                 <div class="buttons">
-                    <button class="edit-btn">Sửa hồ sơ</button>
-                    <button class="add-btn"> 📝Viết bài</button>
+                    <form action="">
+                        <input type="submit" value="Sửa hồ sơ" class="edit-btn"> 
+                    </form>
+                    <form action="create_post.php">
+                        <input type="submit" value="📝 Viết bài" class="add-btn"> 
+                    </form>
                 </div>
-
-                <div class="stats">
+            </div>
+        <div class="stats">
                     <span><strong>116</strong> Đã follow</span>
                     <span><strong>8</strong> Follower</span>
-                    
                 </div>
                 <p class="bio">Chào mừng bạn đến với trang cá nhân của mình! Hãy theo dõi để xem những prompt thú vị nhé! 😊</p>
-            </div>
-        </div>
-
-        <!-- Tabs -->
         <div class="tabs">
             <span class="active">🔁 Bài viết</span>
             <span>❤️ Yêu thích</span>
-            <span >🔒 Đã Lưu</span>
+            <span>🔒 Đã Lưu</span>
         </div>
 
-        <!-- Lưới video -->
         <div class="write-container">
             <div class="write-item">
                 <h3>“Giải thích ngắn gọn cho tôi biết API là gì và cho ví dụ thực tế dễ hiểu.”</h3>
@@ -49,7 +37,7 @@
             </div>
             <div class="write-item">
                 <h3>“Viết bài blog 300 từ về ‘Cách duy trì động lực học lập trình’, giọng văn tích cực và gần gũi.”</h3>
-                 <span>9,8K ❤️ • 809 comments</span>
+                <span>9,8K ❤️ • 809 comments</span>
             </div>
             <div class="write-item">
                 <h3>“Tạo hình ảnh poster game hành động với nhân vật chính mặc áo giáp tương lai, phông nền là thành phố đổ nát.”</h3>
@@ -57,5 +45,3 @@
             </div>
         </div>
     </div>
-</body>
-</html>
