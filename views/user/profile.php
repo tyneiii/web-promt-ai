@@ -1,4 +1,4 @@
-<?php include_once __DIR__ . '/../layout/header.php'; ?>
+<?php include_once __DIR__ . '/layout/header.php'; ?>
     <link rel="stylesheet" href="../../public/css/profile.css">
     <div class="profile-container">
         <div class="header" style="background-image: url('../../public/img/bg.jpg');">

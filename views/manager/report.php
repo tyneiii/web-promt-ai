@@ -6,12 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quản lý bài đăng</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="../../public/css/slidebar.css">
+  <link rel="stylesheet" href="../../public/css/sidebar.css">
 </head>
 
 <body>
   <div class="container">
-    <?php include_once __DIR__ . '/layout/slidebar.php'; ?>
+    <?php include_once __DIR__ . '/layout/sidebar.php'; ?>
     <div class="main">
       <?php
       $reports = [
@@ -71,7 +71,7 @@
                     <td><?= htmlspecialchars($report['reason']) ?></td>
                     <td><?= (new DateTime($report['created_at']))->format('d/m/Y') ?></td>
                     <td class="actions">
-                      <button class="btn-edit"><i class="fa-solid fa-magnifying-glass"></i> Kiểm tra</button>
+                      <a href="check_report.php" class="btn-edit"><i class="fa-solid fa-magnifying-glass"></i> Kiểm tra</a>
                       <button class="btn-delete"><i class="fa-solid fa-trash"></i> Xóa</button>
                     </td>
                   </tr>
