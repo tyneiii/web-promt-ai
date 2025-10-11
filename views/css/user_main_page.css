@@ -48,10 +48,9 @@ body {
     margin-bottom: 10px;
 }
 
-button {
-    
+input{
     border: none;
-    padding: 8px 14px;
+    padding: 10px 14px;
     border-radius: 6px;
     cursor: pointer;
     font-weight: bold;
@@ -61,12 +60,14 @@ button {
     font-size: 1rem;
     background-color: #fae206;
     color: #151515;
+    padding: 11px 15px;
 }
 
 .add-btn {
     font-size: 1rem;
     background-color: #e5145d;
     color: #fff;
+    
 }
 
 .setting-btn, .share-btn {
@@ -194,3 +195,5 @@ button {
 .back-btn:hover {
     background-color: #555;
 }
+
+

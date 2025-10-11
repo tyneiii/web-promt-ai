@@ -29,9 +29,9 @@
 
 
         <!-- Lưới video -->
-            <span class="active">🔁 Bài viết</span>
+            <!-- <span class="active">🔁 Bài viết</span>
             <span>❤️ Yêu thích</span>
-            <span>🔒 Đã Lưu</span>
+            <span>🔒 Đã Lưu</span> -->
         </div>
 
         <div class="write-container">
