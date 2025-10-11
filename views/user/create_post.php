@@ -6,7 +6,7 @@
   <title>Tạo bài đăng</title>
   <link rel="stylesheet" href="../../public/css/create_post.css">
 </head>
-<body>
+<body> 
   <main class="composer-wrap">
     <button type="button" class="close-btn" title="Hủy bài viết mới" onclick="confirmCancel()">×</button>
     <div class="composer card">
@@ -21,6 +21,7 @@
             </a>
           </div>
         </div>
+        <h2 style="margin: 0;color:red;-webkit-text-stroke: 0.8px black;">Chia sẻ Prompt</h2>
         <div class="topic-container">
           <input type="text" class="topic-input" placeholder="Chọn chủ đề...">
           <div class="topic-dropdown"></div>
@@ -28,21 +29,38 @@
         </div>
       </div>
 
-      <input type="text" class="title-input" placeholder="Tiêu đề bài đăng">
-      <textarea class="composer-textarea" placeholder="Chia sẻ prompt của bạn tại đây" oninput="autoGrow(this)"></textarea>
+      <input type="text" class="title-input" placeholder="Tiêu đề bài đăng" required>
+      <textarea class="composer-textarea" placeholder="Mô tả ngắn gọn về prompt" required oninput="autoGrow(this)"></textarea>
 
-      <div class="preview">
+            <div class="preview">
         <label for="upload" class="upload-placeholder">+ Thêm mô tả bằng ảnh tại đây</label>
         <input type="file" id="upload" accept="image/*" hidden>
       </div>
 
+      <!-- 🔽 BỐ CỤC 2 CỘT CHO 4 PHẦN -->
+      <div class="prompt-sections">
+        <div class="section">
+          <h3>1. Mục tiêu</h3>
+          <textarea class="composer-textarea small" placeholder="Mục tiêu" required oninput="autoGrow(this)"></textarea>
+        </div>
+        <div class="section">
+          <h3>2. Vai trò</h3>
+          <textarea class="composer-textarea small" placeholder="Vai trò của AI" required oninput="autoGrow(this)"></textarea>
+        </div>
+        <div class="section">
+          <h3>3. Ngữ cảnh</h3>
+          <textarea class="composer-textarea small" placeholder="Ngữ cảnh" required oninput="autoGrow(this)"></textarea>
+        </div>
+        <div class="section">
+          <h3>4. Nhiệm vụ</h3>
+          <textarea class="composer-textarea small" placeholder="Nhiệm vụ của AI" required oninput="autoGrow(this)"></textarea>
+        </div>
+      </div>
       <div class="composer-actions">
         <label for="upload" class="action-btn">📷 Ảnh/Video</label>
-        <button class="action-btn">😊 Cảm xúc</button>
-        <button class="action-btn">📍 Đang ở</button>
         <div class="right">
-          <button class="btn ghost" onclick="confirmCancel()">Hủy</button>
-          <button class="btn primary">Đăng</button>
+          <button class="btn ghost" onclick="confirmCancel()" title="Hủy bài viết">Hủy</button>
+          <button class="btn primary" title="Đăng bài">Đăng</button>
         </div>
       </div>
     </div>
