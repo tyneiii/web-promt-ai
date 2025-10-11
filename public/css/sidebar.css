@@ -355,3 +355,13 @@ tr:hover {
 .btn-delete:hover {
     background-color: #b52b27;
 }
+a.btn-edit,
+a.btn-delete {
+  text-decoration: none;
+  display: inline-block;
+}
+
+a.btn-edit:hover,
+a.btn-delete:hover {
+  text-decoration: none;
+}
