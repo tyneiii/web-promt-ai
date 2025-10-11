@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="../../../public/css/slidebar.css">
 <div class="sidebar">
   <h2>
     <form action="../user/home.php">
@@ -5,14 +6,11 @@
     </form>
   </h2>
 <?php
-  $currentPage = basename($_SERVER['PHP_SELF']); // lấy file hiện tại
-
+  $currentPage = basename($_SERVER['PHP_SELF']); 
   function isActive($page) {
       global $currentPage;
       return $currentPage === $page ? 'active' : '';
   }
-
-  // Kiểm tra menu cha
   function isParentActive($subPages) {
       global $currentPage;
       return in_array($currentPage, $subPages) ? 'active' : '';

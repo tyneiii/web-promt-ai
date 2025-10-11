@@ -48,8 +48,12 @@ body {
   color: #fff;
   transition: all 0.2s ease;
   flex: 1;
+  font-size: 16px;
 }
-
+.search-bar::placeholder {
+  font-size: 16px;   /* kích thước chữ placeholder */
+  color: #aaa;       /* hoặc màu khác nếu muốn */
+}
 .search-bar:focus {
   outline: none;
   background-color: #2d2d2d;
@@ -96,8 +100,8 @@ select {
   display: none;
   position: absolute;
   right: 0;
-  background-color: #222;
-  border-radius: 8px;
+  background-color: #111;
+  border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   z-index: 10;
   min-width: 160px;
@@ -126,11 +130,11 @@ select {
 }
 .left-sidebar {
   position: fixed;
-  top: 60px;
+  top: 70px;
   left: 0;
   width: 60px;
   height: 100%;
-  background-color: #111;
+  background-color: black;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -151,45 +155,114 @@ select {
 }
 .right-sidebar {
   position: fixed;
-  top: 70px;
-  right: 0;
+  top: 90px;
+  right: 2px;
   width: 260px;
-  background-color: #222;
+  background-color: black;
   padding: 15px;
-  border-radius: 10px 0 0 10px;
-  height: calc(100vh - 80px);
+  border-radius: 10px;
   overflow-y: auto;
+  z-index: 10;
+}
+
+.right-sidebar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 50%;
+  background: linear-gradient(to bottom, red, orange);
+  border-radius: 1.5px;
+  z-index: 11;
+}
+
+.right-sidebar::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 3px;
+  height: 50%;
+  background: linear-gradient(to top, red, orange);
+  border-radius: 1.5px;
+  z-index: 11;
+}
+
+.right-sidebar .border-top {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 3px;
+  width: 50%;
+  background: linear-gradient(to right, red, orange);
+  border-radius: 1.5px;
+  z-index: 11;
+}
+
+.right-sidebar .border-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 50%;
+  background: linear-gradient(to right, red, orange);
+  border-radius: 1.5px;
+  z-index: 11;
 }
 
 .right-sidebar h3 {
+  margin-top: -5px;
   margin-bottom: 10px;
-  border-bottom: 2px solid #555;
   padding-bottom: 5px;
+
+  /* background: linear-gradient(to right, #ff8c00, #ffd700, #ffffff); */
+   /* background: linear-gradient(to right, #42bcde, #ebda23, #ffffff); */
+   /* background: linear-gradient(to right, #ff4da6, #9b30ff, #ff8c00); */
+   background: linear-gradient(to right, #ff3c3c, #ff7f50, #ffd700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .item {
   margin: 10px 0;
   padding: 8px;
-  background-color: #333;
+  background-color: #111;
   border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  transition: all 0.2s ease;
 }
+
+.item:hover {
+  background-color: #2d2d2d;
+  color: orange;
+  transform: scale(1.075); /* to lên 5% */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* tạo hiệu ứng nổi */
+}
+
 .main-content {
   margin-top: 70px;
   margin-left: 80px;
   margin-right: 280px;
   padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 20px;
 }
 
 .card {
-  background-color: #2b2b2b;
+  display: flex;
+  flex-direction: column;   /* dọc: header + nội dung + buttons */
+  background-color: #111;
   padding: 15px;
   border-radius: 10px;
-  margin-bottom: 20px;
   transition: 0.2s;
+  min-height: 220px;        /* hoặc 100% height nếu dùng grid auto-fit */
 }
 
 .card:hover {
-  background-color: #383838;
+  background-color: #222;
   transform: translateY(-3px);
 }
 
@@ -216,8 +289,10 @@ select {
 
 .card-buttons {
   display: flex;
-  gap: 10px;
+  justify-content: space-between; /* chia đều các nút */
+  margin-top: auto;              /* đẩy xuống cuối card */
 }
+
 
 .card-buttons button {
   background-color: #444;
@@ -309,5 +384,49 @@ select {
 
   .main-content {
     margin: 130px 10px 20px 10px;
+    grid-template-columns: 1fr;
   }
 }
+.card-header .user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-header .user-info img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 2px solid red;
+}
+
+.card-header .user-info strong {
+  font-size: 0.95rem;
+  color: #fff;
+}
+.card h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ff4d4d;       
+  margin: 10px 0 5px 0;
+  border-bottom: 2px solid #ff4d4d;
+  padding-bottom: 3px;
+}
+/* Hover avatar */
+.card-header .user-info img:hover {
+  background-color: #000;  
+  border-color: red;        
+  cursor: pointer;
+  transform: scale(1.05);  
+  box-shadow: 0 4px 10px rgba(255,0,0,0.4); 
+  transition: all 0.2s ease;
+}
+
+.dropdown-content input[type="submit"]:hover {
+  background-color:#2d2d2d; 
+  color: rgb(255, 255, 255);             
+  border-radius: 8px;
+  transform: scale(1.1);  
+  transition: all 0.2s ease;
+}
+

@@ -2,24 +2,24 @@
 <html lang="vi">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý bài đăng</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="../../public/css/slidebar.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý bài đăng</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../../public/css/sidebar.css">
 </head>
 
 <body>
-    <div class="container">
-        <?php include_once __DIR__ . '/layout/slidebar.php'; ?>
-        <div class="main">
-            <?php
-            $posts = [
-                ['prompt_id' => 101, 'account_id' => 1, 'title' => 'Giải thích API đơn giản', 'status' => 'approved', 'created_' => '2025-10-01'],
-                ['prompt_id' => 102, 'account_id' => 2, 'title' => 'Caption TikTok vui về học code', 'status' => 'pending', 'created_' => '2025-10-02'],
-                ['prompt_id' => 103, 'account_id' => 1, 'title' => 'Blog 300 từ về động lực học lập trình', 'status' => 'approved', 'created_' => '2025-10-03'],
-                ['prompt_id' => 104, 'account_id' => 3, 'title' => 'Poster game hành động nhân vật áo giáp', 'status' => 'reported', 'created_' => '2025-10-04'],
-            ];
+  <div class="container">
+    <?php include_once __DIR__ . '/layout/sidebar.php'; ?>
+    <div class="main">
+      <?php
+          $posts = [
+              ['prompt_id'=>101, 'account_id'=>1, 'title'=>'Giải thích API đơn giản', 'status'=>'approved', 'created_'=>'2025-10-01'],
+              ['prompt_id'=>102, 'account_id'=>2, 'title'=>'Caption TikTok vui về học code', 'status'=>'pending', 'created_'=>'2025-10-02'],
+              ['prompt_id'=>103, 'account_id'=>1, 'title'=>'Blog 300 từ về động lực học lập trình', 'status'=>'approved', 'created_'=>'2025-10-03'],
+              ['prompt_id'=>104, 'account_id'=>3, 'title'=>'Poster game hành động nhân vật áo giáp', 'status'=>'reported', 'created_'=>'2025-10-04'],
+          ];
 
             $search = $_GET['search'] ?? '';
             $selectedStatus = $_GET['status'] ?? '';
