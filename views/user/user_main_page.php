@@ -25,8 +25,12 @@
                 <!-- <p class="name"><b>An Trương</b></p> -->
 
                 <div class="buttons">
-                    <button class="edit-btn">Sửa hồ sơ</button>
-                    <button class="add-btn"> 📝Viết bài</button>
+                   <form action="edit_profile.php">
+                        <input type="submit" value="Sửa hồ sơ" class="edit-btn"> 
+                    </form>
+                    <form action="create_post.php">
+                        <input type="submit" value="📝 Viết bài" class="add-btn"> 
+                    </form>
                 </div>
 
                 <div class="stats">
@@ -96,6 +100,7 @@
                 </div>
             </div>
     </div>
+
 </body>
 
 </html>

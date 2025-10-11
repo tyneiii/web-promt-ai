@@ -3,7 +3,9 @@
   max-width: 900px;
   color: #fff; 
   font-family: 'Arial', sans-serif;
-  margin: 80px auto;
+  margin: auto;
+  margin-top:80px;
+  margin-bottom:30px;
 }
 
 .header {
