@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 </head>
-
+<?php include_once __DIR__ . '/layout/header.php'; ?>
 <body>
-    <button class="back-btn" onclick="window.history.back()" title="Trang chủ">
+    <!-- <button class="back-btn" onclick="window.history.back()" title="Trang chủ">
         <i class="fa-solid fa-arrow-left"></i>
-    </button>
+    </button> -->
 
     <div class="profile-container">
 
