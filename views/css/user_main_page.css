@@ -10,6 +10,7 @@ body {
 .profile-container {
     width: 80%;
     margin: 2vh auto;
+    margin-top: 12vh;
 }
 
 /* Phần hồ sơ */
@@ -18,7 +19,7 @@ body {
     flex-direction: column;      
     align-items: center;         
     text-align: center;      
-    margin-top:5vh;    
+       
 }
 
 .avatar {
@@ -108,7 +109,6 @@ input{
     color: #aaa;
     position: sticky;  
     top: 0;             
-    background-color: #000; 
     z-index: 999;       
 }
 .tabs .tab {
