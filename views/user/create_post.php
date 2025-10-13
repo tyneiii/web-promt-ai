@@ -68,11 +68,6 @@
     </div>
 
     <div class="form-footer">
-      <div class="icons">
-        <div>📷</div>
-        <div>😊</div>
-        <div>📍</div>
-      </div>
       <div class="right-buttons">
         <button class="cancel-btn" onclick="confirmCancel()">Cancel</button>
         <button class="submit-btn" onclick="handleSubmit()">Upload</button>
@@ -80,6 +75,7 @@
     </div>
   </div>
 </body>
+
 </html>
 
 <script>

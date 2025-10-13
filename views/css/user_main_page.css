@@ -16,10 +16,10 @@ body {
 /* Phần hồ sơ */
 .header {
     display: flex;
-    flex-direction: column;      
-    align-items: center;         
-    text-align: center;      
-       
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
 }
 
 .avatar {
@@ -30,7 +30,7 @@ body {
     margin-bottom: 10px;
 }
 
-.profile-info h2{
+.profile-info h2 {
     margin: 0;
     margin-bottom: 1.5vh;
     font-size: 1.5rem;
@@ -50,7 +50,7 @@ body {
     margin-bottom: 10px;
 }
 
-input{
+input {
     border: none;
     padding: 10px 14px;
     border-radius: 6px;
@@ -69,10 +69,11 @@ input{
     font-size: 1rem;
     background-color: #e5145d;
     color: #fff;
-    
+
 }
 
-.setting-btn, .share-btn {
+.setting-btn,
+.share-btn {
     background-color: #222;
     color: #fff;
 }
@@ -107,25 +108,26 @@ input{
     padding-top: 20px;
     padding-bottom: 20px;
     color: #aaa;
-    position: sticky;  
-    top: 0;             
-    z-index: 999;       
+    position: sticky;
+    top: 0;
+    z-index: 999;
 }
+
 .tabs .tab {
     cursor: pointer;
     color: #aaa;
     transition: color 0.3s, border-bottom-color 0.3s;
     padding-bottom: 4px;
-    border-bottom: 2px solid transparent; 
+    border-bottom: 2px solid transparent;
 }
 
 .tabs .tab.active {
     color: #fff;
-    border-bottom-color: #fff; 
+    border-bottom-color: #fff;
 }
 
 .tabs .tab:focus {
-    outline: none; 
+    outline: none;
 }
 
 
@@ -141,36 +143,38 @@ input{
 
 /* Card Reddit style */
 .write-item {
-    position: relative;              /* cần thiết để định vị phần con */
+    position: relative;
+    /* cần thiết để định vị phần con */
     background-color: #1a1a1a;
     border: 1px solid #2c2c2c;
     border-radius: 12px;
     padding: 16px;
     width: 350px;
-    min-height: 150px;               /* giúp card cao đều */
+    min-height: 150px;
+    /* giúp card cao đều */
     color: #e0e0e0;
     text-align: left;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 .write-item:hover {
     background-color: #222;
     border-color: #3a3a3a;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     transform: translateY(-3px);
 }
 
 .write-item h3 {
     font-size: 16px;
-    margin-bottom: 32px;             
+    margin-bottom: 32px;
     line-height: 1.4;
 }
 
 .write-item span {
-    position: absolute;             
-    bottom: 10px;                    
-    right: 16px;                     
+    position: absolute;
+    bottom: 10px;
+    right: 16px;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -196,5 +200,3 @@ input{
 .back-btn:hover {
     background-color: #555;
 }
-
-

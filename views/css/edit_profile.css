@@ -1,156 +1,157 @@
 body {
-    font-family: Arial, sans-serif;
-    background: #0f0f0f;
-    color: #fff;
-    margin: 0;
-    height: 100vh;
-    overflow: hidden;
+  font-family: Arial, sans-serif;
+  background: #0f0f0f;
+  color: #fff;
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* --- Overlay nền mờ --- */
 .overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    animation: fadeIn 0.3s ease;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
+  from {
+    opacity: 0;
+  }
 
-    to {
-        opacity: 1;
-    }
+  to {
+    opacity: 1;
+  }
 }
 
 /* --- Hộp modal chính --- */
 .modal {
-    background-color: #1e1e1e;
-    border-radius: 12px;
-    width: 600px;
-    max-width: 90%;
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-    overflow: hidden;
-    animation: scaleUp 0.3s ease;
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  width: 600px;
+  max-width: 90%;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  animation: scaleUp 0.3s ease;
 }
 
 @keyframes scaleUp {
-    from {
-        transform: scale(0.9);
-    }
+  from {
+    transform: scale(0.9);
+  }
 
-    to {
-        transform: scale(1);
-    }
+  to {
+    transform: scale(1);
+  }
 }
 
 .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #333;
-    padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #333;
+  padding: 20px;
 }
 
 .modal-header h2 {
-    margin: 0;
-    font-size: 22px;
+  margin: 0;
+  font-size: 22px;
 }
 
 .close-btn {
-    font-size: 22px;
-    background: none;
-    border: none;
-    color: #bbb;
-    cursor: pointer;
-    transition: color 0.2s;
+  font-size: 22px;
+  background: none;
+  border: none;
+  color: #bbb;
+  cursor: pointer;
+  transition: color 0.2s;
 }
 
 .close-btn:hover {
-    color: #fff;
+  color: #fff;
 }
 
 .modal-body {
-    padding: 25px;
+  padding: 25px;
 }
 
 label {
-    font-weight: bold;
-    display: block;
-    margin-top: 15px;
+  font-weight: bold;
+  display: block;
+  margin-top: 15px;
 }
 
 input[type="text"],
 textarea {
-    width: 100%;
-    background: #2a2a2a;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    padding: 10px;
-    margin-top: 5px;
+  width: 100%;
+  background: #2a2a2a;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px;
+  margin-top: 5px;
 }
 
 textarea {
-    resize: none;
-    height: 80px;
+  resize: none;
+  height: 80px;
 }
 
 .avatar {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 .avatar img {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    border: 2px solid #333;
-    cursor: pointer;
-    object-fit: cover;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 2px solid #333;
+  cursor: pointer;
+  object-fit: cover;
 }
 
 .modal-footer {
-    border-top: 1px solid #333;
-    padding: 15px 25px;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+  border-top: 1px solid #333;
+  padding: 15px 25px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
 .cancel,
 .save {
-    border: none;
-    border-radius: 6px;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
 .cancel {
-    background: #333;
-    color: #fff;
+  background: #333;
+  color: #fff;
 }
 
 .save {
-    background: #fe2c55;
-    color: #fff;
+  background: #fe2c55;
+  color: #fff;
 }
 
 .cancel:hover {
-    background: #444;
+  background: #444;
 }
 
 .save:hover {
-    background: #ff476d;
+  background: #ff476d;
 }
+
 .avatar {
   position: relative;
   width: 120px;
@@ -200,9 +201,10 @@ textarea {
 #avatar {
   display: none;
 }
+
 .avatar-section {
   margin-bottom: 20px;
-    text-align: center;
+  text-align: center;
 }
 
 .avatar-section h3 {
@@ -214,7 +216,7 @@ textarea {
 .avatar-container {
   position: relative;
   display: inline-block;
-  
+
 }
 
 .avatar-container img {
