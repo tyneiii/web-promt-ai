@@ -130,34 +130,34 @@
       });
     });
     const runBtn = document.querySelector('.run-btn');
-  const runResult = document.getElementById('run-result');
+    const runResult = document.getElementById('run-result');
 
-  runBtn.addEventListener('click', () => {
-    runResult.innerHTML = ''; // reset trước khi hiển thị
+    runBtn.addEventListener('click', () => {
+      runResult.innerHTML = ''; // reset trước khi hiển thị
 
-    // Tạo textarea
-    const textarea = document.createElement('textarea');
-    textarea.placeholder = 'Nhập nhận xét/test prompt...';
-    textarea.style.width = '100%';
-    textarea.style.minHeight = '100px';
-    textarea.style.marginBottom = '10px';
-    
-    // Tạo nút Duyệt bài đăng
-    const approveBtn = document.createElement('button');
-    approveBtn.textContent = 'Duyệt bài đăng';
-    approveBtn.className = 'action-btn run-btn';
-    approveBtn.style.marginRight = '10px';
+      // Tạo textarea
+      const textarea = document.createElement('textarea');
+      textarea.placeholder = 'Nhập nhận xét/test prompt...';
+      textarea.style.width = '100%';
+      textarea.style.minHeight = '100px';
+      textarea.style.marginBottom = '10px';
 
-    // Tạo nút Từ chối bài đăng
-    const rejectBtn = document.createElement('button');
-    rejectBtn.textContent = 'Từ chối bài đăng';
-    rejectBtn.className = 'action-btn back-btn';
+      // Tạo nút Duyệt bài đăng
+      const approveBtn = document.createElement('button');
+      approveBtn.textContent = 'Duyệt bài đăng';
+      approveBtn.className = 'action-btn run-btn';
+      approveBtn.style.marginRight = '10px';
 
-    // Thêm vào Section 2
-    runResult.appendChild(textarea);
-    runResult.appendChild(approveBtn);
-    runResult.appendChild(rejectBtn);
-  });
+      // Tạo nút Từ chối bài đăng
+      const rejectBtn = document.createElement('button');
+      rejectBtn.textContent = 'Từ chối bài đăng';
+      rejectBtn.className = 'action-btn back-btn';
+
+      // Thêm vào Section 2
+      runResult.appendChild(textarea);
+      runResult.appendChild(approveBtn);
+      runResult.appendChild(rejectBtn);
+    });
   </script>
 </body>
 
