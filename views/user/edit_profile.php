@@ -35,7 +35,7 @@
 
 
 
-                    <label for="tiktok_id">TikTok ID</label>
+                    <label for="tiktok_id">User ID</label>
                     <input type="text" id="tiktok_id" name="tiktok_id" value="antruong_2709" required>
 
                     <label for="name">Tên</label>
