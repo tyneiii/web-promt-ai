@@ -63,9 +63,51 @@ $cards = [
         <button><i class="fa-regular fa-heart"></i> Thích</button>
         <button><i class="fa-regular fa-comment"></i> Bình luận</button>
         <button><i class="fa-regular fa-bookmark"></i> Lưu</button>
+        <button class="run-btn" onclick="runPrompt(`<?= $card['title'] . ' - ' . $card['description'] ?>`)">
+    ⚡ Run Prompt
+</button>
+
       </div>
     </div>
   <?php endforeach; ?>
 </div>
+<script>
+async function runPrompt(text) {
+    let edited = window.prompt(
+        "Chạy prompt sau:\n" + text + "\n\nBạn có muốn chỉnh sửa không?",
+        text
+    );
+    if (!edited) return;
+
+    try {
+        console.log('Gửi prompt:', edited); // Debug log
+
+        const resp = await fetch("/web-promt-ai/api/run_api.php", {  // Fix: Thêm / đầu
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ prompt: edited })
+});
+
+        console.log('Response status:', resp.status); // Debug log
+
+        if (!resp.ok) {
+            const errorText = await resp.text();
+            console.error('Server error:', resp.status, errorText);
+            alert(`❌ Lỗi server: ${resp.status} (${resp.statusText})\nChi tiết: ${errorText.substring(0, 200)}...`);
+            return;
+        }
+
+        const data = await resp.json();
+console.log('Raw data từ API:', data);  // Debug: Log JSON đầy đủ
+
+let result = data.result || data.choices?.[0]?.message?.content || "Không có dữ liệu trả về.";
+
+        alert("✅ Kết quả:\n\n" + result);
+    } catch (error) {
+        console.error('Lỗi JS:', error);
+        alert("❌ Lỗi: " + error.message + "\nKiểm tra console để biết thêm.");
+    }
+}
+</script>
 
 <?php include_once __DIR__ . '/layout/footer.php'; ?>
