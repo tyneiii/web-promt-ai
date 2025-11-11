@@ -219,8 +219,8 @@ select {
   /* background: linear-gradient(to right, #ff8c00, #ffd700, #ffffff); */
    /* background: linear-gradient(to right, #42bcde, #ebda23, #ffffff); */
    /* background: linear-gradient(to right, #ff4da6, #9b30ff, #ff8c00); */
-   background: linear-gradient(to right, #ff3c3c, #ff7f50, #ffd700);
-  -webkit-background-clip: text;
+  background: linear-gradient(to right, #ff3c3c, #ff7f50, #ffd700);
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
