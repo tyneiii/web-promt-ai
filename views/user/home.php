@@ -60,16 +60,64 @@ while ($row = $cards->fetch_assoc()) {
       <h4><?= $prompt['description'] ?></h4>
       <p><?= implode('<br><br>', $prompt['details']) ?></p>
       <div class="card-buttons">
+<<<<<<< HEAD
         <button><i class="fa-regular fa-heart"></i> <?= $prompt['love_count'] ?></button>
         <button><i class="fa-regular fa-comment"></i> <?= $prompt['comment_count'] ?></button>
         <button><i class="fa-regular fa-bookmark"></i> <?= $prompt['save_count'] ?></button>
         <button class="run-btn" onclick="openPromptModal(`<?= htmlspecialchars($prompt['description'] . "\n" . implode("\n", $prompt['details']), ENT_QUOTES) ?>`)">
           ⚡ Run Prompt
         </button>
+=======
+        <button><i class="fa-regular fa-heart"></i> Thích</button>
+        <button><i class="fa-regular fa-comment"></i> Bình luận</button>
+        <button><i class="fa-regular fa-bookmark"></i> Lưu</button>
+        <button class="run-btn" onclick="runPrompt(`<?= $card['title'] . ' - ' . $card['description'] ?>`)">
+    ⚡ Run Prompt
+</button>
+
+>>>>>>> b2eb645cd5f1f9fb0454fd7832e89eb7d3144482
       </div>
     </div>
   <?php endforeach; ?>
 </div>
+<script>
+async function runPrompt(text) {
+    let edited = window.prompt(
+        "Chạy prompt sau:\n" + text + "\n\nBạn có muốn chỉnh sửa không?",
+        text
+    );
+    if (!edited) return;
+
+    try {
+        console.log('Gửi prompt:', edited); // Debug log
+
+        const resp = await fetch("/web-promt-ai/api/run_api.php", {  // Fix: Thêm / đầu
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ prompt: edited })
+});
+
+        console.log('Response status:', resp.status); // Debug log
+
+        if (!resp.ok) {
+            const errorText = await resp.text();
+            console.error('Server error:', resp.status, errorText);
+            alert(`❌ Lỗi server: ${resp.status} (${resp.statusText})\nChi tiết: ${errorText.substring(0, 200)}...`);
+            return;
+        }
+
+        const data = await resp.json();
+console.log('Raw data từ API:', data);  // Debug: Log JSON đầy đủ
+
+let result = data.result || data.choices?.[0]?.message?.content || "Không có dữ liệu trả về.";
+
+        alert("✅ Kết quả:\n\n" + result);
+    } catch (error) {
+        console.error('Lỗi JS:', error);
+        alert("❌ Lỗi: " + error.message + "\nKiểm tra console để biết thêm.");
+    }
+}
+</script>
 
 <div id="prompt-modal" style="display:none;">
   <div class="modal-overlay"></div>
