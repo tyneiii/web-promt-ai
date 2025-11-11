@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tạo bài viết - Giao diện mới</title>
-  <link rel="stylesheet" href="../../public/css/create_post.css">
+  <link rel="stylesheet" href="../../public/css/user/create_post.css">
 </head>
 
 <body>
