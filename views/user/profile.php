@@ -1,15 +1,17 @@
 <?php include_once __DIR__ . '/layout/header.php'; ?>
-<link rel="stylesheet" href="../../public/css/profile.css">
+<link rel="stylesheet" href="../../public/css/user/profile.css">
+
+<button id="back-btn" class="back-btn" onclick="window.history.back()" title="Về trang trước">
+  <i class="fa-solid fa-arrow-left"></i>
+</button>
 <div class="profile-container">
-    <div class="header" style="background-image: url('../../public/img/bg.jpg');">
-        <img src="../../public/img/anh_user_1.jpeg" alt="Avatar" class="avatar">
-    </div>
+    <div class="header" style="background-image: url('../../public/img/bg.png');">
+    <img src="../../public/img/avatar.png" class="avatar">
+</div>
     <div class="profile-info">
         <h2>An Trương</h2>
         <div class="buttons">
-            <button id="follow-btn" class="add-btn">Theo dõi</button>
-
-            <form action="">
+            <form action="edit_profile.php">
                 <input type="submit" value="Sửa hồ sơ" class="edit-btn">
             </form>
             <form action="create_post.php">
@@ -26,12 +28,6 @@
         <div class="tab active">🔁 Bài viết</div>
         <div class="tab">❤️ Yêu thích</div>
     </div>
-
-
-    <!-- Lưới video -->
-    <!-- <span class="active">🔁 Bài viết</span>
-            <span>❤️ Yêu thích</span>
-            <span>🔒 Đã Lưu</span> -->
 </div>
 
 <div class="write-container">

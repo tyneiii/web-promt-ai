@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="../../../public/css/slidebar.css">
+<link rel="stylesheet" href="../../public/css/manager/sidebar.css">
 <div class="sidebar">
   <h2>
     <form action="../user/home.php">

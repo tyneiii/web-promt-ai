@@ -46,7 +46,6 @@ $cards = [
   <div class="item">Prompt tạo website bằng HTML</div>
 </div>
 
-
 <div class="main-content">
   <?php foreach ($cards as $card): ?>
     <div class="card">
