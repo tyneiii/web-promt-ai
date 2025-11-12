@@ -36,7 +36,7 @@
           <form action="../user/profile.php" method="post">
             <input type="submit" value="Xem trang cá nhân">
           </form>
-          <form action="../user/logout.php" method="post">
+          <form action="../../views/login/login.php" method="post">
             <input type="submit" value="Thoát">
           </form>
         </div>
