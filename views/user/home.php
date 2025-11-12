@@ -6,11 +6,15 @@ include_once __DIR__ . '/../../Controller/user/prompt.php'
 <link rel="stylesheet" href="../../public/css/run_prompt.css">
 <?php
 $id_user = $_SESSION['id_user'];
+$search='';
+if(isset($_GET['search'])){
+  $search=$_GET['search'];
+}
 if (isset($_POST['loveBtn'])) {
   $id_prompt=(int)$_POST['loveBtn'];
   $mess = lovePrompt($id_user, $id_prompt, $conn);
 }
-$prompts = getPrompt($id_user,$_GET['search'], $conn);
+$prompts = getPrompt($id_user,$search, $conn);
 
 ?>
 <div class="left-sidebar">
