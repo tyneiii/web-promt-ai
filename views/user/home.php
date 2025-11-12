@@ -109,54 +109,22 @@ let result = data.result || data.choices?.[0]?.message?.content || "Không có d
 }
 </script>
 
-<div id="prompt-modal" style="display:none;">
-  <div class="modal-overlay"></div>
+<!-- Modal xác nhận -->
+<div id="prompt-modal">
+  <div class="modal-overlay" onclick="closePromptModal()"></div>
   <div class="modal-content">
-    <h3>Chạy Prompt</h3>
-    <textarea id="modal-prompt-text" rows="6" style="width:100%;"></textarea>
+    <h3>Xác nhận chạy prompt</h3>
+    <p>Bạn có chắc chắn muốn chạy lệnh này không?</p>
     <div class="modal-actions">
-      <button onclick="runModalPrompt()">Chạy</button>
-      <button onclick="closePromptModal()">Hủy</button>
+      <button class="cancel" onclick="closePromptModal()">Hủy</button>
+      <button class="confirm" onclick="confirmRunPrompt()">Chạy ngay</button>
     </div>
   </div>
 </div>
 
-<script>
-function openPromptModal(text) {
-    document.getElementById('modal-prompt-text').value = text;
-    document.getElementById('prompt-modal').style.display = 'flex';
-}
+<div id="resultBox"></div>
 
-function closePromptModal() {
-    document.getElementById('prompt-modal').style.display = 'none';
-}
-
-async function runModalPrompt() {
-    const text = document.getElementById('modal-prompt-text').value;
-    if(!text) return alert("Prompt trống!");
-    try {
-        const resp = await fetch("../../api/run_api.php", {
-            method:"POST",
-            headers:{"Content-Type":"application/json"},
-            body: JSON.stringify({prompt:text})
-        });
-
-        if(!resp.ok) {
-            const err = await resp.text();
-            alert("Lỗi server: " + resp.status + "\n" + err.substring(0,200));
-            return;
-        }
-
-        const data = await resp.json();
-        let result = data.result || data.choices?.[0]?.message?.content || "Không có dữ liệu trả về.";
-        alert("✅ Kết quả:\n\n" + result);
-        closePromptModal();
-    } catch(err) {
-        alert("❌ Lỗi: " + err.message);
-        console.error(err);
-    }
-}
-</script>
+<script src="/web-promt-ai/public/js/run_api.js"></script>
 
 
 <?php include_once __DIR__ . '/layout/footer.php'; ?>
