@@ -12,13 +12,17 @@
 </head>
 
 <body>
+    <!-- Nút quay về trang chủ -->
+    <a href="../user/home.php" class="back-home-btn" title="Về trang chủ">
+        <i class="fas fa-arrow-left"></i>
+    </a>
     <div class="auth-container">
         <div class="form-card">
             <h2>Tạo tài khoản</h2>
             <p class="subtitle">Bắt đầu hành trình của bạn bằng cách tạo tài khoản.</p>
 
             <!-- Form Đăng ký -->
-            <form action="../../controller/AuthController.php?action=register" method="POST">
+            <form action="../../controller/AuthController.php?action=register" method="post">
                 <div class="input-group">
                     <!-- <label for="username">Tên người dùng</label> -->
                     <input type="text" id="username" name="username" placeholder="Username" required>

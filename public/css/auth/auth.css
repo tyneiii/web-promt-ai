@@ -36,8 +36,35 @@ body {
     background-repeat: no-repeat;
 }
 
+/* Nút quay về trang chủ */
+.back-home-btn {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    width: 44px;
+    height: 44px;
+    background-color: rgba(26, 26, 30, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 18px;
+    backdrop-filter: blur(5px);
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.back-home-btn:hover {
+    background-color: var(--primary-color);
+    color: var(--text-primary);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 15px rgba(229, 57, 53, 0.5);
+}
 .auth-container {
-    width: 100%;
+    width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -47,16 +74,16 @@ body {
     background-color: rgba(26, 26, 30, 0.6); /* Thay đổi: Tăng độ trong suốt (từ 0.85 xuống 0.6) */
     border: 1px solid rgba(255, 255, 255, 0.2); /* Thêm: Viền mờ cho giống mẫu */
     border-radius: 12px;
-    padding: 28px 32px;
+    padding: 32px 40px;
     width: 100%;
-    max-width: 450px;
+    max-width: 570px;
     box-shadow: 0 5px 25px rgba(229, 57, 53, 0.4); /* Giữ hiệu ứng glow đỏ */
     backdrop-filter: blur(5px); /* Hiệu ứng làm mờ nền phía sau */
 }
 
 .form-card h2 {
     text-align: center;
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 800;
     margin-bottom: 8px;
     color: var(--text-primary);
@@ -80,12 +107,6 @@ form {
     flex-direction: column;
 }
 
-/* .input-group label {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-} */
 
 .input-group input {
     background-color: var(--input-bg);
@@ -137,11 +158,12 @@ form {
     border: none;
     border-radius: 28px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
 .auth-btn:hover {
     background-color: #d32f2f;
+    box-shadow: 0 6px 20px rgba(229, 57, 53, 0.5); /* Thêm: Hiệu ứng glow màu đỏ */
 }
 
 .divider {
@@ -181,12 +203,13 @@ form {
     border: 1px solid var(--border-color);
     border-radius: 28px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
     width: 100%;
 }
 
 .google-btn:hover {
     background-color: #f5f5f5;
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
 }
 
 .google-btn i {
