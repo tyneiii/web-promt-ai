@@ -20,13 +20,13 @@
             <!-- Form Đăng nhập -->
             <form action="../../controller/AuthController.php?action=login" method="POST">
                 <div class="input-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="example@gmail.com" required>
+                    <!-- <label for="email">Email</label> -->
+                    <input type="email" id="email" name="email" placeholder="Email" required>
                 </div>
 
                 <div class="input-group">
-                    <label for="password">Mật khẩu</label>
-                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                    <!-- <label for="password">Mật khẩu</label> -->
+                    <input type="password" id="password" name="password" placeholder="Password" required>
                 </div>
 
                 <div class="form-options">

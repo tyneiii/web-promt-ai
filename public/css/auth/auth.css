@@ -2,14 +2,14 @@
  * CSS chung cho trang login.php và register.php
  */
 
-
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
 
 :root {
     --bg-color: #1a1a1e;
     --card-color: #2a2a2e;
     --text-primary: #ffffff;
     --text-secondary: #a0a0a5;
-    --primary-color: #e53935; /* Thay đổi: Từ tím sang đỏ */
+    --primary-color: #e53935; /* Đỏ */
     --input-bg: #3a3a40;
     --border-color: #44444c;
 }
@@ -21,14 +21,19 @@
 }
 
 body {
-    font-family:Arial, Helvetica, sans-serif;
-    background-color: var(--bg-color);
+    font-family: 'Manrope', sans-serif;
+    background-color: var(--bg-color); /* Màu nền dự phòng */
     color: var(--text-primary);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     padding: 20px;
+
+    background-image: url(../../img/black-aesthetic-mountains-4k-9k.jpg); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .auth-container {
@@ -39,18 +44,20 @@ body {
 }
 
 .form-card {
-    background-color: var(--card-color);
+    background-color: rgba(26, 26, 30, 0.6); /* Thay đổi: Tăng độ trong suốt (từ 0.85 xuống 0.6) */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Thêm: Viền mờ cho giống mẫu */
     border-radius: 12px;
-    padding: 28px 32px; /* Giảm padding trên/dưới từ 32px xuống 28px */
+    padding: 28px 32px;
     width: 100%;
     max-width: 450px;
-    box-shadow: 0 5px 25px rgba(229, 57, 53, 0.4); /* Thay đổi: Thêm hiệu ứng glow màu đỏ */
+    box-shadow: 0 5px 25px rgba(229, 57, 53, 0.4); /* Giữ hiệu ứng glow đỏ */
+    backdrop-filter: blur(5px); /* Hiệu ứng làm mờ nền phía sau */
 }
 
 .form-card h2 {
     text-align: center;
     font-size: 28px;
-    font-weight: 700;
+    font-weight: 800;
     margin-bottom: 8px;
     color: var(--text-primary);
 }
@@ -58,14 +65,14 @@ body {
 .form-card .subtitle {
     text-align: center;
     color: var(--text-secondary);
-    margin-bottom: 20px; /* Giảm từ 24px */
+    margin-bottom: 20px;
     font-size: 15px;
 }
 
 form {
     display: flex;
     flex-direction: column;
-    gap: 14px; /* Giảm khoảng cách các input từ 16px */
+    gap: 14px;
 }
 
 .input-group {
@@ -73,27 +80,30 @@ form {
     flex-direction: column;
 }
 
-.input-group label {
+/* .input-group label {
     font-size: 14px;
     font-weight: 500;
     color: var(--text-secondary);
     margin-bottom: 8px;
-}
+} */
 
 .input-group input {
     background-color: var(--input-bg);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: 28px;
     padding: 12px 16px;
     color: var(--text-primary);
     font-size: 16px;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
-
+.input-group input::placeholder {
+    color: var(--text-secondary);
+    font-size: smaller
+}
 .input-group input:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.3); /* Thay đổi: Sang shadow màu đỏ */
+    box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.3);
 }
 
 .input-group input::placeholder {
@@ -125,13 +135,13 @@ form {
     font-weight: 600;
     padding: 14px;
     border: none;
-    border-radius: 8px;
+    border-radius: 28px;
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
 .auth-btn:hover {
-    background-color: #d32f2f; /* Thay đổi: Sang màu đỏ đậm hơn khi hover */
+    background-color: #d32f2f;
 }
 
 .divider {
@@ -139,7 +149,7 @@ form {
     align-items: center;
     text-align: center;
     color: var(--text-secondary);
-    margin: 20px 0; /* Giảm margin trên/dưới từ 24px */
+    margin: 20px 0;
     font-size: 13px;
 }
 
@@ -169,7 +179,7 @@ form {
     font-weight: 600;
     padding: 14px;
     border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: 28px;
     cursor: pointer;
     transition: background-color 0.2s;
     width: 100%;
@@ -186,7 +196,7 @@ form {
 
 .switch-auth {
     text-align: center;
-    margin-top: 20px; /* Giảm margin từ 24px */
+    margin-top: 20px;
     color: var(--text-secondary);
     font-size: 15px;
 }

@@ -20,23 +20,23 @@
             <!-- Form Đăng ký -->
             <form action="../../controller/AuthController.php?action=register" method="POST">
                 <div class="input-group">
-                    <label for="username">Tên người dùng</label>
-                    <input type="text" id="username" name="username" placeholder="antruong_2709" required>
+                    <!-- <label for="username">Tên người dùng</label> -->
+                    <input type="text" id="username" name="username" placeholder="Username" required>
                 </div>
 
                 <div class="input-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="example@gmail.com" required>
+                    <!-- <label for="email">Email</label> -->
+                    <input type="email" id="email" name="email" placeholder="Email" required>
                 </div>
 
                 <div class="input-group">
-                    <label for="password">Mật khẩu</label>
-                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                    <!-- <label for="password">Mật khẩu</label> -->
+                    <input type="password" id="password" name="password" placeholder="Password" required>
                 </div>
 
                 <div class="input-group">
-                    <label for="repeat_password">Nhập lại mật khẩu</label>
-                    <input type="password" id="repeat_password" name="repeat_password" placeholder="••••••••" required>
+                    <!-- <label for="repeat_password">Nhập lại mật khẩu</label> -->
+                    <input type="password" id="repeat_password" name="repeat_password" placeholder="Repeat password" required>
                 </div>
 
                 <button type="submit" class="auth-btn">Đăng ký</button>
