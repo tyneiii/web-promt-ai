@@ -73,7 +73,7 @@
     margin-bottom: 10px;
 }
 
-input {
+.edit-btn,.add-btn {
     border: none;
     padding: 8px 14px;
     border-radius: 6px;
@@ -82,13 +82,11 @@ input {
 }
 
 .edit-btn {
-    
     background-color: #fae206;
     color: #151515;
 }
 
 .add-btn {
-    
     background-color: #e5145d;
     color: #fff;
 }
