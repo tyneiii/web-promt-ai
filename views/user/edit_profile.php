@@ -18,7 +18,7 @@
                     <label>Ảnh hồ sơ</label>
                     <div class="avatar-section">
                         <div class="avatar-container">
-                            <img id="avatarPreview" src="../../public/img/avatar.png" alt="Avatar">
+                            <img id="avatarPreview" src="../../public/img/user5.png" alt="Avatar">
                             <label for="avatar" class="edit-icon">
                                 ✎
                             </label>
