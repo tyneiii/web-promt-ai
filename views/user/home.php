@@ -91,4 +91,6 @@ $prompts = getPrompt($id_user,$search, $conn);
 
 <script src="/web-promt-ai/public/js/run_api.js"></script>
 
+
+
 <?php include_once __DIR__ . '/layout/footer.php'; ?>
