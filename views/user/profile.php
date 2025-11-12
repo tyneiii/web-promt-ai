@@ -1,4 +1,42 @@
-<?php include_once __DIR__ . '/layout/header.php'; ?>
+<?php 
+    include_once __DIR__ . '/layout/header.php'; 
+    include_once __DIR__ . '/../../config.php';
+    
+    $acc_id = 5;
+    // Lấy thông tin người dùng có account_id = 5
+    $sql_user = "SELECT * FROM account WHERE account_id = $acc_id ";
+    $user_result = mysqli_query($conn, $sql_user);
+    $user = mysqli_fetch_assoc($user_result);
+
+    // Xác định tab hiện tại (mặc định là 'posts')
+    $tab = isset($_GET['tab']) ? $_GET['tab'] : 'posts';
+
+    // Truy vấn dữ liệu theo tab
+    if ($tab === 'favorites') {
+        $sql = "SELECT p.* 
+            FROM love l 
+            JOIN prompt p ON l.prompt_id = p.prompt_id 
+            WHERE l.account_id = $acc_id AND l.status = 'OPEN'
+            ORDER BY l.love_at DESC ";
+    } else {
+        $sql = "SELECT * FROM prompt WHERE account_id = $acc_id ORDER BY prompt_id DESC";
+    }
+
+    $result = mysqli_query($conn, $sql);
+    // // Lấy danh sách bài viết của user
+    // $sql_prompt = "SELECT * FROM prompt WHERE account_id = $acc_id ORDER BY prompt_id DESC";
+    // $posts = mysqli_query($conn, $sql_prompt);
+
+    // // Lấy danh sách bài viết user đã yêu thích
+    // $sql_love = "SELECT p.* FROM love l
+    // JOIN prompt p ON l.prompt_id = p.prompt_id
+    // WHERE l.account_id = $acc_id AND l.status = 'OPEN'
+    // ORDER BY l.love_at DESC";
+
+    // $favorites = mysqli_query($conn, $sql_love);
+
+?>
+
 <link rel="stylesheet" href="../../public/css/user/profile.css">
 
 <button id="back-btn" class="back-btn" onclick="window.history.back()" title="Về trang trước">
@@ -6,10 +44,10 @@
 </button>
 <div class="profile-container">
     <div class="header" style="background-image: url('../../public/img/bg.png');">
-    <img src="../../public/img/avatar.png" class="avatar">
+    <img src="../../public/img/<?= $user['avatar'] ?? 'avatar.png' ?>" class="avatar">
 </div>
     <div class="profile-info">
-        <h2>An Trương</h2>
+        <h2><?= $user['username'] ?? 'Người dùng'?></h2>
         <div class="buttons">
             <form action="edit_profile.php">
                 <input type="submit" value="Sửa hồ sơ" class="edit-btn">
@@ -23,63 +61,30 @@
         <span><strong>116</strong> Đã follow</span>
         <span><strong>8</strong> Follower</span>
     </div>
-    <p class="bio">Chào mừng bạn đến với trang cá nhân của mình! Hãy theo dõi để xem những prompt thú vị nhé! 😊</p>
+    <p class="bio"><?= $user['description'] ?? 'Chưa có tiểu sử.' ?></p>
     <div class="tabs">
-        <div class="tab active">🔁 Bài viết</div>
-        <div class="tab">❤️ Yêu thích</div>
+        <a href="?tab=posts" class="tab <?= $tab === 'posts' ? 'active' : '' ?>">🔁 Bài viết</a>
+        <a href="?tab=favorites" class="tab <?= $tab === 'favorites' ? 'active' : '' ?>">❤️ Yêu thích</a>
     </div>
 </div>
 
+<!-- Nội dung -->
 <div class="write-container">
-    <div class="write-item">
-        <h3>“Giải thích ngắn gọn cho tôi biết API là gì và cho ví dụ thực tế dễ hiểu.”</h3>
-        <span>13,5K ❤️ • 810 comments</span>
-    </div>
-    <div class="write-item">
-        <h3>“Viết caption TikTok ngắn, vui nhộn về việc học code khuya nhưng vẫn tỉnh táo, kèm 3 hashtag phù hợp.”</h3>
-        <span>3,9K ❤️ • 714 comments</span>
-    </div>
-    <div class="write-item">
-        <h3>“Viết bài blog 300 từ về ‘Cách duy trì động lực học lập trình’, giọng văn tích cực và gần gũi.”</h3>
-        <span>9,8K ❤️ • 809 comments</span>
-    </div>
-    <div class="write-item">
-        <h3>“Tạo hình ảnh poster game hành động với nhân vật chính mặc áo giáp tương lai, phông nền là thành phố đổ nát.”</h3>
-        <span>20K ❤️ • 809 comments</span>
-    </div>
-    <div class="write-item">
-        <h3>“Giải thích ngắn gọn cho tôi biết API là gì và cho ví dụ thực tế dễ hiểu.”</h3>
-        <span>13,5K ❤️ • 810 comments</span>
-    </div>
-    <div class="write-item">
-        <h3>“Viết caption TikTok ngắn, vui nhộn về việc học code khuya nhưng vẫn tỉnh táo, kèm 3 hashtag phù hợp.”</h3>
-        <span>3,9K ❤️ • 714 comments</span>
-    </div>
-    <div class="write-item">
-        <h3>“Viết bài blog 300 từ về ‘Cách duy trì động lực học lập trình’, giọng văn tích cực và gần gũi.”</h3>
-        <span>9,8K ❤️ • 809 comments</span>
-    </div>
-    <div class="write-item">
-        <h3>“Tạo hình ảnh poster game hành động với nhân vật chính mặc áo giáp tương lai, phông nền là thành phố đổ nát.”</h3>
-        <span>20K ❤️ • 809 comments</span>
-    </div>
-    <div class="write-item">
-        <h3>“Giải thích ngắn gọn cho tôi biết API là gì và cho ví dụ thực tế dễ hiểu.”</h3>
-        <span>13,5K ❤️ • 810 comments</span>
-    </div>
-    <div class="write-item">
-        <h3>“Viết caption TikTok ngắn, vui nhộn về việc học code khuya nhưng vẫn tỉnh táo, kèm 3 hashtag phù hợp.”</h3>
-        <span>3,9K ❤️ • 714 comments</span>
-    </div>
-    <div class="write-item">
-        <h3>“Viết bài blog 300 từ về ‘Cách duy trì động lực học lập trình’, giọng văn tích cực và gần gũi.”</h3>
-        <span>9,8K ❤️ • 809 comments</span>
-    </div>
-    <div class="write-item">
-        <h3>“Tạo hình ảnh poster game hành động với nhân vật chính mặc áo giáp tương lai, phông nền là thành phố đổ nát.”</h3>
-        <span>20K ❤️ • 809 comments</span>
-    </div>
+    <?php if (mysqli_num_rows($result) > 0): ?>
+        <?php while ($row = mysqli_fetch_assoc($result)): ?>
+            <div class="write-item">
+                <h2><?= $row['title'] ?></h2>
+                <h3><?= $row['short_description'] ?></h3>
+                <span><?= $row['love_count'] ?> ❤️ • <?= number_format($row['comment_count']) ?> bình luận</span>
+            </div>
+        <?php endwhile; ?>
+    <?php else: ?>
+        <p style="text-align:center; color:gray;">
+            <?= $tab === 'favorites' ? 'Chưa có bài viết yêu thích nào.' : 'Chưa có bài viết nào.' ?>
+        </p>
+    <?php endif; ?>
 </div>
+
 </div>
 </body>
 
