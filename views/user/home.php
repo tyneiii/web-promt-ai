@@ -3,7 +3,7 @@ include_once __DIR__ . '/layout/header.php';
 include_once __DIR__ . '/../../config.php';
 include_once __DIR__ . '/../../Controller/user/prompt.php'
 ?>
-<link rel="stylesheet" href="../../public/css/run_prompt.css">
+<link rel="stylesheet" href="../../public/css/run_prompt.css"> 
 <?php
 $id_user = $_SESSION['id_user'];
 $search='';
@@ -59,8 +59,9 @@ $prompts = getPrompt($id_user,$search, $conn);
           <button type="submit" name="saveBtn" title="Lưu bài viết" id='saveBtn' value="<?= $prompt['id'] ?>">
             <i class="fa-regular fa-bookmark"></i>  <?= $prompt['save_count'] ?>
           </button>
-          <button type="button" title="Xem kết quả" id="runBtn"
-            onclick="openPromptModal(`<?= htmlspecialchars($prompt['description'] . "\n" . implode("\n", $prompt['details']), ENT_QUOTES) ?>`)">
+          <!-- SỬA: Xóa onclick, chỉ dùng class + data-prompt cho delegation JS -->
+          <button type="button" class="run-btn" title="Xem kết quả" 
+            data-prompt="<?= htmlspecialchars($prompt['description'] . "\n" . implode("\n", $prompt['details']), ENT_QUOTES) ?>">
             ⚡ Run Prompt
           </button>
         </div>
@@ -68,65 +69,26 @@ $prompts = getPrompt($id_user,$search, $conn);
     </form>
   <?php endforeach; ?>
 </div>
-<script>
-  async function runPrompt(text) {
-    let edited = window.prompt(
-      "Chạy prompt sau:\n" + text + "\n\nBạn có muốn chỉnh sửa không?",
-      text
-    );
-    if (!edited) return;
 
-    try {
-      console.log('Gửi prompt:', edited); // Debug log
-
-      const resp = await fetch("/web-promt-ai/api/run_api.php", { // Fix: Thêm / đầu
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          prompt: edited
-        })
-      });
-
-      console.log('Response status:', resp.status); // Debug log
-
-      if (!resp.ok) {
-        const errorText = await resp.text();
-        console.error('Server error:', resp.status, errorText);
-        alert(`❌ Lỗi server: ${resp.status} (${resp.statusText})\nChi tiết: ${errorText.substring(0, 200)}...`);
-        return;
-      }
-
-      const data = await resp.json();
-      console.log('Raw data từ API:', data); // Debug: Log JSON đầy đủ
-
-      let result = data.result || data.choices?.[0]?.message?.content || "Không có dữ liệu trả về.";
-
-      alert("✅ Kết quả:\n\n" + result);
-    } catch (error) {
-      console.error('Lỗi JS:', error);
-      alert("❌ Lỗi: " + error.message + "\nKiểm tra console để biết thêm.");
-    }
-  }
-</script>
-
-<!-- Modal xác nhận -->
-<div id="prompt-modal">
-  <div class="modal-overlay" onclick="closePromptModal()"></div>
+<!-- Modal (giữ nguyên) -->
+<div id="prompt-modal" style="display: none;">
+  <div class="modal-overlay" onclick="closePromptModal(event)"></div>
   <div class="modal-content">
     <h3>Xác nhận chạy prompt</h3>
-    <p>Bạn có chắc chắn muốn chạy lệnh này không?</p>
+    <div id="prompt-display">
+      <label for="promptInput">Nội dung prompt (có thể chỉnh sửa):</label>
+      <textarea id="promptInput" rows="8" cols="50" placeholder="Prompt sẽ hiển thị ở đây..."></textarea>
+      <small>Bấm "Chạy ngay" để lấy kết quả.</small>
+    </div>
     <div class="modal-actions">
-      <button class="cancel" onclick="closePromptModal()">Hủy</button>
-      <button class="confirm" onclick="confirmRunPrompt()">Chạy ngay</button>
+      <button class="cancel" type="button" onclick="closePromptModal()">Hủy</button>
+      <button class="confirm" type="button" onclick="confirmRunPrompt()">Chạy ngay</button>
     </div>
   </div>
 </div>
 
-<div id="resultBox"></div>
+<div id="resultBox" style="display: none;"></div>
 
 <script src="/web-promt-ai/public/js/run_api.js"></script>
-
 
 <?php include_once __DIR__ . '/layout/footer.php'; ?>

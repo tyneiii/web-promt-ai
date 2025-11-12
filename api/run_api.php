@@ -1,5 +1,5 @@
 <?php 
-require_once __DIR__ . '/../key.php';  
+require_once __DIR__ . '../key.php';  
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -74,7 +74,14 @@ if (isset($data['error'])) {
     exit;
 }
 
+// Sửa: Check choices tồn tại
+if (!isset($data['choices']) || empty($data['choices'])) {
+    http_response_code(400);
+    echo json_encode(["error" => "No choices in response"]);
+    exit;
+}
+
 $result = $data['choices'][0]['message']['content'] ?? 'No text generated';
-$result = str_replace($prompt, '', $result);
 
 echo json_encode(["result" => trim($result)]);
+?>
