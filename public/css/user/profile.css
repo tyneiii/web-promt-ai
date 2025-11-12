@@ -122,6 +122,7 @@
     margin-top: 25px;
     padding-bottom: 10px;
     color: #aaa;
+    
 }
 
 .tabs .active {
@@ -177,3 +178,21 @@
     font-size: 14px;
     color: #aaa;
 }
+.tabs a {
+  text-decoration: none;        /* Bỏ gạch dưới */
+  color: #aaa;                  /* Màu mặc định */
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tabs a.active {
+  color: #fff;
+  border-bottom: 2px solid #fff;
+  padding-bottom: 4px;
+}
+
+.tabs a:hover {
+  color: #d33;                  /* Màu khi hover, tuỳ bạn chỉnh */
+}
+
