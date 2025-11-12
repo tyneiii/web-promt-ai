@@ -6,6 +6,43 @@
   <title>Prompt AI Share</title>
   <link rel="stylesheet" href="../../public/css/home.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+        #sticky-ad-banner {
+            position: fixed; 
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            
+            background-color: transparent; 
+
+            text-align: center;
+            padding: 5px 0;
+            z-index: 1000;
+        }
+
+        #sticky-ad-banner img {
+            height: 100px;
+            width: 1500px;
+            max-width: 50%;
+            vertical-align: middle;
+        }
+
+        #close-ad-btn {
+            position: absolute;
+            top: 0;
+            right: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #888;
+            cursor: pointer;
+            line-height: 1;
+            padding: 5px;
+        }
+
+        #close-ad-btn:hover {
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
   <?php
