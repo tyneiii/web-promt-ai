@@ -1,3 +1,5 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'); /* Cho fa-spinner */
+
 #prompt-modal {
     position: fixed;
     top: 0;
@@ -37,4 +39,369 @@
 
 .modal-actions button {
     margin-left: 10px;
+}
+
+#resultBox {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;
+}
+.result-content, .error-content { background: white; padding: 20px; border-radius: 8px; max-width: 600px; }
+.loading { text-align: center; padding: 40px; }
+.close-result { background: #ff6b6b; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+
+/* Thêm vào public/css/run_prompt.css để làm modal đẹp hơn */
+
+/* Modal overlay: Làm mờ background và centered */
+#prompt-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Mờ hơn một chút */
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px); /* Blur nhẹ cho modern look */
+  animation: fadeIn 0.3s ease-out; /* Animation fade in */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Modal content: Rounded, shadow, gradient border */
+.modal-content {
+  background: linear-gradient(145deg, #ffffff, #f8f9ff); /* Gradient nhẹ */
+  border-radius: 20px; /* Rounded hơn */
+  padding: 30px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.15), /* Shadow lớn hơn */
+    0 0 0 1px rgba(255, 255, 255, 0.5), /* Inner glow */
+    inset 0 1px 0 rgba(255, 255, 255, 0.8); /* Inner highlight */
+  border: 1px solid rgba(59, 130, 246, 0.2); /* Blue subtle border */
+  position: relative;
+  animation: slideUp 0.3s ease-out; /* Slide up animation */
+}
+
+@keyframes slideUp {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Header: Title với icon */
+.modal-content h3 {
+  margin: 0 0 20px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #1f2937; /* Dark gray */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modal-content h3::before {
+  content: '⚡'; /* Icon lightning cho prompt */
+  font-size: 28px;
+}
+
+/* Prompt display section */
+#prompt-display {
+  margin-bottom: 25px;
+}
+
+#prompt-display label {
+  display: block;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+#promptInput {
+  width: 100%;
+  min-height: 150px; /* Cao hơn cho dễ đọc */
+  padding: 15px;
+  border: 2px solid #e5e7eb; /* Border xám nhạt */
+  border-radius: 12px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Font sạch */
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical; /* Chỉ resize vertical */
+  transition: border-color 0.2s, box-shadow 0.2s; /* Smooth transition */
+  background: #fafbff; /* Background nhẹ */
+}
+
+#promptInput:focus {
+  outline: none;
+  border-color: #3b82f6; /* Blue focus */
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); /* Glow focus */
+}
+
+#promptInput::placeholder {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* Small note */
+#prompt-display small {
+  display: block;
+  margin-top: 8px;
+  color: #6b7280;
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* Actions: Buttons đẹp hơn, flex layout */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.modal-actions button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 100px; /* Width cố định */
+}
+
+.cancel {
+  background: #f3f4f6;
+  color: #6b7280;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.cancel:hover {
+  background: #e5e7eb;
+  transform: translateY(-1px); /* Hover lift */
+}
+
+.confirm {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8); /* Gradient blue */
+  color: white;
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+}
+
+.confirm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4);
+}
+
+.confirm:active {
+  transform: translateY(0);
+}
+
+/* Responsive cho mobile */
+@media (max-width: 768px) {
+  .modal-content {
+    padding: 20px;
+    margin: 20px;
+    width: calc(100% - 40px);
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+  }
+  
+  #promptInput {
+    min-height: 120px;
+  }
+}
+
+/* Thêm vào public/css/run_prompt.css để làm resultBox (modal kết quả) đẹp hơn */
+
+/* ResultBox overlay: Tương tự modal prompt, nhưng z-index cao hơn */
+#resultBox {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1001; /* Cao hơn modal prompt */
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Result content: Rounded, shadow, gradient tương tự modal */
+.result-content {
+  background: linear-gradient(145deg, #ffffff, #f8f9ff);
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 700px; /* Rộng hơn một chút cho kết quả dài */
+  width: 90%;
+  max-height: 85vh; /* Cao hơn để scroll */
+  overflow-y: auto;
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.2), /* Shadow sâu hơn */
+    0 0 0 1px rgba(255, 255, 255, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(34, 197, 94, 0.2); /* Green subtle border cho "success" */
+  position: relative;
+  animation: slideUp 0.4s ease-out; /* Slide up chậm hơn */
+}
+
+@keyframes slideUp {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Error content: Tương tự nhưng red theme */
+.error-content {
+  background: linear-gradient(145deg, #ffffff, #fef2f2);
+  border: 1px solid rgba(239, 68, 68, 0.2); /* Red border */
+  color: #dc2626;
+}
+
+/* Header: Title với icon success */
+.result-content h4 {
+  margin: 0 0 20px;
+  font-size: 26px;
+  font-weight: 600;
+  color: #059669; /* Green success */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 2px solid rgba(34, 197, 94, 0.3); /* Underline nhẹ */
+  padding-bottom: 10px;
+}
+
+.result-content h4::before {
+  content: '✅'; /* Icon checkmark */
+  font-size: 24px;
+}
+
+.error-content h4 {
+  color: #dc2626;
+  border-bottom-color: rgba(239, 68, 68, 0.3);
+}
+
+.error-content h4::before {
+  content: '❌'; /* Icon error */
+}
+
+/* Pre content: Format markdown-like cho đẹp (không dùng <pre> thuần nữa) */
+.result-content pre {
+  white-space: pre-wrap; /* Wrap lines */
+  word-wrap: break-word;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Font dễ đọc */
+  font-size: 15px;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f9fafb; /* Light bg */
+  padding: 20px;
+  border-radius: 12px;
+  border-left: 4px solid #10b981; /* Green left border */
+  margin: 0 0 25px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle inset */
+  overflow-x: auto; /* Scroll ngang nếu code dài */
+}
+
+/* Cải thiện cho list/markdown: Nếu kết quả có #, -, * thì style */
+.result-content pre h1, .result-content pre h2, .result-content pre h3 {
+  color: #059669;
+  font-weight: 600;
+}
+
+.result-content pre ul, .result-content pre ol {
+  padding-left: 20px;
+}
+
+.result-content pre li {
+  margin-bottom: 8px;
+}
+
+/* Loading state: Center và animate */
+.loading {
+  text-align: center;
+  padding: 50px 20px;
+  color: #6b7280;
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.loading i.fa-spinner {
+  font-size: 24px;
+  color: #3b82f6;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Close button: Đẹp hơn, position absolute top-right */
+.close-result {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: linear-gradient(135deg, #ef4444, #dc2626); /* Red gradient */
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 50%; /* Circle cho icon-like */
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+}
+
+.close-result:hover {
+  transform: scale(1.1) rotate(90deg); /* Rotate fun khi hover */
+  box-shadow: 0 6px 12px rgba(239, 68, 68, 0.4);
+}
+
+.close-result:active {
+  transform: scale(0.95);
+}
+
+/* Responsive: Mobile-friendly */
+@media (max-width: 768px) {
+  .result-content {
+    padding: 20px;
+    margin: 20px;
+    width: calc(100% - 40px);
+    max-height: 90vh;
+  }
+  
+  .result-content pre {
+    font-size: 14px;
+    padding: 15px;
+  }
+  
+  .close-result {
+    top: 10px;
+    right: 15px;
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
+  }
 }
