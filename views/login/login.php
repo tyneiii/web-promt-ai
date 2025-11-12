@@ -12,13 +12,17 @@
 </head>
 
 <body>
+    <!-- Nút quay về trang chủ -->
+    <a href="../user/home.php" class="back-home-btn" title="Về trang chủ">
+        <i class="fas fa-arrow-left"></i>
+    </a>
     <div class="auth-container">
         <div class="form-card">
             <h2>Đăng nhập</h2>
             <p class="subtitle">Chào mừng trở lại! Vui lòng nhập thông tin của bạn.</p>
 
             <!-- Form Đăng nhập -->
-            <form action="../../controller/AuthController.php?action=login" method="POST">
+            <form action="../../controller/AuthController.php?action=login" method="post">
                 <div class="input-group">
                     <!-- <label for="email">Email</label> -->
                     <input type="email" id="email" name="email" placeholder="Email" required>
