@@ -242,8 +242,8 @@ select {
 }
 
 .main-content {
-  margin-top: 70px;
-  margin-left: 80px;
+  margin-top: 40px;
+  margin-left: 60px;
   margin-right: 280px;
   padding: 20px;
   display: grid;
@@ -254,7 +254,7 @@ select {
 .card {
   display: flex;
   flex-direction: column;   /* dọc: header + nội dung + buttons */
-  background-color: #111;
+  background-color: black;
   padding: 15px;
   border-radius: 10px;
   transition: 0.2s;
@@ -262,7 +262,7 @@ select {
 }
 
 .card:hover {
-  background-color: #222;
+  background-color: #111;
   transform: translateY(-3px);
 }
 
@@ -293,19 +293,42 @@ select {
   margin-top: auto;              /* đẩy xuống cuối card */
 }
 
-
 .card-buttons button {
-  background-color: #444;
+  background-color: #222;
   border: none;
   padding: 6px 12px;
   border-radius: 6px;
-  color: white;
   cursor: pointer;
   transition: 0.2s;
+  color:white;
+}
+.card-buttons button:hover {
+  background-color: black;
+}
+#loveBtn{
+  color: red;
+}
+#saveBtn{
+  color: yellow;
 }
 
-.card-buttons button:hover {
-  background-color: #666;
+#runBtn {
+    background-color: #222;
+    color: rgb(252, 50, 50); 
+    font-weight: 600;
+    font-size: 14px;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    transition: all 0.25s ease;
+}
+
+#runBtn:hover {
+    box-shadow: 0 5px 12px rgba(0,0,0,0.4); /* bóng sâu hơn */
+    background: black; /* gradient xanh đậm “ngầu” */
+    color: red; /* chữ vẫn trắng */
 }
 
 .user-menu {
@@ -371,10 +394,6 @@ select {
     justify-content: center;
     width: 100%;
     text-align: center;
-  }
-
-  .search-bar {
-    width: 100%;
   }
 
   .left-sidebar,

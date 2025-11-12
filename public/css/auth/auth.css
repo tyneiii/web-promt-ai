@@ -1,0 +1,235 @@
+/* * File: public/css/auth/auth.css
+ * CSS chung cho trang login.php và register.php
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --bg-color: #1a1a1e;
+    --card-color: #2a2a2e;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a5;
+    --primary-color: #e53935; /* Đỏ */
+    --input-bg: #3a3a40;
+    --border-color: #44444c;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Manrope', sans-serif;
+    background-color: var(--bg-color); /* Màu nền dự phòng */
+    color: var(--text-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+
+    background-image: url(../../img/black-aesthetic-mountains-4k-9k.jpg); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Nút quay về trang chủ */
+.back-home-btn {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    width: 44px;
+    height: 44px;
+    background-color: rgba(26, 26, 30, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 18px;
+    backdrop-filter: blur(5px);
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.back-home-btn:hover {
+    background-color: var(--primary-color);
+    color: var(--text-primary);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 15px rgba(229, 57, 53, 0.5);
+}
+.auth-container {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-card {
+    background-color: rgba(26, 26, 30, 0.6); /* Thay đổi: Tăng độ trong suốt (từ 0.85 xuống 0.6) */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Thêm: Viền mờ cho giống mẫu */
+    border-radius: 12px;
+    padding: 32px 40px;
+    width: 100%;
+    max-width: 570px;
+    box-shadow: 0 5px 25px rgba(229, 57, 53, 0.4); /* Giữ hiệu ứng glow đỏ */
+    backdrop-filter: blur(5px); /* Hiệu ứng làm mờ nền phía sau */
+}
+
+.form-card h2 {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.form-card .subtitle {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    font-size: 15px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.input-group input {
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 28px;
+    padding: 12px 16px;
+    color: var(--text-primary);
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.input-group input::placeholder {
+    color: var(--text-secondary);
+    font-size: smaller
+}
+.input-group input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.3);
+}
+
+.input-group input::placeholder {
+    color: #6a6a70;
+}
+
+.form-options {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -8px;
+    margin-bottom: 8px;
+}
+
+.forgot-password {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.auth-btn {
+    background-color: var(--primary-color);
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: 600;
+    padding: 14px;
+    border: none;
+    border-radius: 28px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.auth-btn:hover {
+    background-color: #d32f2f;
+    box-shadow: 0 6px 20px rgba(229, 57, 53, 0.5); /* Thêm: Hiệu ứng glow màu đỏ */
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: var(--text-secondary);
+    margin: 20px 0;
+    font-size: 13px;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.divider::before {
+    margin-right: 16px;
+}
+
+.divider::after {
+    margin-left: 16px;
+}
+
+.google-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    background-color: #ffffff;
+    color: #1a1a1e;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 28px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    width: 100%;
+}
+
+.google-btn:hover {
+    background-color: #f5f5f5;
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
+}
+
+.google-btn i {
+    font-size: 20px;
+    color: #DB4437; /* Google red */
+}
+
+.switch-auth {
+    text-align: center;
+    margin-top: 20px;
+    color: var(--text-secondary);
+    font-size: 15px;
+}
+
+.switch-auth a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.switch-auth a:hover {
+    text-decoration: underline;
+}
