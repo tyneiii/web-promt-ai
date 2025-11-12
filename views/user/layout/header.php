@@ -8,12 +8,19 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
+  <?php
+    session_start();
+    $_SESSION['id_user']=2;
+  ?>
   <nav class="navbar">
     <div class="navbar-left">
       <a href="home.php" class="logo" style="text-decoration: none;" title="Trang chủ">Prompt AI</a>
     </div>
     <div class="navbar-center">
-      <input type="text" class="search-bar" title="Tìm kiếm" placeholder="Tìm kiếm prompt...">
+      <form action="home.php" method="get" class="navbar-center">
+        <input type="text" name="search" class="search-bar" title="Tìm kiếm" placeholder="Tìm kiếm prompt..." 
+              value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
+      </form>
     </div>
     <div class="navbar-right">
       <select>

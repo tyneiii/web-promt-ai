@@ -1,32 +1,21 @@
-<?php 
-include_once __DIR__ . '/layout/header.php'; 
+<?php
+include_once __DIR__ . '/layout/header.php';
 include_once __DIR__ . '/../../config.php';
+include_once __DIR__ . '/../../Controller/user/prompt.php'
 ?>
 <link rel="stylesheet" href="../../public/css/run_prompt.css">
 <?php
-$sql = 'SELECT prompt.prompt_id, account.username, account.avatar, prompt.short_description,
-               promptdetail.content, prompt.love_count, prompt.save_count, prompt.comment_count
-    FROM prompt
-    JOIN account ON account.account_id = prompt.account_id
-    JOIN promptdetail ON prompt.prompt_id = promptdetail.prompt_id
-    ORDER BY prompt.prompt_id ASC';
-$cards = $conn->query($sql);
-$prompts = [];
-while ($row = $cards->fetch_assoc()) {
-    $id = $row['prompt_id'];
-    if (!isset($prompts[$id])) {
-        $prompts[$id] = [
-            'username' => $row['username'],
-            'avatar' => $row['avatar'],
-            'description' => $row['short_description'],
-            'details' => [],
-            'love_count' => $row['love_count'],
-            'comment_count' => $row['comment_count'],
-            'save_count' => $row['save_count'],
-        ];
-    }
-    $prompts[$id]['details'][] = $row['content'];
+$id_user = $_SESSION['id_user'];
+$search='';
+if(isset($_GET['search'])){
+  $search=$_GET['search'];
 }
+if (isset($_POST['loveBtn'])) {
+  $id_prompt=(int)$_POST['loveBtn'];
+  $mess = lovePrompt($id_user, $id_prompt, $conn);
+}
+$prompts = getPrompt($id_user,$search, $conn);
+
 ?>
 <div class="left-sidebar">
   <i class="fa-regular fa-heart"></i>
@@ -49,64 +38,77 @@ while ($row = $cards->fetch_assoc()) {
 
 <div class="main-content">
   <?php foreach ($prompts as $prompt): ?>
-    <div class="card">
-      <div class="card-header">
-        <div class="user-info">
-          <img src="../../public/img/avatar.png" alt="<?= $prompt['username'] ?>" style="width:35px; height:35px; border-radius:50%;">
-          <strong><?= $prompt['username'] ?></strong>
+    <form action="" method="post">
+      <div class="card">
+        <div class="card-header">
+          <div class="user-info">
+            <img src="../../public/img/avatar.png" alt="<?= $prompt['username'] ?>" style="width:35px; height:35px; border-radius:50%;">
+            <strong><?= $prompt['username'] ?></strong>
+          </div>
+          <button class="report-btn" type="button"><i class="fa-solid fa-flag"></i> Báo cáo</button>
         </div>
-        <button class="report-btn"><i class="fa-solid fa-flag"></i> Báo cáo</button>
+        <h4><?= $prompt['description'] ?></h4>
+        <p><?= implode('<br><br>', $prompt['details']) ?></p>
+        <div class="card-buttons">
+          <button type="submit" name="loveBtn" id='loveBtn' title="Tim bài viết" value="<?= $prompt['id'] ?> ">
+            <i class="fa-heart <?= $prompt['is_loved'] ? 'fa-solid text-red' : 'fa-regular' ?>"></i>  <?= $prompt['love_count'] ?>
+          </button>
+          <button type="submit" name="cmtBtn" title="Bình luận bài viết" value="<?= $prompt['id'] ?>">
+            <i class="fa-regular fa-comment"></i>  <?= $prompt['comment_count'] ?>
+          </button>
+          <button type="submit" name="saveBtn" title="Lưu bài viết" id='saveBtn' value="<?= $prompt['id'] ?>">
+            <i class="fa-regular fa-bookmark"></i>  <?= $prompt['save_count'] ?>
+          </button>
+          <button type="button" title="Xem kết quả" id="runBtn"
+            onclick="openPromptModal(`<?= htmlspecialchars($prompt['description'] . "\n" . implode("\n", $prompt['details']), ENT_QUOTES) ?>`)">
+            ⚡ Run Prompt
+          </button>
+        </div>
       </div>
-      <h4><?= $prompt['description'] ?></h4>
-      <p><?= implode('<br><br>', $prompt['details']) ?></p>
-      <div class="card-buttons">
-        <button><i class="fa-regular fa-heart"></i> <?= $prompt['love_count'] ?></button>
-        <button><i class="fa-regular fa-comment"></i> <?= $prompt['comment_count'] ?></button>
-        <button><i class="fa-regular fa-bookmark"></i> <?= $prompt['save_count'] ?></button>
-        <button class="run-btn" onclick="openPromptModal(`<?= htmlspecialchars($prompt['description'] . "\n" . implode("\n", $prompt['details']), ENT_QUOTES) ?>`)">
-          ⚡ Run Prompt
-        </button>
-      </div>
-    </div>
+    </form>
   <?php endforeach; ?>
 </div>
 <script>
-async function runPrompt(text) {
+  async function runPrompt(text) {
     let edited = window.prompt(
-        "Chạy prompt sau:\n" + text + "\n\nBạn có muốn chỉnh sửa không?",
-        text
+      "Chạy prompt sau:\n" + text + "\n\nBạn có muốn chỉnh sửa không?",
+      text
     );
     if (!edited) return;
 
     try {
-        console.log('Gửi prompt:', edited); // Debug log
+      console.log('Gửi prompt:', edited); // Debug log
 
-        const resp = await fetch("/web-promt-ai/api/run_api.php", {  // Fix: Thêm / đầu
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({ prompt: edited })
-});
+      const resp = await fetch("/web-promt-ai/api/run_api.php", { // Fix: Thêm / đầu
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          prompt: edited
+        })
+      });
 
-        console.log('Response status:', resp.status); // Debug log
+      console.log('Response status:', resp.status); // Debug log
 
-        if (!resp.ok) {
-            const errorText = await resp.text();
-            console.error('Server error:', resp.status, errorText);
-            alert(`❌ Lỗi server: ${resp.status} (${resp.statusText})\nChi tiết: ${errorText.substring(0, 200)}...`);
-            return;
-        }
+      if (!resp.ok) {
+        const errorText = await resp.text();
+        console.error('Server error:', resp.status, errorText);
+        alert(`❌ Lỗi server: ${resp.status} (${resp.statusText})\nChi tiết: ${errorText.substring(0, 200)}...`);
+        return;
+      }
 
-        const data = await resp.json();
-console.log('Raw data từ API:', data);  // Debug: Log JSON đầy đủ
+      const data = await resp.json();
+      console.log('Raw data từ API:', data); // Debug: Log JSON đầy đủ
 
-let result = data.result || data.choices?.[0]?.message?.content || "Không có dữ liệu trả về.";
+      let result = data.result || data.choices?.[0]?.message?.content || "Không có dữ liệu trả về.";
 
-        alert("✅ Kết quả:\n\n" + result);
+      alert("✅ Kết quả:\n\n" + result);
     } catch (error) {
-        console.error('Lỗi JS:', error);
-        alert("❌ Lỗi: " + error.message + "\nKiểm tra console để biết thêm.");
+      console.error('Lỗi JS:', error);
+      alert("❌ Lỗi: " + error.message + "\nKiểm tra console để biết thêm.");
     }
-}
+  }
 </script>
 
 <!-- Modal xác nhận -->
