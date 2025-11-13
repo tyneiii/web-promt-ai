@@ -35,7 +35,6 @@
                 
                 if ($stmt->execute()) {
                     $stmt->store_result();
-                    // 5. Kiểm tra xem email có tồn tại không
                     if ($stmt->num_rows == 1) {
                         $account_id = "";
                         $username = "";
@@ -45,16 +44,11 @@
                         $stmt->bind_result($account_id, $username, $hashed_password_from_db);
                         
                         if ($stmt->fetch()) {
-                            // 7. Xác thực mật khẩu
                             if (password_verify($password_input, $hashed_password_from_db)) {
-                            
-                                 // KIỂM TRA ĐÃ KÍCH HOẠT CHƯA?
                             if ($token !== "" ) {
                                 sendLoginErrors("Tài khoản của bạn chưa được kích hoạt. Vui lòng kiểm tra email.", null);
                                 exit;
                             }
-                                
-                                // Xóa các session lỗi (nếu có)
                                 unset($_SESSION['email_error']);
                                 unset($_SESSION['password_error']);
                                 unset($_SESSION['login_email_attempt']);
@@ -65,7 +59,6 @@
                                 header("Location: ../../views/user/home.php");
                                 exit;
                             } else {
-                                // Sai mật khẩu (Email đúng)
                                 sendLoginErrors(null, "Mật khẩu không đúng.");
                             }
                         }
