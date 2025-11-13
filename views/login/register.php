@@ -33,7 +33,7 @@ unset($_SESSION['register_inputs']);
 </head>
 
 <body>
-    <a href="../login/login.php" class="back-home-btn" title="Về trang chủ">
+    <a href="../login/login.php" class="back-home-btn" title="Về trang đăng nhập">
         <i class="fas fa-arrow-left"></i>
     </a>
     <div class="auth-container">
