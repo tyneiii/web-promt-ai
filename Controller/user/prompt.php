@@ -7,8 +7,7 @@ function getPrompt($account_id, $searchString, $conn)
         $search = $conn->real_escape_string(trim($searchString));
     }
 
-    $sql = "
-        SELECT 
+    $sql = "SELECT 
             p.prompt_id, 
             a.username, 
             a.avatar, 
@@ -28,12 +27,7 @@ function getPrompt($account_id, $searchString, $conn)
             OR a.username LIKE '%$search%'
         ORDER BY p.prompt_id ASC
     ";
-
-    $result = $conn->query($sql);
-    if (!$result) {
-        die("Lỗi truy vấn: " . $conn->error);
-    }
-
+    $result=$conn->query($sql);
     $prompts = [];
     while ($row = $result->fetch_assoc()) {
         $id = $row['prompt_id'];
@@ -55,7 +49,6 @@ function getPrompt($account_id, $searchString, $conn)
 
     return $prompts;
 }
-
 function lovePrompt($account_id, $prompt_id, $conn) {
     $checkSql = "SELECT * FROM love WHERE prompt_id='$prompt_id' AND account_id='$account_id'";
     $result = $conn->query($checkSql);

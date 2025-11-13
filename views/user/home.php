@@ -1,34 +1,17 @@
-<?php
-session_start();
-if (!isset($_SESSION['account_id'])) {
-  $_SESSION['account_id'] = 2; // Gán tạm để test
-}
-$account_id = $_SESSION['account_id'];
-$search = $_GET['search'] ?? '';
-
-include_once __DIR__ . '/../../config.php';
-include_once __DIR__ . '/../../Controller/user/prompt.php';
-
-if (isset($_POST['loveBtn'])) {
-  $prompt_id = (int)$_POST['loveBtn'];
-  $mess = lovePrompt($account_id, $prompt_id, $conn);
-}
-
-$prompts = getPrompt($account_id, $search, $conn);
-?>
-
-
 <?php 
 include_once __DIR__ . '/layout/header.php';
-include_once __DIR__ . '/../../config.php';
 include_once __DIR__ . '/../../Controller/user/prompt.php';
 ?>
 
 <link rel="stylesheet" href="../../public/css/run_prompt.css"> 
 
 <?php
-  $id_user = $_SESSION['id_user'];
-  $user_name=$_SESSION['name_user'];
+  $id_user = '';
+  $name_user='';
+  if(isset($_SESSION['id_user'])){
+    $id_user=$_SESSION['id_user'];
+    $name_user=$_SESSION['name_user'];
+  }
   $search='';
   if(isset($_GET['search'])){
     $search=$_GET['search'];
@@ -40,7 +23,6 @@ include_once __DIR__ . '/../../Controller/user/prompt.php';
   header("Location: ".$_SERVER['PHP_SELF']."?search=".urlencode($search));
   exit;
 }
-
   $prompts = getPrompt($id_user,$search, $conn);
   unset($_POST);
 ?>
