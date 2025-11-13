@@ -29,6 +29,9 @@ function getPrompt($account_id, $searchString, $conn)
         ORDER BY p.prompt_id ASC
     ";
 
+    
+   function lovePrompt($id_user, $id_prompt, $conn) {
+    $sql = "SELECT * FROM love WHERE prompt_id='$id_prompt' AND account_id='$id_user'";
     $result = $conn->query($sql);
     if (!$result) {
         die("Lỗi truy vấn: " . $conn->error);
@@ -55,7 +58,7 @@ function getPrompt($account_id, $searchString, $conn)
 
     return $prompts;
 }
-
+}
 function lovePrompt($account_id, $prompt_id, $conn) {
     $checkSql = "SELECT * FROM love WHERE prompt_id='$prompt_id' AND account_id='$account_id'";
     $result = $conn->query($checkSql);
