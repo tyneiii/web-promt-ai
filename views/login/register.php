@@ -1,3 +1,26 @@
+<?php
+// LUÔN LUÔN BẮT ĐẦU SESSION
+session_start();
+
+// Lấy lỗi (nếu có)
+$errors = isset($_SESSION['register_errors']) ? $_SESSION['register_errors'] : [];
+$inputs = isset($_SESSION['register_inputs']) ? $_SESSION['register_inputs'] : [];
+
+// Lấy giá trị cũ, nếu không có thì rỗng
+$username_attempt = isset($inputs['username']) ? htmlspecialchars($inputs['username']) : '';
+$email_attempt = isset($inputs['email']) ? htmlspecialchars($inputs['email']) : '';
+
+// Lấy lỗi cho từng trường
+$username_error = isset($errors['username']) ? $errors['username'] : null;
+$email_error = isset($errors['email']) ? $errors['email'] : null;
+$password_error = isset($errors['password']) ? $errors['password'] : null;
+$repeat_password_error = isset($errors['repeat_password']) ? $errors['repeat_password'] : null;
+$general_error = isset($errors['general']) ? $errors['general'] : null;
+
+// Xóa session lỗi sau khi dùng
+unset($_SESSION['register_errors']);
+unset($_SESSION['register_inputs']);
+?>
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -5,15 +28,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng ký tài khoản</title>
-    <!-- Link đến file CSS chung cho auth -->
     <link rel="stylesheet" href="../../public/css/auth/auth.css">
-    <!-- Font Awesome (dùng cho icon Google) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
-    <!-- Nút quay về trang chủ -->
-    <a href="../user/home.php" class="back-home-btn" title="Về trang chủ">
+    <a href="../login/login.php" class="back-home-btn" title="Về trang chủ">
         <i class="fas fa-arrow-left"></i>
     </a>
     <div class="auth-container">
@@ -21,29 +41,54 @@
             <h2>Tạo tài khoản</h2>
             <p class="subtitle">Bắt đầu hành trình của bạn bằng cách tạo tài khoản.</p>
 
-            <!-- Form Đăng ký -->
-            <form action="../../controller/AuthController.php?action=register" method="post">
+            <?php
+            if ($general_error) {
+                echo '<div class="error-message">' . htmlspecialchars($general_error) . '</div>';
+            }
+            ?>
+            <form action="../../controller/authentification/AuthController.php?action=register" method="post">
+                
                 <div class="input-group">
-                    <!-- <label for="username">Tên người dùng</label> -->
-                    <input type="text" id="username" name="username" placeholder="Username" required>
+                    <input type="text" id="username" name="username" placeholder="Username" value="<?php echo $username_attempt; ?>" class="<?php echo $username_error ? 'input-error' : ''; ?>" required>
+                    <?php
+                    // Hiển thị lỗi username
+                    if ($username_error) {
+                        echo '<div class="input-error-message">' . htmlspecialchars($username_error) . '</div>';
+                    }
+                    ?>
                 </div>
 
                 <div class="input-group">
-                    <!-- <label for="email">Email</label> -->
-                    <input type="email" id="email" name="email" placeholder="Email" required>
+                    <input type="email" id="email" name="email" placeholder="Email" value="<?php echo $email_attempt; ?>" class="<?php echo $email_error ? 'input-error' : ''; ?>" required>
+                    <?php
+                    // Hiển thị lỗi email
+                    if ($email_error) {
+                        echo '<div class="input-error-message">' . htmlspecialchars($email_error) . '</div>';
+                    }
+                    ?>
                 </div>
 
                 <div class="input-group">
-                    <!-- <label for="password">Mật khẩu</label> -->
-                    <input type="password" id="password" name="password" placeholder="Password" required>
+                    <input type="password" id="password" name="password" placeholder="Password" class="<?php echo $password_error ? 'input-error' : ''; ?>" required>
+                     <?php
+                    // Hiển thị lỗi password
+                    if ($password_error) {
+                        echo '<div class="input-error-message">' . htmlspecialchars($password_error) . '</div>';
+                    }
+                    ?>
                 </div>
 
                 <div class="input-group">
-                    <!-- <label for="repeat_password">Nhập lại mật khẩu</label> -->
-                    <input type="password" id="repeat_password" name="repeat_password" placeholder="Repeat password" required>
+                    <input type="password" id="repeat_password" name="repeat_password" placeholder="Repeat password" class="<?php echo $repeat_password_error ? 'input-error' : ''; ?>" required>
+                     <?php
+                    // Hiển thị lỗi repeat_password
+                    if ($repeat_password_error) {
+                        echo '<div class="input-error-message">' . htmlspecialchars($repeat_password_error) . '</div>';
+                    }
+                    ?>
                 </div>
 
-                <button type="submit" class="auth-btn">Đăng ký</button>
+                <button type="submit" class="auth-btn" name="btnregister">Đăng ký</button>
             </form>
 
             <div class="divider">
