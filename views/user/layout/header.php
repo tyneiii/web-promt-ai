@@ -46,9 +46,26 @@
 </head>
 
 <body>
-  <?php
-  session_start();
-  ?>
+<?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+if (isset($_POST['out-btn'])) {
+    $_SESSION = [];
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000,
+            $params["path"], $params["domain"],
+            $params["secure"], $params["httponly"]
+        );
+    }
+    session_destroy();
+    header("Location: home.php");
+    exit();
+}
+
+include_once __DIR__ . '/../../../config.php';
+?>
   <nav class="navbar">
     <div class="navbar-left">
       <a href="home.php" class="logo" style="text-decoration: none;" title="Trang chủ">Prompt AI</a>
@@ -76,8 +93,8 @@
             <form action="../user/profile.php" method="post">
               <input type="submit" value="Xem trang cá nhân">
             </form>
-            <form action="../../views/login/logout.php" method="post">
-              <input type="submit" value="Thoát">
+            <form action="" method="post">
+              <input type="submit" name="out-btn" value="Thoát">
             </form>
           </div>
         </div>
