@@ -1,20 +1,33 @@
-
+// Updated run_api.js - Fixed delegation and target handling
 let currentPrompt = '';
 
 // Lấy elements
 const promptModal = document.getElementById("prompt-modal");
-const resultBox = document.getElementById("resultBox"); // Dùng #resultBox làm overlay modal kết quả
+const resultBox = document.getElementById("resultBox");
+const promptInput = document.getElementById("promptInput");
 
-// Event delegation cho run-btn
+// Utility: Escape HTML
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// Event listeners
 document.addEventListener("DOMContentLoaded", function() {
+  console.log('Script loaded!'); // Debug
+
+  // Event delegation: Use closest to handle clicks on children
   document.addEventListener("click", function(event) {
-    if (event.target.classList.contains("run-btn")) {
-      event.preventDefault();
-      event.stopPropagation();
-      openPromptModal(event);
+    const btn = event.target.closest(".run-btn");
+    if (btn) {
+      console.log('Button clicked:', btn); // Debug
+      openPromptModal({ target: event.target, currentTarget: btn }); // Pass event with correct currentTarget
     }
   });
   
+  console.log('Attached to run-btn delegation'); // Debug
+
   // Overlay đóng prompt modal
   if (promptModal) {
     promptModal.addEventListener("click", function(event) {
@@ -24,10 +37,10 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // Overlay đóng result modal (#resultBox)
+  // Overlay đóng result modal
   if (resultBox) {
     resultBox.addEventListener("click", function(event) {
-      if (event.target === resultBox) { // Click overlay
+      if (event.target === resultBox) {
         closeResultBox(event);
       }
     });
@@ -35,29 +48,40 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function openPromptModal(event) {
-  console.log('Button clicked:', event.target);
+  console.log('openPromptModal called'); // Debug
   
-  let promptText = event.target.dataset.prompt || event.target.getAttribute('data-prompt');
-  console.log('promptText loaded:', promptText ? promptText.substring(0, 100) + '...' : 'EMPTY!');
+  // Use currentTarget or closest to get the button
+  const btn = event.currentTarget || event.target.closest(".run-btn");
+  if (!btn) {
+    console.error("Button not found!");
+    return;
+  }
   
-  if (!promptText) {
+  let promptText = btn.dataset.prompt || btn.getAttribute('data-prompt');
+  console.log('promptText loaded:', promptText ? promptText.substring(0, 100) + '...' : 'EMPTY!'); // Debug
+  
+  if (!promptText || promptText.trim() === '') {
     alert("⚠️ Không tìm thấy prompt! Kiểm tra data-prompt trong HTML.");
     return;
   }
   
   currentPrompt = promptText;
-  const promptInput = document.getElementById("promptInput");
+  
   if (promptInput) {
     promptInput.value = promptText;
     promptInput.focus();
     console.log('Set to textarea OK');
   } else {
     console.error("Không tìm thấy #promptInput!");
+    return;
   }
   
   if (promptModal) {
     promptModal.style.display = "flex";
+    document.body.style.overflow = "hidden"; // Prevent scroll
     console.log('Prompt modal opened');
+  } else {
+    console.error("Không tìm thấy #prompt-modal!");
   }
 }
 
@@ -65,15 +89,16 @@ function closePromptModal(event) {
   if (event) event.stopPropagation();
   if (promptModal) {
     promptModal.style.display = "none";
+    document.body.style.overflow = ""; // Restore scroll
   }
-  const promptInput = document.getElementById("promptInput");
   if (promptInput) promptInput.value = '';
 }
 
-// Mở result modal (#resultBox)
+// Mở result modal
 function openResultBox() {
   if (resultBox) {
     resultBox.style.display = "flex";
+    document.body.style.overflow = "hidden";
     console.log('Result modal opened');
   }
 }
@@ -84,11 +109,11 @@ window.closeResultBox = function(event) {
   if (resultBox) {
     resultBox.style.display = "none";
     resultBox.innerHTML = ''; // Clear nội dung
+    document.body.style.overflow = "";
   }
 };
 
 async function confirmRunPrompt() {
-  const promptInput = document.getElementById("promptInput");
   const prompt = (promptInput ? promptInput.value.trim() : currentPrompt.trim());
 
   console.log('Sending prompt:', prompt.substring(0, 100) + '...');
@@ -103,8 +128,11 @@ async function confirmRunPrompt() {
   // Hiển thị loading trong #resultBox
   if (resultBox) {
     resultBox.innerHTML = `
-      <div class="loading">
-        <i class="fa fa-spinner fa-spin"></i> Đang chạy prompt...
+      <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: rgba(0,0,0,0.8);">
+        <div class="loading" style="text-align: center; color: white;">
+          <i class="fa fa-spinner fa-spin" style="font-size: 2em; color: #ff4d4d;"></i><br>
+          Đang chạy prompt...
+        </div>
       </div>
     `;
     openResultBox();
@@ -113,63 +141,60 @@ async function confirmRunPrompt() {
   }
 
   try {
-    const response = await fetch("/web-promt-ai/api/run_api.php", {  // Đảm bảo endpoint đúng
+    const response = await fetch("/web-promt-ai/api/run_api.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt }),
     });
 
+    console.log('Response status:', response.status); // Debug
+
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      const errorText = await response.text();
+      throw new Error(`HTTP ${response.status}: ${errorText}`);
     }
 
     const data = await response.json();
     console.log('API Response:', data);
 
     if (data.error) {
-      if (resultBox) {
-        resultBox.innerHTML = `
-          <div class="error-content">
-            <h4>Lỗi:</h4>
-            <p>${escapeHtml(data.error)}</p>
-            <button class="close-result" onclick="closeResultBox()" title="Đóng">×</button>
-          </div>
-        `;
-      } else {
-        alert(`❌ Lỗi: ${data.error}`);
-      }
+      showResultError(data.error);
     } else {
       const result = data.result || data.choices?.[0]?.message?.content || "Không có kết quả.";
-      if (resultBox) {
-        resultBox.innerHTML = `
-          <div class="result-content">
-            <h4>Kết quả:</h4>
-            <pre>${escapeHtml(result)}</pre>
-            <button class="close-result" onclick="closeResultBox()" title="Đóng">×</button>
-          </div>
-        `;
-      } else {
-        alert(`✅ Kết quả:\n\n${result}`);
-      }
+      showResultSuccess(result);
     }
   } catch (err) {
     console.error('Lỗi API:', err);
-    if (resultBox) {
-      resultBox.innerHTML = `
-        <div class="error-content">
-          <h4>Lỗi kết nối:</h4>
-          <p>${escapeHtml(err.message)}</p>
-          <button class="close-result" onclick="closeResultBox()" title="Đóng">×</button>
-        </div>
-      `;
-    } else {
-      alert(`⚠️ Lỗi kết nối: ${err.message}`);
-    }
+    showResultError(err.message);
   }
 }
 
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
+// Helper: Hiển thị error
+function showResultError(errorMsg) {
+  if (resultBox) {
+    resultBox.innerHTML = `
+      <div style="padding: 20px; max-width: 600px; margin: auto; background: #333; color: #ff4d4d; border-radius: 8px; position: relative;">
+        <h4>Lỗi:</h4>
+        <pre style="white-space: pre-wrap;">${escapeHtml(errorMsg)}</pre>
+        <button class="close-result" onclick="closeResultBox()" title="Đóng">×</button>
+      </div>
+    `;
+  } else {
+    alert(`❌ Lỗi: ${errorMsg}`);
+  }
+}
+
+// Helper: Hiển thị success
+function showResultSuccess(result) {
+  if (resultBox) {
+    resultBox.innerHTML = `
+      <div style="padding: 20px; max-width: 600px; margin: auto; background: #111; color: white; border-radius: 8px; position: relative;">
+        <h4 style="color: #4dff4d;">Kết quả:</h4>
+        <pre style="white-space: pre-wrap; background: #222; padding: 10px; border-radius: 4px;">${escapeHtml(result)}</pre>
+        <button class="close-result" onclick="closeResultBox()" title="Đóng">×</button>
+      </div>
+    `;
+  } else {
+    alert(`✅ Kết quả:\n\n${result}`);
+  }
 }
