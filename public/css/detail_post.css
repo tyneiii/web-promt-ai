@@ -1,0 +1,705 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+/* Toàn trang - Phù hợp với theme dark của home */
+body {
+  font-family: Arial, sans-serif;
+  background: #1f1f1f;
+  margin: 0;
+  padding: 0;
+  color: white;
+}
+
+/* Vùng chính của trang chi tiết - Dark theme, border red/orange */
+.detail-container {
+  max-width: 900px;
+  margin: 40px auto;
+  background: black;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border: 2px solid #ff4d4d;
+  animation: fadeIn 0.4s ease-out;
+  position: relative;
+}
+
+.detail-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(to right, #ff4d4d, #ff7f50);
+  border-radius: 10px 10px 0 0;
+}
+
+.detail-container::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 3px;
+  height: 50%;
+  background: linear-gradient(to top, #ff4d4d, #ff7f50);
+  border-radius: 0 0 10px 0;
+}
+
+/* Header người đăng - Dark, red accents */
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #ff4d4d;
+  padding-bottom: 15px;
+  margin-bottom: 25px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-info img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 2px solid #ff4d4d;
+  transition: all 0.2s ease;
+}
+
+.user-info img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(255, 77, 77, 0.4);
+}
+
+.user-info strong {
+  font-size: 16px;
+  color: #fff;
+}
+
+.detail-header .date {
+  font-size: 13px;
+  color: #aaa;
+}
+
+/* Tiêu đề bài viết - Red accent */
+.detail-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ff4d4d;
+  margin-bottom: 15px;
+  line-height: 1.4;
+  border-bottom: 2px solid #ff4d4d;
+  padding-bottom: 5px;
+}
+
+/* Nội dung chính - Dark background */
+.detail-content {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #fff;
+  background: #111;
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid #ff4d4d;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.detail-content p {
+  margin-bottom: 12px;
+}
+
+.detail-content code {
+  background: #222;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-family: monospace;
+  color: #ff4d4d;
+}
+
+/* Thanh nút hành động dưới bài viết - Dark buttons, enhanced */
+.detail-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.detail-actions button {
+  border: none;
+  background: linear-gradient(135deg, #222, #333);
+  padding: 12px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  min-width: 80px;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.detail-actions button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.detail-actions button:hover::before {
+  left: 100%;
+}
+
+.detail-actions button:hover {
+  background: linear-gradient(135deg, #333, #444);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+}
+
+.detail-actions button:active {
+  transform: scale(0.98);
+}
+
+/* Specific styles for each button */
+.detail-actions .love {
+  color: #fff;
+}
+
+.detail-actions .love.active,
+.detail-actions .love:hover {
+  background: linear-gradient(135deg, #ff4d4d, #ff7f50);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(255, 77, 77, 0.4);
+}
+
+.detail-actions .love i {
+  transition: color 0.2s ease;
+}
+
+.detail-actions .love.active i,
+.detail-actions .love:hover i {
+  color: #fff;
+}
+
+.detail-actions .comment-btn {
+  color: #aaa;
+}
+
+.detail-actions .comment-btn:hover {
+  background: linear-gradient(135deg, #4d4d4d, #666);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(128, 128, 128, 0.4);
+}
+
+.detail-actions .save {
+  color: #fff;
+}
+
+.detail-actions .save.active,
+.detail-actions .save:hover {
+  background: linear-gradient(135deg, #ffd700, #ffed4a);
+  color: #000;
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+}
+
+.detail-actions .save.active i,
+.detail-actions .save:hover i {
+  color: #000;
+}
+
+/* Nút Run Prompt - More prominent, red theme with glow */
+.run-btn {
+  background: linear-gradient(135deg, #ff4d4d, #ff7f50);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(255, 77, 77, 0.4);
+  position: relative;
+  overflow: hidden;
+  min-width: 120px;
+  justify-content: center;
+}
+
+.run-btn::before {
+  content: "⚡";
+  font-size: 16px;
+  margin-right: 4px;
+}
+
+.run-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(255, 77, 77, 0.6);
+  background: linear-gradient(135deg, #ff7f50, #ff4d4d);
+}
+
+.run-btn:active {
+  transform: scale(0.97);
+  box-shadow: 0 4px 8px rgba(255, 77, 77, 0.4);
+}
+
+.run-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.run-btn:hover::after {
+  left: 100%;
+}
+
+/* Modal styles - Enhanced dark theme with red accents */
+#prompt-modal,
+#resultBox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  backdrop-filter: blur(5px);
+  animation: fadeInModal 0.3s ease-out;
+  overflow-y: auto;
+}
+
+@keyframes fadeInModal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.modal-content {
+  background: linear-gradient(145deg, #111, #222);
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 700px;
+  max-height: 80vh;
+  overflow-y: auto;
+  color: white;
+  border: 2px solid #ff4d4d;
+  box-shadow: 0 10px 30px rgba(255, 77, 77, 0.2);
+  position: relative;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-content h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ff4d4d;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #ff4d4d;
+  padding-bottom: 10px;
+}
+
+.modal-content label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.modal-content textarea {
+  width: 100%;
+  min-height: 150px;
+  border-radius: 8px;
+  border: 1.5px solid #ff4d4d;
+  padding: 12px;
+  font-size: 14px;
+  resize: vertical;
+  background: #0a0a0a;
+  color: #fff;
+  font-family: monospace;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.2s ease;
+}
+
+.modal-content textarea:focus {
+  outline: none;
+  border-color: #ff7f50;
+  box-shadow: 0 0 0 2px rgba(255, 77, 77, 0.2);
+}
+
+.modal-content small {
+  display: block;
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 8px;
+  font-style: italic;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #333;
+}
+
+.modal-actions button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  min-width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.modal-actions .cancel {
+  background: linear-gradient(135deg, #333, #444);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.modal-actions .cancel:hover {
+  background: linear-gradient(135deg, #444, #555);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.modal-actions .confirm {
+  background: linear-gradient(135deg, #ff4d4d, #ff7f50);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(255, 77, 77, 0.4);
+}
+
+.modal-actions .confirm:hover {
+  background: linear-gradient(135deg, #ff7f50, #ff4d4d);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 77, 77, 0.6);
+}
+
+.modal-actions .confirm:active {
+  transform: scale(0.98);
+}
+
+/* Loading state - Hiển thị khi đang chạy prompt */
+.loading {
+  text-align: center;
+  color: #fff;
+  padding: 40px;
+  font-size: 16px;
+}
+
+.loading i {
+  font-size: 3em;
+  color: #ff4d4d;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Result content styles (for #resultBox) */
+.result-content,
+.error-content {
+  padding: 20px;
+  max-width: 700px;
+  margin: auto;
+  background: #111;
+  color: white;
+  border-radius: 8px;
+  border-left: 4px solid #ff4d4d;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.result-content h4 {
+  color: #4dff4d;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.error-content h4 {
+  color: #ff4d4d;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.result-content pre,
+.error-content pre {
+  white-space: pre-wrap;
+  background: #222;
+  padding: 15px;
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+  max-height: 400px;
+  overflow-y: auto;
+  border-left: 3px solid #ff4d4d;
+}
+
+.close-result {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(255, 77, 77, 0.8);
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.close-result:hover {
+  background: #ff4d4d;
+  transform: scale(1.1);
+}
+
+/* Vùng bình luận - Dark */
+.comment-section {
+  margin-top: 40px;
+  border-top: 2px solid #ff4d4d;
+  padding-top: 25px;
+}
+
+.comment-section h4 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #ff4d4d;
+  border-bottom: 1px solid #ff4d4d;
+  padding-bottom: 5px;
+}
+
+.comment {
+  background: #111;
+  border-radius: 8px;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  border-left: 3px solid #ff4d4d;
+}
+
+.comment .username {
+  font-weight: 600;
+  color: #ff4d4d;
+}
+
+.comment .time {
+  font-size: 12px;
+  color: #aaa;
+  margin-left: 10px;
+}
+
+.comment .text {
+  margin-top: 8px;
+  font-size: 15px;
+  color: #fff;
+}
+
+/* Form bình luận - Dark */
+.comment-form {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.comment-form textarea {
+  flex: 1;
+  border-radius: 8px;
+  border: 1.5px solid #333;
+  padding: 10px 14px;
+  font-size: 14px;
+  resize: vertical;
+  background: #222;
+  color: #fff;
+}
+
+.comment-form textarea::placeholder {
+  color: #aaa;
+}
+
+.comment-form button {
+  background: linear-gradient(135deg, #ff4d4d, #ff7f50);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.comment-form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(255, 77, 77, 0.4);
+  background: linear-gradient(135deg, #ff7f50, #ff4d4d);
+}
+
+/* Animation fadeIn */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive - Phù hợp với home */
+@media (max-width: 768px) {
+  .detail-container {
+    margin: 20px 10px;
+    padding: 15px;
+  }
+
+  .detail-title {
+    font-size: 20px;
+  }
+
+  .detail-actions {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .detail-actions button {
+    flex: 1;
+    min-width: auto;
+  }
+
+  .comment-form {
+    flex-direction: column;
+  }
+
+  .comment-form button {
+    width: 100%;
+  }
+
+  .modal-content {
+    padding: 20px;
+    max-width: 95%;
+    max-height: 90vh;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .modal-actions button {
+    width: 100%;
+  }
+}
+
+/* Nút đóng trang detail - Enhanced with glow and better animation */
+.close-detail {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  background: linear-gradient(135deg, rgba(255, 77, 77, 0.9), rgba(255, 127, 80, 0.9));
+  color: white;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(255, 77, 77, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.close-detail::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.close-detail:hover {
+  background: linear-gradient(135deg, #ff4d4d, #ff7f50);
+  transform: scale(1.15) rotate(90deg);
+  box-shadow: 0 6px 16px rgba(255, 77, 77, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.close-detail:hover::before {
+  opacity: 1;
+  animation: shimmer 1.5s infinite;
+}
+
+.close-detail:active {
+  transform: scale(0.95) rotate(90deg);
+  box-shadow: 0 2px 6px rgba(255, 77, 77, 0.3);
+}
+
+@keyframes shimmer {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .close-detail {
+    top: 8px;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+  
+  .close-detail:hover {
+    transform: scale(1.1) rotate(90deg);
+  }
+}

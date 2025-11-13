@@ -47,10 +47,9 @@
           <span class="indicator">+</span>
         </div>
         <div class="collapsible-content content-fields">
-          <label>1. Instruction</label>
-          <input type="text" placeholder="Thêm hướng dẫn...">
-          <label>2. Requirement</label>
-          <input type="text" placeholder="Thêm yêu cầu...">
+        
+          <textarea placeholder="Nhập nội dung chính của bài viết..."></textarea>
+          
         </div>
       </div>
 
