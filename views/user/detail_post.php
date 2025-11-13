@@ -26,9 +26,10 @@ if (!$prompt) {
 }
 
 // Lấy nội dung chi tiết bài viết
-$sql_details = "SELECT content 
-                FROM promptdetail 
-                WHERE prompt_id = ?";
+$sql_details = "SELECT pd.content, p.short_description 
+                FROM promptdetail pd
+                JOIN prompt p ON pd.prompt_id = p.prompt_id
+                WHERE pd.prompt_id = ?";
 $stmt2 = $conn->prepare($sql_details);
 $stmt2->bind_param("i", $id);
 $stmt2->execute();
@@ -36,7 +37,7 @@ $details_result = $stmt2->get_result();
 $details = $details_result->fetch_all(MYSQLI_ASSOC);
 
 // Xây dựng nội dung prompt đầy đủ cho data-prompt
-$full_prompt = $prompt['description'];
+$full_prompt = $prompt['short_description'];
 foreach ($details as $d) {
     $full_prompt .= "\n" . $d['content'];
 }
