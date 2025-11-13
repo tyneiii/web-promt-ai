@@ -40,6 +40,7 @@
         }
         return $prompts;
     }
+    
    function lovePrompt($id_user, $id_prompt, $conn) {
     $sql = "SELECT * FROM love WHERE prompt_id='$id_prompt' AND account_id='$id_user'";
     $result = $conn->query($sql);
