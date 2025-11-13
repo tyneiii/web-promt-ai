@@ -42,7 +42,7 @@ $prompts = getPrompt($id_user,$search, $conn);
       <div class="card">
         <div class="card-header">
           <div class="user-info">
-            <img src="../../public/img/avatar.png" alt="<?= $prompt['username'] ?>" style="width:35px; height:35px; border-radius:50%;">
+            <img src="../../public/img/user5.png" alt="<?= $prompt['username'] ?>" style="width:35px; height:35px; border-radius:50%;">
             <strong><?= $prompt['username'] ?></strong>
           </div>
           <button class="report-btn" type="button"><i class="fa-solid fa-flag"></i> Báo cáo</button>

@@ -30,7 +30,7 @@ body {
     min-height: 100vh;
     padding: 20px;
 
-    background-image: url(../../img/black-aesthetic-mountains-4k-9k.jpg); 
+    background-image: url(../../img/black-aesthetic-mountains-4k-9k.jpg);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -96,6 +96,68 @@ body {
     font-size: 15px;
 }
 
+.toast {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    padding: 16px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 15px;
+    z-index: 1000;
+    border: 1px solid transparent;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    
+    /* Trạng thái ẩn ban đầu (bên ngoài màn hình) */
+    transform: translateX(110%);
+    visibility: hidden;
+    opacity: 0;
+    transition: transform 0.4s ease-in-out, opacity 0.4s ease, visibility 0.4s ease;
+}
+
+/* Trạng thái hiển thị */
+.toast.show {
+    transform: translateX(0);
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Kiểu toast thành công (xanh lá) */
+.toast.toast-success {
+    background-color: #2a2e2a; /* Nền xanh đậm mờ */
+    border-color: var(--success-color);
+    color: #e6f4e7;
+}
+
+.toast span i {
+    margin-right: 8px;
+    color: var(--success-color);
+}
+
+.success-message {
+    background-color: rgba(76, 175, 80, 0.15); /* Nền xanh mờ */
+    border: 1px solid var(--success-color);     /* Viền xanh */
+    color: var(--success-color);                /* Chữ xanh */
+    padding: 12px 16px;
+    border-radius: 28px;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.error-message {
+    background-color: rgba(229, 57, 53, 0.15); /* Nền đỏ mờ */
+    border: 1px solid var(--primary-color);    /* Viền đỏ */
+    color: var(--primary-color);               /* Chữ đỏ */
+    padding: 12px 16px;
+    border-radius: 28px;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 15px;
+    font-weight: 500;
+}
+
 form {
     display: flex;
     flex-direction: column;
@@ -117,6 +179,8 @@ form {
     font-size: 16px;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
+    /* Cần width 100% để vừa vặn với wrapper */
+    width: 100%;
 }
 .input-group input::placeholder {
     color: var(--text-secondary);
@@ -127,18 +191,37 @@ form {
     box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.3);
 }
 
+/* === CSS MỚI CHO INPUT BỊ LỖI === */
+.input-group input.input-error {
+    border-color: var(--primary-color);
+    /* box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.3); */
+}
+.input-group input.input-error:focus {
+     box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.3);
+}
+
+.input-error-message {
+    color: var(--primary-color);
+    font-size: 14px;
+    font-weight: 500;
+    padding-left: 16px; 
+    margin-top: 6px;
+}
+
+
 .input-group input::placeholder {
     color: #6a6a70;
 }
 
 .form-options {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
     margin-top: -8px;
     margin-bottom: 8px;
-}
-
+} 
 .forgot-password {
+    justify-content: flex-end;
     color: var(--primary-color);
     text-decoration: none;
     font-size: 14px;
@@ -147,6 +230,21 @@ form {
 
 .forgot-password:hover {
     text-decoration: underline;
+}
+
+.show-password-label {
+    gap: 6px; /* Khoảng cách giữa checkbox và text */
+    color: var(--primary-color); 
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.show-password-label input[type="checkbox"] {
+    cursor: pointer;
+    width: 15px;
+    height: 15px;
+    accent-color: var(--primary-color); /* Màu checkbox khi được check */
 }
 
 .auth-btn {
