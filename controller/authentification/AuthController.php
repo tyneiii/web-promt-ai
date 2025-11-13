@@ -49,8 +49,13 @@
                             if (password_verify($password_input, $hashed_password_from_db)) {
                             
                                  // KIỂM TRA ĐÃ KÍCH HOẠT CHƯA?
+<<<<<<< HEAD
                             if ($token !== "" ) {
                                 sendLoginErrors("Tài khoản của bạn chưa được kích hoạt. Vui lòng kiểm tra email.", null);
+=======
+                            if ($token !== "") {
+                                 $_SESSION['inactive_error'] = "Tài khoản của bạn chưa được kích hoạt. Vui lòng kiểm tra email.";
+>>>>>>> 5be2f01970f2d33a79809da8daf2a0b694953668
                                 exit;
                             }
                                 
