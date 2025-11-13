@@ -41,15 +41,19 @@
                         $account_id = "";
                         $username = "";
                         $hashed_password_from_db = "";
+                        $token = "";
 
                         $stmt->bind_result($account_id, $username, $hashed_password_from_db);
                         
                         if ($stmt->fetch()) {
                             // 7. Xác thực mật khẩu
-                            // BỎ QUA MD5, SỬ DỤNG password_verify KHI CÓ THỂ
-                            // if (password_verify($password_input, $hashed_password_from_db)) {
-                            if (md5($password_input) === $hashed_password_from_db) {
-                                // ĐĂNG NHẬP THÀNH CÔNG
+                            if (password_verify($password_input, $hashed_password_from_db)) {
+                            
+                                 // KIỂM TRA ĐÃ KÍCH HOẠT CHƯA?
+                            if ($token !== NULL) {
+                                sendLoginErrors("Tài khoản của bạn chưa được kích hoạt. Vui lòng kiểm tra email.", null);
+                                exit;
+                            }
                                 
                                 // Xóa các session lỗi (nếu có)
                                 unset($_SESSION['email_error']);

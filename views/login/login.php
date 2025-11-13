@@ -58,7 +58,6 @@ session_start();
             <!-- Form Đăng nhập -->
             <form action="../../controller/authentification/AuthController.php?action=login" method="post">
                 <div class="input-group">
-                    <!-- Thêm value và class lỗi -->
                     <input type="email" id="email" name="email" placeholder="Email" value="<?php echo $email_attempt; ?>" class="<?php echo $email_error ? 'input-error' : ''; ?>" required>
                     <?php
                     // Hiển thị lỗi email ngay dưới input
