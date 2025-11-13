@@ -124,40 +124,20 @@ body {
 
 /* Kiểu toast thành công (xanh lá) */
 .toast.toast-success {
-    background-color: #2a2e2a; /* Nền xanh đậm mờ */
+    background-color: #149214; 
     border-color: var(--success-color);
     color: #e6f4e7;
+}
+.toast.toast-error {
+    background-color: var(--primary-color);
+    border-color: var(--success-color);
+    color: var(--text-primary);
 }
 
 .toast span i {
     margin-right: 8px;
     color: var(--success-color);
 }
-
-.success-message {
-    background-color: rgba(76, 175, 80, 0.15); /* Nền xanh mờ */
-    border: 1px solid var(--success-color);     /* Viền xanh */
-    color: var(--success-color);                /* Chữ xanh */
-    padding: 12px 16px;
-    border-radius: 28px;
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 15px;
-    font-weight: 500;
-}
-
-.error-message {
-    background-color: rgba(229, 57, 53, 0.15); /* Nền đỏ mờ */
-    border: 1px solid var(--primary-color);    /* Viền đỏ */
-    color: var(--primary-color);               /* Chữ đỏ */
-    padding: 12px 16px;
-    border-radius: 28px;
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 15px;
-    font-weight: 500;
-}
-
 form {
     display: flex;
     flex-direction: column;

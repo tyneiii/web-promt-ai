@@ -20,12 +20,22 @@ session_start();
             echo '</div>';
             unset($_SESSION['register_success']);
         }
+        if (isset($_SESSION['inactive_error'])) {
+            echo '<div class="toast toast-error">'; 
+            echo '<span><i class="fas fa-exclamation-circle"></i> ' . htmlspecialchars($_SESSION['inactive_error']) . '</span>'; // Icon lỗi
+            echo '</div>';
+            unset($_SESSION['inactive_error']);
+        }
         if (isset($_SESSION['activate_success'])) {
-            echo '<div class="success-message">' . htmlspecialchars($_SESSION['activate_success']) . '</div>';
+            echo '<div id="toast-success" class="toast toast-success">';
+            echo '<span><i class="fas fa-check-circle"></i> ' . htmlspecialchars($_SESSION['activate_success']) . '</span>';
+            echo '</div>';
             unset($_SESSION['activate_success']);
         }
         if (isset($_SESSION['activate_error'])) {
-            echo '<div class="error-message">' . htmlspecialchars($_SESSION['activate_error']) . '</div>';
+            echo '<div class="toast toast-error">'; 
+            echo '<span><i class="fas fa-exclamation-circle"></i> ' . htmlspecialchars($_SESSION['activate_error']) . '</span>';
+            echo '</div>';
             unset($_SESSION['activate_error']);
         }
     ?>
@@ -85,27 +95,28 @@ session_start();
         </div>
     </div>
     <script>
-        const toast = document.getElementById('toast-success');
-        if (toast) {
-            setTimeout(() => {
-                toast.classList.add('show');
-            }, 100); 
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 5100); // 100ms delay + 5000ms hiển thị
-        }
         document.addEventListener('DOMContentLoaded', function() {
+            const allToasts = document.querySelectorAll('.toast');
+            allToasts.forEach((toast, index) => {
+                // Hiển thị toast
+                setTimeout(() => {
+                    toast.classList.add('show');
+                }, 100 * (index + 1)); 
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    // Xóa hẳn khỏi DOM sau khi mờ đi
+                     setTimeout(() => {
+                        if (toast.parentNode) {
+                            toast.parentNode.removeChild(toast);
+                        }
+                    }, 500); 
+                }, 5100 * (index + 1));
+            });
             const passwordInput = document.getElementById('password');
-            // const toggleIcon = document.getElementById('togglePassword'); // ĐÃ XÓA
-            const showPasswordCheckbox = document.getElementById('showPassword'); // MỚI
+            const showPasswordCheckbox = document.getElementById('showPassword'); 
 
-            if (showPasswordCheckbox && passwordInput) { // CẬP NHẬT ĐIỀU KIỆN
-                showPasswordCheckbox.addEventListener('change', function() { // ĐỔI SANG CHECKBOX VÀ SỰ KIỆN 'CHANGE'
-                    // Lấy trạng thái type hiện tại của input
-                    // const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                    // passwordInput.setAttribute('type', type);
-
-                    // Logic mới dựa trên checkbox
+            if (showPasswordCheckbox && passwordInput) {
+                showPasswordCheckbox.addEventListener('change', function() {
                     if (this.checked) {
                         passwordInput.setAttribute('type', 'text');
                     } else {
@@ -117,5 +128,4 @@ session_start();
         });
     </script>
 </body>
-
 </html>
