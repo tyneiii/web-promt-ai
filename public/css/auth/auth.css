@@ -124,8 +124,13 @@ body {
 
 /* Kiểu toast thành công (xanh lá) */
 .toast.toast-success {
-    background-color: #2a2e2a; /* Nền xanh đậm mờ */
-    border-color: var(--success-color);
+    background-color: #2a2e2a; 
+    border-color: rgba(76, 175, 80, 0.15);
+    color: #e6f4e7;
+}
+.toast.toast-error {
+    background-color: var(--primary-color); 
+    border-color: var(--primary-color);
     color: #e6f4e7;
 }
 
