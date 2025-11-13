@@ -5,17 +5,22 @@ include_once __DIR__ . '/../../Controller/user/prompt.php'
 ?>
 <link rel="stylesheet" href="../../public/css/run_prompt.css"> 
 <?php
-$id_user = $_SESSION['id_user'];
-$search='';
-if(isset($_GET['search'])){
-  $search=$_GET['search'];
-}
-if (isset($_POST['loveBtn'])) {
-  $id_prompt=(int)$_POST['loveBtn'];
+  $id_user = $_SESSION['id_user'];
+  $user_name=$_SESSION['name_user'];
+  $search='';
+  if(isset($_GET['search'])){
+    $search=$_GET['search'];
+  }
+  if (isset($_POST['loveBtn'])) {
+  $id_prompt = (int)$_POST['loveBtn'];
   $mess = lovePrompt($id_user, $id_prompt, $conn);
-}
-$prompts = getPrompt($id_user,$search, $conn);
 
+  header("Location: ".$_SERVER['PHP_SELF']."?search=".urlencode($search));
+  exit;
+}
+
+  $prompts = getPrompt($id_user,$search, $conn);
+  unset($_POST);
 ?>
 <div class="left-sidebar">
   <i class="fa-regular fa-heart"></i>
