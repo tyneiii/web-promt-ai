@@ -52,7 +52,7 @@ include_once __DIR__ . '/../../Controller/user/prompt.php';
       <div class="card" data-id="<?= $prompt['prompt_id'] ?>">
         <div class="card-header">
           <div class="user-info">
-            <img src="../../public/img/user5.png" 
+            <img src="<?=$prompt['avatar']?> ?>" 
                  alt="<?= htmlspecialchars($prompt['username']) ?>" 
                  style="width:35px; height:35px; border-radius:50%;">
             <strong><?= htmlspecialchars($prompt['username']) ?></strong>

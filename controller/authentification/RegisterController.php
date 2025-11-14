@@ -16,7 +16,7 @@ function handleRegister($conn)
         if ($password !== $repeat_password) {
             $errors['repeat_password'] = "Mật khẩu nhập lại không khớp.";
         }
-        //  Kiểm tra email đã tồn tại chưa
+        //  Kiểm tra email đã tồn tại chưa
         $sql_check = "SELECT account_id FROM account WHERE email = ?";
         if ($stmt_check = $conn->prepare($sql_check)) {
             $stmt_check->bind_param("s", $email);
@@ -47,10 +47,17 @@ function handleRegister($conn)
         $token = bin2hex(random_bytes(50));
         $role_id = 2;
         $create_at = date('Y-m-d H:i:s');
-        $sql_insert = "INSERT INTO account (username, email, password, role_id, token, create_at) VALUES (?, ?, ?, ?, ?, ?)";
+        
+        // ⭐️ THAY ĐỔI: Gán đường dẫn avatar mặc định
+        $avatar = "../../public/img/user5.png";
+        
+        // ⭐️ THAY ĐỔI: Thêm `avatar` vào câu lệnh INSERT
+        $sql_insert = "INSERT INTO account (username, email, password, role_id, token, create_at, avatar) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             if ($stmt_insert = $conn->prepare($sql_insert)) {
-                $stmt_insert->bind_param("sssiss", $username, $email, $hashed_password, $role_id, $token, $create_at);
+                
+                // ⭐️ THAY ĐỔI: Thêm `avatar` vào bind_param ("sssiss" -> "sssiss**s**")
+                $stmt_insert->bind_param("sssisss", $username, $email, $hashed_password, $role_id, $token, $create_at, $avatar);
 
                 if ($stmt_insert->execute()) {
                     // 5. Gửi email kích hoạt
@@ -59,12 +66,12 @@ function handleRegister($conn)
                     $_SESSION['register_success'] = "Đăng ký thành công! Vui lòng kiểm tra email để kích hoạt tài khoản.";
                     header("Location: ../../views/login/login.php");
                 } else {
-                    $errors['general'] = "Đã xảy ra lỗi khi đăng ký. Vui lòng thử lại.";
+                    $errors['general'] = "Đã xảy ra lỗi khi đăng ký. Vui lòng thử lại. Lỗi SQL: " . $conn->error;
                     sendRegisterError($errors, $inputs);
                 }
                 $stmt_insert->close();
             } else {
-                $errors['general'] = "Lỗi hệ thống. Vui lòng thử lại sau.";
+                $errors['general'] = "Lỗi hệ thống (Prepare failed). Vui lòng thử lại sau.";
                 sendRegisterError($errors, $inputs);
             }
         } catch (Exception $e) {
