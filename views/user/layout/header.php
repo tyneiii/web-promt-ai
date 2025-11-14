@@ -8,6 +8,15 @@
   <link rel="stylesheet" href="../../public/css/home.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
+    body {
+      padding-top: 80px !important; 
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding-top: 160px !important; 
+      }
+    }
     #sticky-ad-banner {
       position: fixed;
       bottom: 0;
