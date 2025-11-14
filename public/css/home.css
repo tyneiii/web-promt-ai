@@ -215,10 +215,6 @@ select {
   margin-top: -5px;
   margin-bottom: 10px;
   padding-bottom: 5px;
-
-  /* background: linear-gradient(to right, #ff8c00, #ffd700, #ffffff); */
-  /* background: linear-gradient(to right, #42bcde, #ebda23, #ffffff); */
-  /* background: linear-gradient(to right, #ff4da6, #9b30ff, #ff8c00); */
   background: linear-gradient(to right, #ff3c3c, #ff7f50, #ffd700);
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -238,13 +234,11 @@ select {
   background-color: #2d2d2d;
   color: orange;
   transform: scale(1.075);
-  /* to lên 5% */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  /* tạo hiệu ứng nổi */
 }
 
 .main-content {
-  margin-top: 70px;
+  margin-top: 0; /* FIX: Bù trừ padding-top 80px từ body, giảm từ 70px xuống 0 */
   margin-left: 60px;
   margin-right: 280px;
   padding: 20px;
@@ -256,13 +250,11 @@ select {
 .card {
   display: flex;
   flex-direction: column;
-  /* dọc: header + nội dung + buttons */
   background-color: black;
   padding: 15px;
   border-radius: 10px;
   transition: 0.2s;
   min-height: 220px;
-  /* hoặc 100% height nếu dùng grid auto-fit */
 }
 
 .card:hover {
@@ -294,9 +286,7 @@ select {
 .card-buttons {
   display: flex;
   justify-content: space-between;
-  /* chia đều các nút */
   margin-top: auto;
-  /* đẩy xuống cuối card */
 }
 
 .card-buttons button {
@@ -336,11 +326,8 @@ select {
 
 #runBtn:hover {
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.4);
-  /* bóng sâu hơn */
   background: black;
-  /* gradient xanh đậm “ngầu” */
   color: red;
-  /* chữ vẫn trắng */
 }
 
 .user-menu {
@@ -359,13 +346,10 @@ select {
 
 .gear-btn {
   display: inline-flex;
-  /* giúp canh giữa text/icon */
   justify-content: center;
   align-items: center;
   width: 40px;
-  /* cố định chiều rộng */
   height: 40px;
-  /* cố định chiều cao */
   background-color: #111;
   border: 2px solid #ffffffbe;
   color: white;
@@ -377,13 +361,10 @@ select {
 
 .gear-btn:hover {
   border-color: black;
-  /* sửa border: black -> border-color */
   background-color: red;
   color: #000;
   transform: scale(1.3);
-  /* phóng to nút, không ảnh hưởng layout */
 }
-
 
 .gear-btn:active {
   transform: scale(0.95);
@@ -421,7 +402,7 @@ select {
   }
 
   .main-content {
-    margin: 130px 10px 20px 10px;
+    margin: 0 10px 20px 10px; /* FIX: Bù trừ padding-top 160px từ body, giảm từ 130px xuống 0 */
     grid-template-columns: 1fr;
   }
 }
@@ -479,7 +460,6 @@ select {
   background: #111;
   border-radius: 30px;
   overflow: hidden;
-  /* QUAN TRỌNG: giúp nút không tràn ra ngoài */
   border: 1px solid #333;
 }
 
@@ -517,7 +497,5 @@ select {
 
 .search-group:focus-within {
   border-color: #ff4d4d;
-  /* Đổi màu viền sang đỏ đẹp */
   box-shadow: 0 0 8px rgba(255, 77, 77, 0.7);
-  /* Thêm đổ bóng mờ màu đỏ */
 }

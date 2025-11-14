@@ -1,15 +1,11 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
-
-/* Toàn trang - Phù hợp với theme dark của home */
 body {
   font-family: Arial, sans-serif;
   background: #1f1f1f;
   margin: 0;
-  padding: 0;
   color: white;
 }
 
-/* Vùng chính của trang chi tiết - Dark theme, border red/orange */
 .detail-container {
   max-width: 900px;
   margin: 40px auto;
@@ -44,7 +40,6 @@ body {
   border-radius: 0 0 10px 0;
 }
 
-/* Header người đăng - Dark, red accents */
 .detail-header {
   display: flex;
   justify-content: space-between;
@@ -83,7 +78,6 @@ body {
   color: #aaa;
 }
 
-/* Tiêu đề bài viết - Red accent */
 .detail-title {
   font-size: 24px;
   font-weight: 700;
@@ -94,7 +88,6 @@ body {
   padding-bottom: 5px;
 }
 
-/* Nội dung chính - Dark background */
 .detail-content {
   font-size: 16px;
   line-height: 1.8;
@@ -118,7 +111,6 @@ body {
   color: #ff4d4d;
 }
 
-/* Thanh nút hành động dưới bài viết - Dark buttons, enhanced */
 .detail-actions {
   display: flex;
   justify-content: flex-start;
@@ -170,7 +162,6 @@ body {
   transform: scale(0.98);
 }
 
-/* Specific styles for each button */
 .detail-actions .love {
   color: #fff;
 }
@@ -217,7 +208,6 @@ body {
   color: #000;
 }
 
-/* Nút Run Prompt - More prominent, red theme with glow */
 .run-btn {
   background: linear-gradient(135deg, #ff4d4d, #ff7f50);
   color: #fff;
