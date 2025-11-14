@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -46,34 +47,43 @@
 </head>
 
 <body>
-<?php
-if (session_status() == PHP_SESSION_NONE) {
+  <?php
+  if (session_status() == PHP_SESSION_NONE) {
     session_start();
-}
-if (isset($_POST['out-btn'])) {
+  }
+  if (isset($_POST['out-btn'])) {
     $_SESSION = [];
     if (ini_get("session.use_cookies")) {
-        $params = session_get_cookie_params();
-        setcookie(session_name(), '', time() - 42000,
-            $params["path"], $params["domain"],
-            $params["secure"], $params["httponly"]
-        );
+      $params = session_get_cookie_params();
+      setcookie(
+        session_name(),
+        '',
+        time() - 42000,
+        $params["path"],
+        $params["domain"],
+        $params["secure"],
+        $params["httponly"]
+      );
     }
     session_destroy();
     header("Location: home.php");
     exit();
-}
+  }
 
-include_once __DIR__ . '/../../../config.php';
-?>
+  include_once __DIR__ . '/../../../config.php';
+  ?>
   <nav class="navbar">
     <div class="navbar-left">
       <a href="home.php" class="logo" style="text-decoration: none;" title="Trang chủ">Prompt AI</a>
     </div>
     <div class="navbar-center">
-      <form action="home.php" method="get" class="navbar-center">
-        <input type="text" name="search" class="search-bar" title="Tìm kiếm" placeholder="Tìm kiếm prompt..."
+      <form action="home.php" method="get" class="navbar-center search-group">
+        <input type="text" name="search" class="search-bar"
+          placeholder="Tìm kiếm prompt..."
           value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
+        <button type="submit" class="search-btn">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
       </form>
     </div>
     <div class="navbar-right">
@@ -83,8 +93,8 @@ include_once __DIR__ . '/../../../config.php';
         <option>Image</option>
         <option>Code</option>
       </select>
-      <i class="fa-regular fa-bell icon"></i>
       <?php if (isset($_SESSION['id_user']) && !empty($_SESSION['id_user'])): ?>
+        <i class="fa-regular fa-bell icon"></i>
         <div class="dropdown">
           <button class="dropbtn">
             <?php echo htmlspecialchars($_SESSION['name_user']); ?>
@@ -99,7 +109,7 @@ include_once __DIR__ . '/../../../config.php';
           </div>
         </div>
       <?php else: ?>
-        <a href="../../views/login/login.php" class="login-btn">Đăng nhập</a>
+        <a href="../../views/login/login.php" class="login-btn"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</a>
       <?php endif; ?>
       <div>
         <form action="../manager/account.php" method="post">
