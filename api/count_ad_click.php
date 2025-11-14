@@ -1,42 +1,72 @@
 <?php
-    include_once __DIR__ . '/../config.php';
+include_once __DIR__ . '/../config.php';
 
-    if (!isset($conn) || $conn->connect_error) {
-        error_log("Lỗi kết nối CSDL: " . ($conn->connect_error ?? 'Biến $conn không tồn tại'));
-        header("Location: /index.php"); 
-        exit();
-    }
+if (!isset($conn) || $conn->connect_error) {
+    error_log("Lỗi kết nối CSDL: " . ($conn->connect_error ?? 'Biến $conn không tồn tại'));
+    header("Location: /index.php");
+    exit();
+}
 
-    $metric_id_to_update = isset($_GET['ad']) ? (int)$_GET['ad'] : 1; 
+$metric_id = isset($_GET['ad']) ? (int)$_GET['ad'] : 1;
+$landing_url = "https://3bet.net/?a=five_fbef2c269fca6236245889459437af32&utm_campaign=cpd&utm_source=phimmoi&utm_medium=catfish2-720x90&utm_term=phim";
+
+// số tiền mỗi click (bạn thay theo ý)
+$revenue_per_click = 1; // vì last_month_revenue là DECIMAL(10,0), bạn dùng số nguyên
 
 
-    $landing_url = "https://hopeinconnection.com/"; 
+/* =====================================================
+   1. KIỂM TRA metric_id ĐÃ TỒN TẠI CHƯA
+===================================================== */
+
+$check = $conn->prepare("SELECT metric_id FROM revenuemetrics WHERE metric_id = ?");
+$check->bind_param("i", $metric_id);
+$check->execute();
+$result = $check->get_result();
 
 
-    $sql = "UPDATE revenuemetrics 
-            SET 
-                current_month_clicks = current_month_clicks + 1, 
-                update_at = NOW() 
-            WHERE 
-                metric_id = ?";
+/* =====================================================
+   2. NẾU KHÔNG TỒN TẠI → TẠO MỚI
+===================================================== */
 
-    $stmt = $conn->prepare($sql);
+if ($result->num_rows === 0) {
 
-    if ($stmt === false) {
-        error_log("Lỗi SQL Prepare: " . $conn->error);
-        header("Location: " . $landing_url); 
-        exit();
-    }
+    $insert = $conn->prepare("
+        INSERT INTO revenuemetrics (metric_id, current_month_clicks, last_month_revenue, update_at)
+        VALUES (?, 1, ?, NOW())
+    ");
+    $insert->bind_param("ii", $metric_id, $revenue_per_click);
+    $insert->execute();
+    $insert->close();
 
-    $stmt->bind_param("i", $metric_id_to_update);
-
-    if (!$stmt->execute()) {
-        error_log("Lỗi SQL Execute: " . $stmt->error);
-    }
-
-    $stmt->close();
+    $check->close();
     $conn->close();
-
     header("Location: " . $landing_url);
-    exit(); 
+    exit();
+}
+
+$check->close();
+
+
+/* =====================================================
+   3. NẾU ĐÃ TỒN TẠI → UPDATE
+===================================================== */
+
+$update = $conn->prepare("
+    UPDATE revenuemetrics
+    SET 
+        current_month_clicks = current_month_clicks + 1,
+        last_month_revenue = last_month_revenue + ?,
+        update_at = NOW()
+    WHERE metric_id = ?
+");
+$update->bind_param("ii", $revenue_per_click, $metric_id);
+
+$update->execute();
+$update->close();
+
+$conn->close();
+
+header("Location: " . $landing_url);
+exit();
+
 ?>
