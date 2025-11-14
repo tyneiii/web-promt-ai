@@ -9,22 +9,24 @@ function handleLogin($conn)
         $email = $_POST['email'];
         $password_input = $_POST['password'];
 
-        $sql = "SELECT account_id, username, password, token FROM account WHERE email = ?";
+        $sql = "SELECT account_id, username, avatar, role_id, password, token FROM account WHERE email = ?";
 
         if ($stmt = $conn->prepare($sql)) {
             $stmt->bind_param("s", $email);
-
+            
             if ($stmt->execute()) {
                 $stmt->store_result();
                 if ($stmt->num_rows == 1) {
                     $account_id = "";
                     $username = "";
+                    $avatar = "";
+                    $role = "";
                     $hashed_password_from_db = "";
                     
                     $token = null; 
-
-                    $stmt->bind_result($account_id, $username, $hashed_password_from_db, $token);
-
+                    
+                    $stmt->bind_result($account_id, $username, $avatar, $role, $hashed_password_from_db, $token);
+                    
                     if ($stmt->fetch()) {
                         if (password_verify($password_input, $hashed_password_from_db)) {
                             if ($token !== null) { 
@@ -43,6 +45,8 @@ function handleLogin($conn)
                             $_SESSION["loggedin"] = true;
                             $_SESSION["id_user"] = $account_id;
                             $_SESSION["name_user"] = $username;
+                            $_SESSION["avatar"] = $avatar;
+                            $_SESSION["role"] = $role;
                             header("Location: ../../views/user/home.php");
                             exit;
                         } else {
