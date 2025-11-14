@@ -1,3 +1,11 @@
+<?php
+    include_once __DIR__ . '/../../config.php';
+    $acc_id = $_SESSION['id_user'] ;
+    $sql_user = "SELECT * FROM account WHERE account_id = $acc_id ";
+    $user_result = mysqli_query($conn, $sql_user);
+    $user = mysqli_fetch_assoc($user_result);
+?>
+
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -12,8 +20,8 @@
   <button type="button" class="close-btn" title="Hủy bài viết mới" onclick="confirmCancel()">×</button>
   <div class="form-card">
     <div class="user-info">
-      <img class="avatar" src="https://i.pravatar.cc/40?img=12" alt="avatar">
-      <div class="name">John Doe</div>
+      <img src="../../public/img/<?= $user['avatar'] ?? 'avatar.png' ?>" class="avatar">
+    <div class="name"><?= $user['username'] ?></div>
       <div class="topic-container">
         <input type="text" class="topic-input" placeholder="Chọn chủ đề...">
         <div class="topic-dropdown"></div>
