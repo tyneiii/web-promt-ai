@@ -17,27 +17,33 @@
       background-color: transparent;
 
       text-align: center;
-      padding: 5px 0;
       z-index: 1000;
     }
 
+    #ad-wrapper, .ad-wrapper {
+    position: relative;
+    display: inline-block;
+    }
+
     #sticky-ad-banner img {
-      height: 100px;
-      width: 1500px;
-      max-width: 50%;
-      vertical-align: middle;
+        height: 100px;
+        width: 850px;
+        max-width: 200vw;
+        border-radius: 6px;
     }
 
     #close-ad-btn {
-      position: absolute;
-      top: 0;
-      right: 15px;
-      font-size: 24px;
-      font-weight: bold;
-      color: #888;
-      cursor: pointer;
-      line-height: 1;
-      padding: 5px;
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        font-size: 22px;
+        font-weight: bold;
+        background: rgba(0,0,0,0.4);
+        color: white;
+        padding: 3px 7px;
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 10;
     }
 
     #close-ad-btn:hover {
