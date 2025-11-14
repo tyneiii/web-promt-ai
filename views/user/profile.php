@@ -1,53 +1,75 @@
-<?php 
-    include_once __DIR__ . '/layout/header.php'; 
-    include_once __DIR__ . '/../../config.php';
-    
-    $acc_id = 5;
-    // Lấy thông tin người dùng có account_id = 5
-    $sql_user = "SELECT * FROM account WHERE account_id = $acc_id ";
-    $user_result = mysqli_query($conn, $sql_user);
-    $user = mysqli_fetch_assoc($user_result);
+<?php
+include_once __DIR__ . '/layout/header.php';
+include_once __DIR__ . '/../../config.php';
 
-    // Xác định tab hiện tại (mặc định là 'posts')
-    $tab = isset($_GET['tab']) ? $_GET['tab'] : 'posts';
+// Không gọi session_start() nếu đã có
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-    // Truy vấn dữ liệu theo tab
-    if ($tab === 'favorites') {
-        $sql = "SELECT p.* 
+// // Kiểm tra session
+// if (!isset($_SESSION['account_id'])) {
+//     header("Location: ../../login.php");
+//     exit;
+// }
+
+$acc_id = intval($_SESSION['id_user']); // tránh lỗi SQL
+// Lấy thông tin người dùng
+$sql_user = "SELECT * FROM account WHERE account_id = $acc_id ";
+$user_result = mysqli_query($conn, $sql_user);
+$user = mysqli_fetch_assoc($user_result);
+
+// Xử lý avatar: NULL / rỗng → mặc định
+$avatar = $user['avatar'];
+if (!$avatar || strtolower($avatar) === "NULL" || !file_exists(__DIR__ . "/../../public/img/$avatar")) {
+    $avatar = "default_avatar.png";
+}
+
+// Cập nhật session avatar
+$_SESSION['avatar'] = $avatar;
+
+// Xác định tab hiện tại (mặc định là 'posts')
+$tab = isset($_GET['tab']) ? $_GET['tab'] : 'posts';
+
+// Truy vấn dữ liệu theo tab
+if ($tab === 'favorites') {
+    $sql = "SELECT p.* 
             FROM love l 
             JOIN prompt p ON l.prompt_id = p.prompt_id 
             WHERE l.account_id = $acc_id AND l.status = 'OPEN'
             ORDER BY l.love_at DESC ";
-    } else {
-        $sql = "SELECT * FROM prompt WHERE account_id = $acc_id ORDER BY prompt_id DESC";
-    }
+} else {
+    $sql = "SELECT * FROM prompt WHERE account_id = $acc_id ORDER BY prompt_id DESC";
+}
 
-    $result = mysqli_query($conn, $sql);
-    // // Lấy danh sách bài viết của user
-    // $sql_prompt = "SELECT * FROM prompt WHERE account_id = $acc_id ORDER BY prompt_id DESC";
-    // $posts = mysqli_query($conn, $sql_prompt);
+$result = mysqli_query($conn, $sql);
+// // Lấy danh sách bài viết của user
+// $sql_prompt = "SELECT * FROM prompt WHERE account_id = $acc_id ORDER BY prompt_id DESC";
+// $posts = mysqli_query($conn, $sql_prompt);
 
-    // // Lấy danh sách bài viết user đã yêu thích
-    // $sql_love = "SELECT p.* FROM love l
-    // JOIN prompt p ON l.prompt_id = p.prompt_id
-    // WHERE l.account_id = $acc_id AND l.status = 'OPEN'
-    // ORDER BY l.love_at DESC";
+// // Lấy danh sách bài viết user đã yêu thích
+// $sql_love = "SELECT p.* FROM love l
+// JOIN prompt p ON l.prompt_id = p.prompt_id
+// WHERE l.account_id = $acc_id AND l.status = 'OPEN'
+// ORDER BY l.love_at DESC";
 
-    // $favorites = mysqli_query($conn, $sql_love);
+// $favorites = mysqli_query($conn, $sql_love);
 
 ?>
 
 <link rel="stylesheet" href="../../public/css/user/profile.css">
 
 <button id="back-btn" class="back-btn" onclick="window.history.back()" title="Về trang trước">
-  <i class="fa-solid fa-arrow-left"></i>
+    <i class="fa-solid fa-arrow-left"></i>
 </button>
 <div class="profile-container">
     <div class="header" style="background-image: url('../../public/img/bg.png');">
-    <img src="../../public/img/<?= $user['avatar'] ?? 'avatar.png' ?>" class="avatar">
-</div>
+        <img src="../../public/img/<?= $avatar ?>" class="avatar" alt="Ảnh đại diện">
+
+    </div>
     <div class="profile-info">
-        <h2><?= $user['username'] ?? 'Người dùng'?></h2>
+        <h2><?= $user['username'] ?? 'Người dùng' ?></h2>
+        <h3><?= $user['fullname'] ?? 'Người dùng' ?></h3>
         <div class="buttons">
             <form action="edit_profile.php">
                 <input type="submit" value="Sửa hồ sơ" class="edit-btn">

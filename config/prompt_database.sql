@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Nov 12, 2025 at 08:32 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Máy chủ: 127.0.0.1
+-- Thời gian đã tạo: Th10 14, 2025 lúc 05:31 AM
+-- Phiên bản máy phục vụ: 10.4.32-MariaDB
+-- Phiên bản PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `prompt_database`
+-- Cơ sở dữ liệu: `prompt_database`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `account`
+-- Cấu trúc bảng cho bảng `account`
 --
 
 CREATE TABLE `account` (
@@ -36,21 +36,29 @@ CREATE TABLE `account` (
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `avatar` varchar(255) DEFAULT NULL,
   `role_id` int(11) NOT NULL,
-  `phone` varchar(20) NOT NULL
+  `token` varchar(255) DEFAULT NULL,
+  `create_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `account`
+-- Đang đổ dữ liệu cho bảng `account`
 --
 
-INSERT INTO `account` (`account_id`, `username`, `email`, `password`, `fullname`, `description`, `avatar`, `role_id`, `phone`) VALUES
-(2, 'user1', 'user1@example.com', 'pass123', 'User One', '', '', 1, ''),
-(3, 'user2', 'user2@example.com', 'pass123', 'User Two', '', '', 1, '');
+INSERT INTO `account` (`account_id`, `username`, `email`, `password`, `fullname`, `description`, `avatar`, `role_id`, `token`, `create_at`) VALUES
+(2, 'user1', 'user1@example.com', 'pass123', 'User One', '', '', 1, '', NULL),
+(3, 'user2', 'user2@example.com', 'pass123', 'User Two', '', '', 1, '', NULL),
+(5, 'thuhoang', 'a@gmail.com', '123', NULL, NULL, NULL, 2, '', NULL),
+(7, 'nhi', 'nhi@gmail.com', '$2y$10$P4svZN1uXSQ2IG5c/0dwr.KBZKz4IQXH7oLRVfujEdIjoMKgWcZia', NULL, NULL, NULL, 2, '6a5eefce0ea941d23189c6f94766e54ebd8aebaaf84c286b48', '2025-11-13 11:45:01'),
+(8, 'nhung', 'nhung@gmail.com', '$2y$10$4T4YZjZiPK1xTMKaohcC1.I7axRIa5EvLSX9qHCuWjwOK.2N8r.ea', NULL, NULL, NULL, 2, '27d4356bfa38f56037025b78904c7b2236a729dc956fec0553', '2025-11-13 12:02:39'),
+(9, 'hai trieu', 'haitrieu@gmail.com', '$2y$10$G04ITs2sfJfFb5WtXQxZseaEDVb1Mzf2sTJ2Hd4bqAbH5QrElD2s.', NULL, NULL, NULL, 2, '59ce1d4091acff788e190097eddc7f7344d6892b31e8b543fb', '2025-11-13 12:56:01'),
+(12, 'long', 'longhoang@gmail.com', '$2y$10$mE8LbBjOrqeLTvZ.C5ILqeuXT4ln7zJJFRjY8m./eagCgwMeez.AW', NULL, NULL, NULL, 2, 'a88aba0cca1e16ef32efb61db5dcbd7373a1503a1963fbd766', '2025-11-13 17:40:51'),
+(21, 'mimichan', 'hoanganhthu271004@gmail.com', '$2y$10$Umx3EMJ735BxwUtqPtMDcu11YPO78I0rdr5qbq1W22.4a.zyb03Uu', NULL, NULL, NULL, 2, '59ed606f3c45e4610da9989a674630b79015d57aca2e10e113ecc2a91c9947c66c56eb0e327d0bffa6c041948a92d5e6561e', '2025-11-13 21:34:52'),
+(22, 'postman', 'thu.hta.64cntt@ntu.edu.vn', '$2y$10$cNXo6DpHlxfJEa.OW0k6...ZTcghtymsjSqWzlOJDyMUIrej4TpLi', NULL, NULL, NULL, 2, NULL, '2025-11-13 21:41:40');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `comment`
+-- Cấu trúc bảng cho bảng `comment`
 --
 
 CREATE TABLE `comment` (
@@ -62,7 +70,7 @@ CREATE TABLE `comment` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `comment`
+-- Đang đổ dữ liệu cho bảng `comment`
 --
 
 INSERT INTO `comment` (`comment_id`, `prompt_id`, `account_id`, `content`, `created_at`) VALUES
@@ -72,7 +80,7 @@ INSERT INTO `comment` (`comment_id`, `prompt_id`, `account_id`, `content`, `crea
 -- --------------------------------------------------------
 
 --
--- Table structure for table `follow`
+-- Cấu trúc bảng cho bảng `follow`
 --
 
 CREATE TABLE `follow` (
@@ -82,7 +90,7 @@ CREATE TABLE `follow` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `follow`
+-- Đang đổ dữ liệu cho bảng `follow`
 --
 
 INSERT INTO `follow` (`follow_id`, `follower_id`, `following_id`) VALUES
@@ -91,7 +99,7 @@ INSERT INTO `follow` (`follow_id`, `follower_id`, `following_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `love`
+-- Cấu trúc bảng cho bảng `love`
 --
 
 CREATE TABLE `love` (
@@ -103,17 +111,18 @@ CREATE TABLE `love` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `love`
+-- Đang đổ dữ liệu cho bảng `love`
 --
 
 INSERT INTO `love` (`love_id`, `prompt_id`, `account_id`, `status`, `love_at`) VALUES
-(1, 4, 2, '', NULL),
-(2, 5, 3, '', NULL);
+(2, 5, 3, '', NULL),
+(25, 4, 2, 'OPEN', '2025-11-13'),
+(28, 5, 2, 'OPEN', '2025-11-13');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `notification`
+-- Cấu trúc bảng cho bảng `notification`
 --
 
 CREATE TABLE `notification` (
@@ -126,7 +135,7 @@ CREATE TABLE `notification` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `notification`
+-- Đang đổ dữ liệu cho bảng `notification`
 --
 
 INSERT INTO `notification` (`notification_id`, `reciever_id`, `sender_id`, `prompt_id`, `message`, `created_at`) VALUES
@@ -136,7 +145,7 @@ INSERT INTO `notification` (`notification_id`, `reciever_id`, `sender_id`, `prom
 -- --------------------------------------------------------
 
 --
--- Table structure for table `paymenthistory`
+-- Cấu trúc bảng cho bảng `paymenthistory`
 --
 
 CREATE TABLE `paymenthistory` (
@@ -151,7 +160,7 @@ CREATE TABLE `paymenthistory` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `prompt`
+-- Cấu trúc bảng cho bảng `prompt`
 --
 
 CREATE TABLE `prompt` (
@@ -169,18 +178,18 @@ CREATE TABLE `prompt` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `prompt`
+-- Đang đổ dữ liệu cho bảng `prompt`
 --
 
 INSERT INTO `prompt` (`prompt_id`, `account_id`, `title`, `short_description`, `status`, `image`, `love_count`, `comment_count`, `save_count`, `payable_love_count`, `create_at`) VALUES
-(4, 2, '', 'Hướng dẫn du lịch Đà Lạt', 'public', 'images/dalat.jpg', 0, 0, 0, 0, '0000-00-00 00:00:00'),
-(5, 3, '', 'Mẹo học lập trình PHP', 'public', 'images/php.jpg', 0, 0, 0, 0, '0000-00-00 00:00:00'),
-(6, 2, '', 'Công thức nấu ăn Việt Nam', 'public', 'images/cooking.jpg', 0, 0, 0, 0, '0000-00-00 00:00:00');
+(4, 2, '', 'Hướng dẫn du lịch Đà Lạt', 'public', 'images/dalat.jpg', 1, 0, 0, 0, '0000-00-00 00:00:00'),
+(5, 3, '', 'Mẹo học lập trình PHP', 'public', 'images/php.jpg', 3, 0, 0, 0, '0000-00-00 00:00:00'),
+(6, 2, '', 'Công thức nấu ăn Việt Nam', 'public', 'images/cooking.jpg', 1, 0, 0, 0, '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `promptdetail`
+-- Cấu trúc bảng cho bảng `promptdetail`
 --
 
 CREATE TABLE `promptdetail` (
@@ -192,7 +201,7 @@ CREATE TABLE `promptdetail` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `promptdetail`
+-- Đang đổ dữ liệu cho bảng `promptdetail`
 --
 
 INSERT INTO `promptdetail` (`detail_id`, `prompt_id`, `content`, `component_order`, `created_at`) VALUES
@@ -206,7 +215,7 @@ INSERT INTO `promptdetail` (`detail_id`, `prompt_id`, `content`, `component_orde
 -- --------------------------------------------------------
 
 --
--- Table structure for table `prompttag`
+-- Cấu trúc bảng cho bảng `prompttag`
 --
 
 CREATE TABLE `prompttag` (
@@ -215,7 +224,7 @@ CREATE TABLE `prompttag` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `prompttag`
+-- Đang đổ dữ liệu cho bảng `prompttag`
 --
 
 INSERT INTO `prompttag` (`prompt_id`, `tag_id`) VALUES
@@ -229,7 +238,7 @@ INSERT INTO `prompttag` (`prompt_id`, `tag_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `report`
+-- Cấu trúc bảng cho bảng `report`
 --
 
 CREATE TABLE `report` (
@@ -241,7 +250,7 @@ CREATE TABLE `report` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `report`
+-- Đang đổ dữ liệu cho bảng `report`
 --
 
 INSERT INTO `report` (`report_id`, `prompt_id`, `account_id`, `reason`, `created_at`) VALUES
@@ -250,7 +259,7 @@ INSERT INTO `report` (`report_id`, `prompt_id`, `account_id`, `reason`, `created
 -- --------------------------------------------------------
 
 --
--- Table structure for table `revenuemetrics`
+-- Cấu trúc bảng cho bảng `revenuemetrics`
 --
 
 CREATE TABLE `revenuemetrics` (
@@ -263,7 +272,7 @@ CREATE TABLE `revenuemetrics` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `role`
+-- Cấu trúc bảng cho bảng `role`
 --
 
 CREATE TABLE `role` (
@@ -272,7 +281,7 @@ CREATE TABLE `role` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `role`
+-- Đang đổ dữ liệu cho bảng `role`
 --
 
 INSERT INTO `role` (`role_id`, `role_name`) VALUES
@@ -282,7 +291,7 @@ INSERT INTO `role` (`role_id`, `role_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `save`
+-- Cấu trúc bảng cho bảng `save`
 --
 
 CREATE TABLE `save` (
@@ -292,7 +301,7 @@ CREATE TABLE `save` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `save`
+-- Đang đổ dữ liệu cho bảng `save`
 --
 
 INSERT INTO `save` (`save_id`, `prompt_id`, `account_id`) VALUES
@@ -302,7 +311,7 @@ INSERT INTO `save` (`save_id`, `prompt_id`, `account_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tag`
+-- Cấu trúc bảng cho bảng `tag`
 --
 
 CREATE TABLE `tag` (
@@ -311,7 +320,7 @@ CREATE TABLE `tag` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tag`
+-- Đang đổ dữ liệu cho bảng `tag`
 --
 
 INSERT INTO `tag` (`tag_id`, `tag_name`) VALUES
@@ -324,7 +333,7 @@ INSERT INTO `tag` (`tag_id`, `tag_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `userpayoutinfo`
+-- Cấu trúc bảng cho bảng `userpayoutinfo`
 --
 
 CREATE TABLE `userpayoutinfo` (
@@ -337,20 +346,21 @@ CREATE TABLE `userpayoutinfo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Indexes for dumped tables
+-- Chỉ mục cho các bảng đã đổ
 --
 
 --
--- Indexes for table `account`
+-- Chỉ mục cho bảng `account`
 --
 ALTER TABLE `account`
   ADD PRIMARY KEY (`account_id`),
   ADD UNIQUE KEY `unique_username` (`username`),
   ADD UNIQUE KEY `unique_email` (`email`),
-  ADD KEY `_fk_account_role` (`role_id`);
+  ADD KEY `_fk_account_role` (`role_id`),
+  ADD KEY `username` (`username`);
 
 --
--- Indexes for table `comment`
+-- Chỉ mục cho bảng `comment`
 --
 ALTER TABLE `comment`
   ADD PRIMARY KEY (`comment_id`),
@@ -358,7 +368,7 @@ ALTER TABLE `comment`
   ADD KEY `_fk_comment_prompt` (`prompt_id`) USING BTREE;
 
 --
--- Indexes for table `follow`
+-- Chỉ mục cho bảng `follow`
 --
 ALTER TABLE `follow`
   ADD PRIMARY KEY (`follow_id`),
@@ -366,7 +376,7 @@ ALTER TABLE `follow`
   ADD KEY `_fk_following_account` (`following_id`);
 
 --
--- Indexes for table `love`
+-- Chỉ mục cho bảng `love`
 --
 ALTER TABLE `love`
   ADD PRIMARY KEY (`love_id`),
@@ -374,14 +384,14 @@ ALTER TABLE `love`
   ADD KEY `_fk_love_account` (`account_id`);
 
 --
--- Indexes for table `notification`
+-- Chỉ mục cho bảng `notification`
 --
 ALTER TABLE `notification`
   ADD PRIMARY KEY (`notification_id`),
   ADD KEY `_fk_sender_account` (`reciever_id`);
 
 --
--- Indexes for table `paymenthistory`
+-- Chỉ mục cho bảng `paymenthistory`
 --
 ALTER TABLE `paymenthistory`
   ADD PRIMARY KEY (`payment_id`),
@@ -389,7 +399,7 @@ ALTER TABLE `paymenthistory`
   ADD KEY `_fk_paymenthistory_promt` (`prompt_id`);
 
 --
--- Indexes for table `prompt`
+-- Chỉ mục cho bảng `prompt`
 --
 ALTER TABLE `prompt`
   ADD PRIMARY KEY (`prompt_id`),
@@ -397,21 +407,21 @@ ALTER TABLE `prompt`
   ADD KEY `_fk_prompt_account` (`account_id`) USING BTREE;
 
 --
--- Indexes for table `promptdetail`
+-- Chỉ mục cho bảng `promptdetail`
 --
 ALTER TABLE `promptdetail`
   ADD PRIMARY KEY (`detail_id`),
   ADD KEY `_fk_promptdetail_prompt_` (`prompt_id`) USING BTREE;
 
 --
--- Indexes for table `prompttag`
+-- Chỉ mục cho bảng `prompttag`
 --
 ALTER TABLE `prompttag`
   ADD PRIMARY KEY (`prompt_id`,`tag_id`),
   ADD KEY `_fk_prompttag_tag` (`tag_id`) USING BTREE;
 
 --
--- Indexes for table `report`
+-- Chỉ mục cho bảng `report`
 --
 ALTER TABLE `report`
   ADD PRIMARY KEY (`report_id`),
@@ -419,19 +429,19 @@ ALTER TABLE `report`
   ADD KEY `_fk_report_prompt` (`prompt_id`) USING BTREE;
 
 --
--- Indexes for table `revenuemetrics`
+-- Chỉ mục cho bảng `revenuemetrics`
 --
 ALTER TABLE `revenuemetrics`
   ADD PRIMARY KEY (`metric_id`);
 
 --
--- Indexes for table `role`
+-- Chỉ mục cho bảng `role`
 --
 ALTER TABLE `role`
   ADD PRIMARY KEY (`role_id`);
 
 --
--- Indexes for table `save`
+-- Chỉ mục cho bảng `save`
 --
 ALTER TABLE `save`
   ADD PRIMARY KEY (`save_id`),
@@ -439,186 +449,186 @@ ALTER TABLE `save`
   ADD KEY `_fk_save_account` (`account_id`);
 
 --
--- Indexes for table `tag`
+-- Chỉ mục cho bảng `tag`
 --
 ALTER TABLE `tag`
   ADD PRIMARY KEY (`tag_id`),
   ADD UNIQUE KEY `unique_tagname` (`tag_name`);
 
 --
--- Indexes for table `userpayoutinfo`
+-- Chỉ mục cho bảng `userpayoutinfo`
 --
 ALTER TABLE `userpayoutinfo`
   ADD PRIMARY KEY (`account_id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT cho các bảng đã đổ
 --
 
 --
--- AUTO_INCREMENT for table `account`
+-- AUTO_INCREMENT cho bảng `account`
 --
 ALTER TABLE `account`
-  MODIFY `account_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `account_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
--- AUTO_INCREMENT for table `comment`
+-- AUTO_INCREMENT cho bảng `comment`
 --
 ALTER TABLE `comment`
   MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `follow`
+-- AUTO_INCREMENT cho bảng `follow`
 --
 ALTER TABLE `follow`
   MODIFY `follow_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `love`
+-- AUTO_INCREMENT cho bảng `love`
 --
 ALTER TABLE `love`
-  MODIFY `love_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `love_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
--- AUTO_INCREMENT for table `notification`
+-- AUTO_INCREMENT cho bảng `notification`
 --
 ALTER TABLE `notification`
   MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT for table `paymenthistory`
+-- AUTO_INCREMENT cho bảng `paymenthistory`
 --
 ALTER TABLE `paymenthistory`
   MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `prompt`
+-- AUTO_INCREMENT cho bảng `prompt`
 --
 ALTER TABLE `prompt`
   MODIFY `prompt_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `promptdetail`
+-- AUTO_INCREMENT cho bảng `promptdetail`
 --
 ALTER TABLE `promptdetail`
   MODIFY `detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `report`
+-- AUTO_INCREMENT cho bảng `report`
 --
 ALTER TABLE `report`
   MODIFY `report_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `revenuemetrics`
+-- AUTO_INCREMENT cho bảng `revenuemetrics`
 --
 ALTER TABLE `revenuemetrics`
   MODIFY `metric_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `role`
+-- AUTO_INCREMENT cho bảng `role`
 --
 ALTER TABLE `role`
   MODIFY `role_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `save`
+-- AUTO_INCREMENT cho bảng `save`
 --
 ALTER TABLE `save`
   MODIFY `save_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `tag`
+-- AUTO_INCREMENT cho bảng `tag`
 --
 ALTER TABLE `tag`
   MODIFY `tag_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `userpayoutinfo`
+-- AUTO_INCREMENT cho bảng `userpayoutinfo`
 --
 ALTER TABLE `userpayoutinfo`
   MODIFY `account_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- Constraints for dumped tables
+-- Các ràng buộc cho các bảng đã đổ
 --
 
 --
--- Constraints for table `account`
+-- Các ràng buộc cho bảng `account`
 --
 ALTER TABLE `account`
   ADD CONSTRAINT `_fk_account_role` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `comment`
+-- Các ràng buộc cho bảng `comment`
 --
 ALTER TABLE `comment`
   ADD CONSTRAINT `_fk_comment_account` FOREIGN KEY (`account_id`) REFERENCES `account` (`account_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `_fk_comment_promt` FOREIGN KEY (`prompt_id`) REFERENCES `prompt` (`prompt_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `follow`
+-- Các ràng buộc cho bảng `follow`
 --
 ALTER TABLE `follow`
   ADD CONSTRAINT `_fk_follower_account` FOREIGN KEY (`follower_id`) REFERENCES `account` (`account_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `_fk_following_account` FOREIGN KEY (`following_id`) REFERENCES `account` (`account_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `love`
+-- Các ràng buộc cho bảng `love`
 --
 ALTER TABLE `love`
   ADD CONSTRAINT `_fk_love_account` FOREIGN KEY (`account_id`) REFERENCES `account` (`account_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `_fk_love_promt` FOREIGN KEY (`prompt_id`) REFERENCES `prompt` (`prompt_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `notification`
+-- Các ràng buộc cho bảng `notification`
 --
 ALTER TABLE `notification`
   ADD CONSTRAINT `_fk_reciever_account` FOREIGN KEY (`reciever_id`) REFERENCES `account` (`account_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `_fk_sender_account` FOREIGN KEY (`reciever_id`) REFERENCES `account` (`account_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `paymenthistory`
+-- Các ràng buộc cho bảng `paymenthistory`
 --
 ALTER TABLE `paymenthistory`
   ADD CONSTRAINT `_fk_paymenthistory_account` FOREIGN KEY (`account_id`) REFERENCES `account` (`account_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `_fk_paymenthistory_promt` FOREIGN KEY (`prompt_id`) REFERENCES `prompt` (`prompt_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `prompt`
+-- Các ràng buộc cho bảng `prompt`
 --
 ALTER TABLE `prompt`
   ADD CONSTRAINT `_fk_promt_account` FOREIGN KEY (`account_id`) REFERENCES `account` (`account_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `promptdetail`
+-- Các ràng buộc cho bảng `promptdetail`
 --
 ALTER TABLE `promptdetail`
   ADD CONSTRAINT `_fk_promtdetail_promt_` FOREIGN KEY (`prompt_id`) REFERENCES `prompt` (`prompt_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `prompttag`
+-- Các ràng buộc cho bảng `prompttag`
 --
 ALTER TABLE `prompttag`
   ADD CONSTRAINT `_fk_promttag_promt` FOREIGN KEY (`prompt_id`) REFERENCES `prompt` (`prompt_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `_fk_promttag_tag` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`tag_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `report`
+-- Các ràng buộc cho bảng `report`
 --
 ALTER TABLE `report`
   ADD CONSTRAINT `_fk_report_account` FOREIGN KEY (`account_id`) REFERENCES `account` (`account_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `_fk_report_promt` FOREIGN KEY (`prompt_id`) REFERENCES `prompt` (`prompt_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `save`
+-- Các ràng buộc cho bảng `save`
 --
 ALTER TABLE `save`
   ADD CONSTRAINT `_fk_save_account` FOREIGN KEY (`account_id`) REFERENCES `account` (`account_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `_fk_save_promt` FOREIGN KEY (`prompt_id`) REFERENCES `prompt` (`prompt_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `userpayoutinfo`
+-- Các ràng buộc cho bảng `userpayoutinfo`
 --
 ALTER TABLE `userpayoutinfo`
   ADD CONSTRAINT `_fk_userpayoutinfo_account` FOREIGN KEY (`account_id`) REFERENCES `account` (`account_id`) ON DELETE CASCADE ON UPDATE CASCADE;
