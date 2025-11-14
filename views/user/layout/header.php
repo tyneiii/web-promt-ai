@@ -20,30 +20,31 @@
       z-index: 1000;
     }
 
-    #ad-wrapper, .ad-wrapper {
-    position: relative;
-    display: inline-block;
+    #ad-wrapper,
+    .ad-wrapper {
+      position: relative;
+      display: inline-block;
     }
 
     #sticky-ad-banner img {
-        height: 100px;
-        width: 850px;
-        max-width: 200vw;
-        border-radius: 6px;
+      height: 100px;
+      width: 850px;
+      max-width: 200vw;
+      border-radius: 6px;
     }
 
     #close-ad-btn {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        font-size: 22px;
-        font-weight: bold;
-        background: rgba(0,0,0,0.4);
-        color: white;
-        padding: 3px 7px;
-        border-radius: 50%;
-        cursor: pointer;
-        z-index: 10;
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      font-size: 22px;
+      font-weight: bold;
+      background: rgba(0, 0, 0, 0.4);
+      color: white;
+      padding: 3px 7px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 10;
     }
 
     #close-ad-btn:hover {
@@ -75,7 +76,6 @@
     header("Location: home.php");
     exit();
   }
-
   include_once __DIR__ . '/../../../config.php';
   ?>
   <nav class="navbar">
@@ -103,7 +103,9 @@
         <i class="fa-regular fa-bell icon"></i>
         <div class="dropdown">
           <button class="dropbtn">
-            <?php echo htmlspecialchars($_SESSION['name_user']); ?>
+            <img src="<?php echo htmlspecialchars($_SESSION['avatar']); ?>"
+              alt="Ảnh đại diện"
+              class="avatar-image">
           </button>
           <div class="dropdown-content">
             <form action="../user/profile.php" method="post">
@@ -114,16 +116,19 @@
             </form>
           </div>
         </div>
-      <?php else: ?>
-        <a href="../../views/login/login.php" class="login-btn"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</a>
-      <?php endif; ?>
-      <div>
-        <form action="../manager/account.php" method="post">
-          <button type="submit" title="Đến trang quản lý" class="gear-btn">
-            <i class="fa-solid fa-gears"></i>
-          </button>
-        </form>
-      </div>
+    </div>
+  <?php else: ?>
+    <a href="../../views/login/login.php" class="login-btn"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</a>
+  <?php endif; ?>
+  <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 1):?>
+    <div>
+      <form action="../manager/account.php" method="post">
+        <button type="submit" title="Đến trang quản lý" class="gear-btn">
+          <i class="fa-solid fa-gears"></i>
+        </button>
+      </form>
+    </div>
+  <?php endif; ?>
   </nav>
 </body>
 
