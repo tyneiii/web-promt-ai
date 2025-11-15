@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -9,14 +10,15 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body {
-      padding-top: 80px !important; 
+      padding-top: 80px !important;
     }
 
     @media (max-width: 768px) {
       body {
-        padding-top: 160px !important; 
+        padding-top: 160px !important;
       }
     }
+
     #sticky-ad-banner {
       position: fixed;
       bottom: 0;
@@ -112,7 +114,7 @@
         <i class="fa-regular fa-bell icon"></i>
         <div class="dropdown">
           <button class="dropbtn">
-            <img src="<?php echo htmlspecialchars($_SESSION['avatar']); ?>"
+            <img src="../../public/img/<?=($_SESSION['avatar']); ?>"
               alt="Ảnh đại diện"
               class="avatar-image">
           </button>
@@ -129,7 +131,7 @@
   <?php else: ?>
     <a href="../../views/login/login.php" class="login-btn"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</a>
   <?php endif; ?>
-  <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 1):?>
+  <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 1): ?>
     <div>
       <form action="../manager/account.php" method="post">
         <button type="submit" title="Đến trang quản lý" class="gear-btn">
