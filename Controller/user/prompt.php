@@ -75,4 +75,27 @@ function lovePrompt($account_id, $prompt_id, $conn) {
         }
     }
 }
+
+function getReportedPrompts($conn, $search) {
+    $sql = "SELECT prompt.prompt_id, prompt.title, prompt.status, report.reason
+            FROM prompt
+            JOIN report ON prompt.prompt_id = report.prompt_id
+            WHERE prompt.prompt_id = ? OR report.reason LIKE ?";
+    $stmt = $conn->prepare($sql);
+    $like_search = "%" . $search . "%";
+    $stmt->bind_param("is", $search, $like_search);
+    $stmt->execute();
+    return $stmt->get_result();
+}
+function getAlldPrompts($conn, $search, $status) {
+    $sql = "SELECT prompt_id, title, short_description, status 
+            FROM prompt
+            WHERE (prompt_id = ? OR title LIKE ? OR short_description LIKE ?) AND status LIKE ? ";
+    $stmt = $conn->prepare($sql);
+    $like_search = "%" . $search . "%";
+    $status_like = empty($status) ? "%" : $status;
+    $stmt->bind_param("isss", $search, $like_search,$like_search,$status_like);
+    $stmt->execute();
+    return $stmt->get_result();
+}
 ?>
