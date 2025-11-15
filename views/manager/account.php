@@ -7,6 +7,24 @@
   <title>Quản lý tài khoản</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="../../public/css/manager/sidebar.css">
+  <?php include_once __DIR__ . '/../../Controller/account.php'; ?>
+  <style>
+    .table-container table td:nth-child(4) {
+      vertical-align: middle;
+    }
+
+    .role-tag {
+      font-weight: bold;
+    }
+
+    .admin-tag {
+      color: blue;
+    }
+
+    .user-tag {
+      color:black ;
+    }
+  </style>
 </head>
 
 <body>
@@ -14,26 +32,26 @@
     <?php include_once __DIR__ . '/layout/sidebar.php'; ?>
     <div class="main">
       <?php
-      $accounts = [
-        ['id' => 1, 'name' => 'Nguyễn Văn A', 'email' => 'a@gmail.com', 'type' => 'admin', 'password' => '123456'],
-        ['id' => 2, 'name' => 'Trần Thị B', 'email' => 'b@gmail.com', 'type' => 'user', 'password' => '123456'],
-        ['id' => 3, 'name' => 'Lê Văn C', 'email' => 'c@gmail.com', 'type' => 'admin', 'password' => '123456'],
-        ['id' => 4, 'name' => 'Phạm Thị D', 'email' => 'd@gmail.com', 'type' => 'user', 'password' => '123456'],
-      ];
-
       $search = $_GET['search'] ?? '';
-      $selectedType = $_GET["type"] ?? '';
-      $filteredAccounts = array_filter($accounts, function ($a) use ($selectedType, $search) {
-        $matchType = $selectedType ? $a['type'] === $selectedType : true;
-        $matchSearch = $search ? (stripos($a['name'], $search) !== false || stripos($a['email'], $search) !== false) : true;
-        return $matchType && $matchSearch;
-      });
+      $role = $_GET["type"] ?? '';
+      $accounts = getAccounts($conn, $search, $role);
+      function roleCSS($roleName)
+      {
+        if ($roleName === 'Admin') {
+          return 'role-tag admin-tag';
+        }
+
+        if ($roleName === 'User') {
+          return 'role-tag user-tag';
+        }
+        return '';
+      }
       ?>
       <fieldset class="account-fieldset">
         <legend>Quản lý tài khoản</legend>
         <div class="top-bar">
           <div class="stats">
-            Tổng số tài khoản: <strong><?= count($filteredAccounts) ?></strong>
+            Tổng số tài khoản: <strong><?= $accounts->num_rows ?></strong>
           </div>
           <div class="search-box" style="display: flex; gap: 10px; align-items: center;">
             <form method="get" style="display: flex; gap: 10px; align-items: center;">
@@ -43,8 +61,8 @@
 
               <select name="type">
                 <option value="">Tất cả</option>
-                <option value="admin" <?= ($selectedType === 'admin') ? 'selected' : '' ?>>Admin</option>
-                <option value="user" <?= ($selectedType === 'user') ? 'selected' : '' ?>>User</option>
+                <option value="admin" <?= ($role === 'admin') ? 'selected' : '' ?>>Admin</option>
+                <option value="user" <?= ($role === 'user') ? 'selected' : '' ?>>User</option>
               </select>
 
               <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -60,24 +78,28 @@
                   <th>Tên tài khoản</th>
                   <th>Email</th>
                   <th>Loại tài khoản</th>
-                  <th>Mật khẩu</th>
                   <th>Thao tác</th>
                 </tr>
               </thead>
               <tbody>
-                <?php foreach ($filteredAccounts as $index => $acc): ?>
+                <?php $index = 0;
+                while ($acc = $accounts->fetch_assoc()): ?>
                   <tr style="background-color: <?= $index % 2 === 0 ? '#ffffffff' : '#dcdbdbff' ?>;">
-                    <td><?= $acc["id"] ?></td>
-                    <td><?= htmlspecialchars($acc["name"]) ?></td>
+                    <td><?= $acc["account_id"] ?></td>
+                    <td><?= htmlspecialchars($acc["username"]) ?></td>
                     <td><?= htmlspecialchars($acc["email"]) ?></td>
-                    <td style="text-transform: capitalize;"><?= $acc["type"] ?></td>
-                    <td><?= htmlspecialchars($acc["password"]) ?></td>
+                    <td>
+                      <span class="<?= roleCSS($acc['role_name']) ?>">
+                        <?= $acc["role_name"] ?>
+                      </span>
+                    </td>
                     <td class="actions">
                       <button class="btn-edit"><i class="fa-solid fa-magnifying-glass"></i> Kiểm tra</button>
                       <button class="btn-delete"><i class="fa-solid fa-trash"></i> Xóa</button>
                     </td>
                   </tr>
-                <?php endforeach; ?>
+                <?php $index++;
+                endwhile; ?>
               </tbody>
             </table>
           </div>
