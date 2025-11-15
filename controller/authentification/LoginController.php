@@ -13,7 +13,7 @@ function handleLogin($conn)
 
         if ($stmt = $conn->prepare($sql)) {
             $stmt->bind_param("s", $email);
-            
+
             if ($stmt->execute()) {
                 $stmt->store_result();
                 if ($stmt->num_rows == 1) {
@@ -22,14 +22,14 @@ function handleLogin($conn)
                     $avatar = "";
                     $role = "";
                     $hashed_password_from_db = "";
-                    
-                    $token = null; 
-                    
+
+                    $token = null;
+
                     $stmt->bind_result($account_id, $username, $avatar, $role, $hashed_password_from_db, $token);
-                    
+
                     if ($stmt->fetch()) {
                         if (password_verify($password_input, $hashed_password_from_db)) {
-                            if ($token !== null) { 
+                            if ($token !== null) {
                                 $_SESSION['inactive_error'] = "Tài khoản của bạn chưa được kích hoạt. Vui lòng kiểm tra email.";
                                 if (isset($_POST['email'])) {
                                     $_SESSION['login_email_attempt'] = $_POST['email'];
@@ -45,7 +45,11 @@ function handleLogin($conn)
                             $_SESSION["loggedin"] = true;
                             $_SESSION["id_user"] = $account_id;
                             $_SESSION["name_user"] = $username;
-                            $_SESSION["avatar"] = $avatar;
+                            // FIX avatar NULL → dùng ảnh mặc định
+                            $_SESSION["avatar"] = !empty($avatar)
+                                ? "../../public/img/" . $avatar
+                                : "../../public/img/default-avatar.png";
+
                             $_SESSION["role"] = $role;
                             header("Location: ../../views/user/home.php");
                             exit;
@@ -64,4 +68,3 @@ function handleLogin($conn)
         $conn->close();
     }
 }
-?>
