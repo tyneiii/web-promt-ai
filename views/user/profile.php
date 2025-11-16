@@ -38,9 +38,16 @@ if ($tab === 'favorites') {
             JOIN prompt p ON l.prompt_id = p.prompt_id 
             WHERE l.account_id = $acc_id AND l.status = 'OPEN'
             ORDER BY l.love_at DESC ";
-} else {
+} else if ($tab === 'posts') {
     $sql = "SELECT * FROM prompt WHERE account_id = $acc_id ORDER BY prompt_id DESC";
+} else {
+    $sql = "SELECT p.* 
+            FROM save s 
+            JOIN prompt p ON s.prompt_id = p.prompt_id 
+            WHERE s.account_id = $acc_id 
+            ORDER BY s.save_id DESC ";
 }
+
 
 $result = mysqli_query($conn, $sql);
 // // Lấy danh sách bài viết của user
@@ -63,8 +70,8 @@ $result = mysqli_query($conn, $sql);
     <i class="fa-solid fa-arrow-left"></i>
 </button>
 <div class="profile-container">
-    <div class="header" style="background-image: url('../../public/img/bg.png');">
-        <img src="../../public/img/<?= $avatar ?>" class="avatar" alt="Ảnh đại diện">
+    <div class="header" style="background-image: url('../../public/img/<?= $user['bg_avatar'] != NULL ? $user['bg_avatar'] : 'bg.png' ?>');">
+        <img src="../../public/img/<?= $user['avatar'] ?>" class="avatar" alt="Ảnh đại diện">
 
     </div>
     <div class="profile-info">
@@ -87,6 +94,7 @@ $result = mysqli_query($conn, $sql);
     <div class="tabs">
         <a href="?tab=posts" class="tab <?= $tab === 'posts' ? 'active' : '' ?>">🔁 Bài viết</a>
         <a href="?tab=favorites" class="tab <?= $tab === 'favorites' ? 'active' : '' ?>">❤️ Yêu thích</a>
+        <a href="?tab=saves" class="tab <?= $tab === 'saves' ? 'active' : '' ?>"> 🔖 Đã Lưu</a>
     </div>
 </div>
 
@@ -94,12 +102,13 @@ $result = mysqli_query($conn, $sql);
 <div class="write-container">
     <?php if (mysqli_num_rows($result) > 0): ?>
         <?php while ($row = mysqli_fetch_assoc($result)): ?>
-            <div class="write-item">
+            <a href="detail_post.php?prompt_id=<?= $row['prompt_id'] ?>" class="write-item" style="text-decoration:none; color:inherit;">
                 <h2><?= $row['title'] ?></h2>
                 <h3><?= $row['short_description'] ?></h3>
                 <span><?= $row['love_count'] ?> ❤️ • <?= number_format($row['comment_count']) ?> bình luận</span>
-            </div>
+            </a>
         <?php endwhile; ?>
+
     <?php else: ?>
         <p style="text-align:center; color:gray;">
             <?= $tab === 'favorites' ? 'Chưa có bài viết yêu thích nào.' : 'Chưa có bài viết nào.' ?>

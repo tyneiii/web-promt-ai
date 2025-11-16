@@ -35,6 +35,7 @@ CREATE TABLE `account` (
   `fullname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `avatar` varchar(255) DEFAULT NULL,
+   `bg_avatar` varchar(255) DEFAULT NULL,
   `role_id` int(11) NOT NULL,
   `token` varchar(255) DEFAULT NULL,
   `create_at` datetime DEFAULT NULL
