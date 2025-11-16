@@ -45,10 +45,11 @@ function handleLogin($conn)
                             $_SESSION["loggedin"] = true;
                             $_SESSION["id_user"] = $account_id;
                             $_SESSION["name_user"] = $username;
+                            $_SESSION["avatar"] = $avatar;
                             // FIX avatar NULL → dùng ảnh mặc định
-                            $_SESSION["avatar"] = !empty($avatar)
-                                ? "../../public/img/" . $avatar
-                                : "../../public/img/default-avatar.png";
+                            // $_SESSION["avatar"] = !empty($avatar)
+                            //     ? "../../public/img/" . $avatar
+                            //     : "../../public/img/default-avatar.png";
 
                             $_SESSION["role"] = $role;
                             header("Location: ../../views/user/home.php");

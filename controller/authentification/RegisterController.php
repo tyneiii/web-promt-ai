@@ -50,7 +50,6 @@ function handleRegister($conn)
         
         // ⭐️ THAY ĐỔI: Gán đường dẫn avatar mặc định
         $avatar = "../../public/img/default_avatar.png";
-        
         // ⭐️ THAY ĐỔI: Thêm `avatar` vào câu lệnh INSERT
         $sql_insert = "INSERT INTO account (username, email, password, role_id, token, create_at, avatar) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {

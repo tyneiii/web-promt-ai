@@ -13,7 +13,7 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    height: 280px; /* tăng thêm chiều cao */
+    height: 300px; /* tăng thêm chiều cao */
 }
 
 .back-btn {
@@ -196,3 +196,10 @@
   color: #d33;                  /* Màu khi hover, tuỳ bạn chỉnh */
 }
 
+.write-item {
+    display: block;
+    cursor: pointer;
+}
+.write-item:hover {
+    background: #1a1a1a; 
+}

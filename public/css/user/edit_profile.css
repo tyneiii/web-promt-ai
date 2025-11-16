@@ -252,3 +252,50 @@ textarea {
 #avatar {
   display: none;
 }
+.background-section {
+    margin-bottom: 20px;
+}
+
+.edit-bg-icon {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: #00000088;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#background {
+    display: none;
+}
+/* Cho phép form cuộn */
+.modal {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* Phòng trường hợp overlay chặn cuộn */
+.overlay {
+    overflow-y: auto !important;
+}
+
+/* Ảnh nền nhỏ lại để không chiếm hết form */
+.background-container {
+    position: relative;
+    width: 100%;
+    height: 300px;      /* kích thước preview chuẩn */
+    overflow: hidden;
+    border-radius: 12px;
+    border: 2px solid #444;
+}
+
+.background-img {
+    width: 100%;
+    height: 200px;       /* luôn vừa container */
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+
