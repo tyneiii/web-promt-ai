@@ -49,14 +49,15 @@ function handleRegister($conn)
         $create_at = date('Y-m-d H:i:s');
         
         // ⭐️ THAY ĐỔI: Gán đường dẫn avatar mặc định
-        $avatar = "../../public/img/default_avatar.png";
+        $avatar = "default_avatar.png";
+        $bg_avatar = "bg.png";
         // ⭐️ THAY ĐỔI: Thêm `avatar` vào câu lệnh INSERT
-        $sql_insert = "INSERT INTO account (username, email, password, role_id, token, create_at, avatar) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql_insert = "INSERT INTO account (username, email, password, role_id, token, create_at, avatar, bg_avatar) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             if ($stmt_insert = $conn->prepare($sql_insert)) {
                 
                 // ⭐️ THAY ĐỔI: Thêm `avatar` vào bind_param ("sssiss" -> "sssiss**s**")
-                $stmt_insert->bind_param("sssisss", $username, $email, $hashed_password, $role_id, $token, $create_at, $avatar);
+                $stmt_insert->bind_param("sssissss", $username, $email, $hashed_password, $role_id, $token, $create_at, $avatar, $bg_avatar);
 
                 if ($stmt_insert->execute()) {
                     // 5. Gửi email kích hoạt
