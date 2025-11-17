@@ -76,6 +76,17 @@ function lovePrompt($account_id, $prompt_id, $conn) {
     }
 }
 
+function getAwaitingPrompts($conn, $search) {
+   $sql = "SELECT prompt_id, title, short_description, status 
+            FROM prompt
+            WHERE (prompt_id = ? OR title LIKE ? OR short_description LIKE ?) AND status = 'waiting' ";
+    $stmt = $conn->prepare($sql);
+    $like_search = "%" . $search . "%";
+    $stmt->bind_param("iss", $search, $like_search,$like_search);
+    $stmt->execute();
+    return $stmt->get_result();
+}
+
 function getReportedPrompts($conn, $search) {
     $sql = "SELECT prompt.prompt_id, prompt.title, prompt.status, report.reason
             FROM prompt
@@ -87,6 +98,7 @@ function getReportedPrompts($conn, $search) {
     $stmt->execute();
     return $stmt->get_result();
 }
+
 function getAlldPrompts($conn, $search, $status) {
     $sql = "SELECT prompt_id, title, short_description, status 
             FROM prompt

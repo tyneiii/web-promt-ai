@@ -61,10 +61,8 @@ include_once __DIR__ . '/../../Controller/user/prompt.php';
             <i class="fa-solid fa-flag"></i> Báo cáo
           </button>
         </div>
-
         <h4><?= htmlspecialchars($prompt['description']) ?></h4>
         <p><?= implode('<br><br>', $prompt['details']) ?></p>
-
         <div class="card-buttons">
           <button type="submit" name="loveBtn" id="loveBtn" title="Tim bài viết" value="<?= $prompt['prompt_id'] ?>">
             <i class="fa-heart <?= $prompt['is_loved'] ? 'fa-solid text-red' : 'fa-regular' ?>"></i> <?= $prompt['love_count'] ?>
@@ -77,7 +75,6 @@ include_once __DIR__ . '/../../Controller/user/prompt.php';
           <button type="submit" name="saveBtn" title="Lưu bài viết" id="saveBtn" value="<?= $prompt['prompt_id'] ?>">
             <i class="fa-regular fa-bookmark"></i> <?= $prompt['save_count'] ?>
           </button>
-          
         </div>
       </div>
     </form>

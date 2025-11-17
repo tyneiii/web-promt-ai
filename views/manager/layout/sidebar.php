@@ -1,5 +1,8 @@
 <link rel="stylesheet" href="../../public/css/manager/sidebar.css">
 <?php include_once __DIR__ . '/../../../config.php' ?>
+<?php include_once __DIR__ . '/../../../Controller/user/prompt.php'; ?>
+<?php include_once __DIR__ . '/../../../Controller/account.php'; ?>
+
 <div class="sidebar">
   <h2>
     <form action="../user/home.php">
