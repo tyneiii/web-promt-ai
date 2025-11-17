@@ -51,12 +51,12 @@
 }
 
 .profile-info {
-    margin-top: 30px; /* tạo khoảng cách sau avatar */
+    margin-top: 30px; 
     text-align: center;
 }
 
 .profile-info h2 {
-    margin: 10px 0 15px;
+    margin: 5px 0 15px;
     font-size: 1.6rem;
 }
 
@@ -73,14 +73,17 @@
     margin-bottom: 10px;
 }
 
-.edit-btn,.add-btn {
+.edit-btn, .add-btn {
     border: none;
-    padding: 8px 14px;
-    border-radius: 6px;
+    padding: 10px 16px;      /* đồng bộ */
+    border-radius: 8px;      /* đồng bộ */
     cursor: pointer;
-    font-weight: bold;
+    font-weight: 600;        /* đồng bộ */
+    font-size: 1rem;         /* đồng bộ */
+    display: inline-block;
 }
 
+/* Chỉ khác màu */
 .edit-btn {
     background-color: #fae206;
     color: #151515;
@@ -89,7 +92,9 @@
 .add-btn {
     background-color: #e5145d;
     color: #fff;
+    padding: 8.5px 16px;
 }
+
 
 .setting-btn, .share-btn {
     background-color: #222;
@@ -202,4 +207,39 @@
 }
 .write-item:hover {
     background: #1a1a1a; 
+}
+
+#follow-btn {
+    padding: 10px 20px;
+    border-radius: 12px;
+    background: #ff2d55;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+    font-weight: bold;
+    font-size: 1rem;
+}
+#follow-btn.not-following {
+    background-color: #ff2d55;
+    color: white;
+}
+
+
+/* Trạng thái đã follow — kiểu TikTok (nút xám với icon người + tick) */
+#follow-btn.following {
+    background-color: #333;
+    border: 1px solid #555;
+    color: #fff;
+    display: inline-block;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 14px;
+    transition: background-color 0.3s, color 0.3s;
+   
+}
+
+/* Icon căn chỉnh */
+#follow-btn i {
+    font-size: 1rem;
 }
