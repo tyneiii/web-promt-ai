@@ -1,4 +1,5 @@
 <?php
+session_start();
 include_once __DIR__ . '/layout/header.php';
 include_once __DIR__ . '/../../config.php';
 
@@ -41,6 +42,19 @@ $full_prompt = $prompt['short_description'];
 foreach ($details as $d) {
     $full_prompt .= "\n" . $d['content'];
 }
+
+// Lấy danh sách bình luận
+$sql_cmt = "SELECT c.comment_id, c.prompt_id, c.account_id, c.content, c.created_at,
+                   a.username, a.avatar
+            FROM comment c
+            JOIN account a ON c.account_id = a.account_id
+            WHERE c.prompt_id = ?
+            ORDER BY c.created_at DESC";
+$stmt_cmt = $conn->prepare($sql_cmt);
+$stmt_cmt->bind_param("i", $id);
+$stmt_cmt->execute();
+$cmt_result = $stmt_cmt->get_result();
+$comments = $cmt_result->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <link rel="stylesheet" href="../../public/css/detail_post.css">
@@ -61,7 +75,7 @@ foreach ($details as $d) {
 
   <h1 class="detail-title"><?= htmlspecialchars($prompt['short_description']) ?></h1>
 
-  <?php if ($prompt['image']): ?>
+  <?php if (!empty($prompt['image'])): ?>
     <img class="post-image" src="../../<?= htmlspecialchars($prompt['image']) ?>" alt="Ảnh bài viết" style="max-width: 100%; border-radius: 8px; margin-bottom: 20px;">
   <?php endif; ?>
 
@@ -72,25 +86,86 @@ foreach ($details as $d) {
   </div>
 
   <div class="detail-actions">
-    <button class="love"><i class="fa-regular fa-heart"></i> <?= $prompt['love_count'] ?></button>
-    <button><i class="fa-regular fa-comment"></i> <?= $prompt['comment_count'] ?></button>
-    <button class="save"><i class="fa-regular fa-bookmark"></i> <?= $prompt['save_count'] ?></button>
+    <button class="love"><i class="fa-regular fa-heart"></i> <?= (int)$prompt['love_count'] ?></button>
+    <button><i class="fa-regular fa-comment"></i> <?= (int)$prompt['comment_count'] ?></button>
+    <button class="save"><i class="fa-regular fa-bookmark"></i> <?= (int)$prompt['save_count'] ?></button>
     <button type="button" class="run-btn" title="Xem kết quả" 
             data-prompt="<?= htmlspecialchars($full_prompt, ENT_QUOTES) ?>">
       ⚡ Run Prompt
     </button>
   </div>
 
+  <!-- PHẦN BÌNH LUẬN -->
   <div class="comment-section">
     <h4>Bình luận</h4>
-    <!-- Thêm form bình luận nếu cần -->
+
+    <!-- Form thêm bình luận -->
     <div class="comment-form">
-      <textarea placeholder="Viết bình luận..."></textarea>
-      <button>Gửi</button>
+      <?php if (isset($_SESSION['id_user'])): ?>
+        <form method="post" action="../../Controller/user/process_comment.php">
+          <input type="hidden" name="action" value="add">
+          <input type="hidden" name="prompt_id" value="<?= $id ?>">
+          <textarea name="comment_content" rows="3" placeholder="Viết bình luận..." required></textarea>
+          <button type="submit">Gửi</button>
+        </form>
+      <?php else: ?>
+        <p>Bạn cần <a href="../login/login.php">đăng nhập</a> để bình luận.</p>
+      <?php endif; ?>
     </div>
+
     <!-- Danh sách bình luận -->
     <div class="comments-list">
-      <!-- Bình luận sẽ được load bằng JS -->
+      <?php if (empty($comments)): ?>
+        <p>Chưa có bình luận nào.</p>
+      <?php else: ?>
+        <?php foreach ($comments as $c): ?>
+          <div class="comment-item">
+            <div class="comment-avatar">
+              <img src="<?= htmlspecialchars($c['avatar'] ?? '../../public/img/user5.png') ?>" 
+                   alt="<?= htmlspecialchars($c['username']) ?>">
+            </div>
+            <div class="comment-body">
+              <div class="comment-header">
+                <strong><?= htmlspecialchars($c['username']) ?></strong>
+                <span class="comment-date">
+                  <?= date('d/m/Y H:i', strtotime($c['created_at'])) ?>
+                </span>
+              </div>
+
+              <!-- Nội dung bình luận -->
+              <div class="comment-content">
+                <?= nl2br(htmlspecialchars($c['content'])) ?>
+              </div>
+
+              <!-- Nút sửa / xoá (chỉ hiện cho chủ comment) -->
+              <?php if (isset($_SESSION['id_user']) && $_SESSION['id_user'] == $c['account_id']): ?>
+                <div class="comment-actions">
+                  <!-- Form sửa bình luận -->
+                  <details>
+                    <summary>Sửa</summary>
+                    <form method="post" action="../../Controller/user/process_comment.php" class="edit-comment-form">
+                      <input type="hidden" name="action" value="edit">
+                      <input type="hidden" name="prompt_id" value="<?= $id ?>">
+                      <input type="hidden" name="comment_id" value="<?= (int)$c['comment_id'] ?>">
+                      <textarea name="comment_content" rows="3" required><?= htmlspecialchars($c['content']) ?></textarea>
+                      <button type="submit">Lưu</button>
+                    </form>
+                  </details>
+
+                  <!-- Form xoá bình luận -->
+                  <form method="post" action="../../Controller/user/process_comment.php" onsubmit="return confirm('Bạn chắc chắn muốn xoá bình luận này?');" style="display:inline-block; margin-left:8px;">
+                    <input type="hidden" name="action" value="delete">
+                    <input type="hidden" name="prompt_id" value="<?= $id ?>">
+                    <input type="hidden" name="comment_id" value="<?= (int)$c['comment_id'] ?>">
+                    <button type="submit" class="btn-delete-comment">Xoá</button>
+                  </form>
+                </div>
+              <?php endif; ?>
+
+            </div>
+          </div>
+        <?php endforeach; ?>
+      <?php endif; ?>
     </div>
   </div>
 </div>
@@ -119,5 +194,185 @@ function closeDetailPage() {
   window.history.back();
 }
 </script>
-
 <script src="/web-promt-ai/public/js/run_api.js"></script>
+
+<style>
+  /* ===== COMMENT SECTION ===== */
+
+.comment-section {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #333;
+  color: #fff;
+  font-size: 14px;
+}
+
+.comment-section h4 {
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Form bình luận */
+.comment-form form {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.comment-form textarea {
+  flex: 1;
+  border-radius: 8px;
+  border: 1px solid #444;
+  padding: 10px 12px;
+  background: #111;
+  color: #f1f1f1;
+  resize: vertical;
+  min-height: 60px;
+  font-size: 14px;
+}
+
+.comment-form textarea::placeholder {
+  color: #777;
+}
+
+.comment-form button {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  background: linear-gradient(135deg, #ff6a3d, #ff944d);
+  color: #fff;
+  white-space: nowrap;
+  margin-top: 4px;
+}
+
+.comment-form button:hover {
+  opacity: 0.9;
+}
+
+/* Danh sách bình luận */
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Mỗi comment */
+.comment-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  background: #111;
+  border-radius: 10px;
+  border: 1px solid #222;
+}
+
+.comment-avatar img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* Nội dung comment */
+.comment-body {
+  flex: 1;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.comment-header strong {
+  font-size: 14px;
+}
+
+.comment-date {
+  font-size: 12px;
+  color: #888;
+}
+
+.comment-content {
+  margin-bottom: 6px;
+  white-space: pre-wrap;
+  line-height: 1.4;
+}
+
+/* Hành động Sửa / Xoá */
+.comment-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+
+/* Nút "Sửa" dùng <details> */
+.comment-actions details {
+  display: inline-block;
+}
+
+.comment-actions summary {
+  list-style: none;
+  cursor: pointer;
+  color: #ff8a4a;
+}
+
+.comment-actions summary::-webkit-details-marker {
+  display: none;
+}
+
+.comment-actions summary::before {
+  content: "";
+}
+
+/* Form sửa bên trong details */
+.edit-comment-form {
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.edit-comment-form textarea {
+  width: 100%;
+  min-height: 60px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background: #0c0c0c;
+  color: #f1f1f1;
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
+.edit-comment-form button {
+  align-self: flex-end;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  background: #3b82f6;
+  color: #fff;
+}
+
+/* Nút xoá */
+.btn-delete-comment {
+  background: transparent;
+  border: none;
+  color: #f97373;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0;
+}
+
+.btn-delete-comment:hover {
+  text-decoration: underline;
+}
+
+</style>
