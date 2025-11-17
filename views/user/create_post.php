@@ -92,15 +92,12 @@
     collapsibleGroups.forEach(group => {
       const header = group.querySelector('.collapsible-header');
       header.addEventListener('click', () => {
-        // Kiểm tra xem nhóm này có đang mở không
         const wasActive = group.classList.contains('active');
 
-        // Đóng tất cả các nhóm khác
         collapsibleGroups.forEach(otherGroup => {
           otherGroup.classList.remove('active');
         });
 
-        // Nếu nhóm vừa click không phải là nhóm đang mở, thì mở nó ra
         if (!wasActive) {
           group.classList.add('active');
         }
