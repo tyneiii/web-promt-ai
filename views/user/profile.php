@@ -132,7 +132,7 @@ $result = mysqli_query($conn, $sql);
         <div class="buttons">
             <?php if ($acc_id !== $profile_id): ?>
                 <button id="follow-btn"
-                    class="add-btn"
+
                     data-following="<?= $is_following ? 1 : 0 ?>">
                     <?= $is_following ? '<i class="fa-solid fa-user-check"></i> Đã follow' : 'Theo dõi' ?>
                 </button>
@@ -191,13 +191,13 @@ $result = mysqli_query($conn, $sql);
 
         // Hàm cập nhật nút ngay lập tức
         function updateButton() {
-            if (isFollowing) {
+            if (isFollowing == "1") {
                 followBtn.innerHTML = '<i class="fa-solid fa-user-check"></i> Đã follow';
-                followBtn.classList.add("followed");
+                followBtn.classList.add("following");
                 followBtn.dataset.following = "1";
             } else {
                 followBtn.innerHTML = 'Theo dõi';
-                followBtn.classList.remove("followed");
+                followBtn.classList.remove("following");
                 followBtn.dataset.following = "0";
             }
         }
