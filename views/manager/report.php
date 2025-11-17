@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quản lý bài đăng</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <?php include_once __DIR__ . '/../../Controller/user/prompt.php'; ?>
 </head>
-
 <body>
   <div class="container">
     <?php include_once __DIR__ . '/layout/sidebar.php'; ?>
@@ -21,13 +18,18 @@
         <legend>Bài đăng bị báo cáo</legend>
         <div class="top-bar">
           <div class="stats">
-            Tổng số bài bị báo: <strong><?= $reports->num_rows ?></strong>
+            Tổng số bài đăng: <strong><?= $reports->num_rows ?></strong>
           </div>
-          <div class="search-box" style="display: flex; gap: 10px; align-items: center;">
-            <form method="get" style="display: flex; gap: 10px; align-items: center;">
-              <input type="text" name="search" title="Tìm kiếm theo tiêu đề" placeholder="Tìm kiếm theo id hoặc reason..."
-                value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
-              <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+          <div class="search-box">
+            <form method="get">
+              <div class="search-group-styled">
+                <input type="text" name="search" class="search-bar-styled"
+                  title="Tìm kiếm theo tiêu đề" placeholder="Tìm kiếm bài đăng..."
+                  value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
+                <button type="submit" class="search-btn-styled">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+              </div>
             </form>
           </div>
         </div>
@@ -44,8 +46,9 @@
                 </tr>
               </thead>
               <tbody>
-                <?php $index=0; while ($report = $reports->fetch_assoc()): ?>
-                  <tr style="background-color: <?= $index % 2 === 0 ? '#ffffffff' : '#dcdbdbff' ?>;">
+                <?php $index = 0;
+                while ($report = $reports->fetch_assoc()): ?>
+                  <tr>
                     <td><?= $report['prompt_id'] ?></td>
                     <td><?= $report['title'] ?></td>
                     <td style="text-transform: capitalize; color:red; font-weight: bold;"><?= htmlspecialchars($report['status']) ?></td>
@@ -59,7 +62,8 @@
                       </button>
                     </td>
                   </tr>
-                <?php $index++; endwhile; ?>
+                <?php $index++;
+                endwhile; ?>
               </tbody>
             </table>
           </div>

@@ -5,8 +5,8 @@
 body {
     margin: 0;
     font-family: "Segoe UI", Arial, sans-serif;
-    background-color: #f1f1f1;
-    color: #333;
+    background-color: #1a1a1a; /* Tông nền đen chính, đậm hơn #333 */
+    color: #fff; /* Chữ mặc định trên nền đen */
 }
 
 .container {
@@ -21,7 +21,7 @@ body {
 /* --- Sidebar --- */
 .sidebar {
     width: 240px;
-    background-color: black; /* Dark background */
+    background-color: #111; /* Dark background */
     color: #ccc;
     min-height: 100vh;
     padding-top: 10px;
@@ -38,7 +38,7 @@ body {
     font-weight: bold;
     cursor: pointer;
     color: #151515;
-    background: red;
+    background: rgb(255, 42, 42);
     box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     text-align: center;
@@ -158,7 +158,7 @@ input.add-btn:hover {
     display: none;
     list-style: none;
     padding-left: 15px;
-    background-color: black; /* Slightly lighter dark */
+    background-color: #1a1a1a; /* Slightly lighter dark */
 }
 
 .sidebar ul li.menu-parent:hover ul.submenu {
@@ -224,16 +224,16 @@ input.add-btn:hover {
     width: 95%;
     margin: 30px auto;
     padding: 20px 25px;
-    border: 2px solid #0073aa;
+    border: 2px solid #e53935; /* Đổi viền trắng sang Đỏ */
     border-radius: 10px;
-    background-color: #ffffff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #1e1e1e; /* Nền của fieldset cũng là tông đen */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .account-fieldset legend {
-    font-size: 20px;
+    font-size: 24px; /* Tăng cỡ chữ lớn hơn */
     font-weight: bold;
-    color: #0073aa;
+    color: #fff;
     padding: 0 12px;
 }
 
@@ -245,45 +245,83 @@ input.add-btn:hover {
 }
 
 .stats {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 500;
-    color: #333;
+    color: #ccc; /* Giảm độ sáng của chữ stats */
 }
 
+strong{
+    font-weight: 500;
+}
+
+/* Các tùy chỉnh cho Search Box và Form */
 .search-box {
     display: flex;
     align-items: center;
     gap: 6px;
 }
 
-.search-box input {
-    padding: 8px 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    outline: none;
-    width: 200px;
+.search-box form {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Container nhóm input và button thành một khối */
+.search-group-styled {
+    display: flex;
+    align-items: center;
+    width: 300px; /* Tăng nhẹ chiều rộng */
+    background: #111; 
+    border-radius: 10px; 
+    overflow: hidden;
+    border: 2px solid #555;
     transition: border-color 0.2s;
 }
 
-.search-box input:focus {
-    border-color: #0073aa;
+/* Input bên trong khối tìm kiếm */
+.search-bar-styled {
+    flex: 1; 
+    padding: 8px 10px;
+    background: transparent; 
+    color: white;
+    border: none; 
+    outline: none;
+    font-size: 16px;
 }
 
-.search-box button {
-    background-color: #0073aa;
+.search-btn-styled {
+    height: 100%; 
+    padding: 8px; 
+    background-color: #e53935; /* Nút tìm kiếm màu đỏ */
     color: #fff;
     border: none;
-    padding: 8px 10px;
-    border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    font-size: 14px;
+    transition: all 0.2s;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
 }
 
-.search-box button:hover {
-    background-color: #005f8a;
+.search-btn-styled:hover {
+    background-color: red;
 }
 
-/* --- Table --- */
+.search-group-styled:focus-within {
+    border-color: #ff5252;
+}
+
+select{ 
+    border: 2px solid #555;
+    border-radius: 10px;
+    padding: 8px 10px;
+    margin: 0 2px;
+    background: #1e1e1e; /* Đổi nền trắng sang đen */
+    color: #fff; /* Chữ trắng */
+}
+select option {
+    background: #1e1e1e; /* Đảm bảo option cũng có nền đen */
+    color: #fff;
+}
 .table-container {
     width: 100%;
     margin: 0 auto;
@@ -292,31 +330,48 @@ input.add-btn:hover {
 table {
     width: 100%;
     border-collapse: collapse;
-    background-color: #fff;
-    border-style: solid 2px black;
+    background-color: #1e1e1e; /* Đổi nền trắng sang tông đen */
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    color: #fff; /* Chữ trong bảng là màu trắng */
 }
 .table-wrapper {
     margin-top: 10px;
-    border: 1px solid black;
+    border: 1px solid #e53935; /* Đổi viền đen sang Đỏ */
     border-radius: 12px;
-    overflow: hidden; /* cắt tràn các góc của table */
+    overflow: hidden;
 }
 
 th, td {
     padding: 12px 16px;
     text-align: left;
+    border-bottom: 2px solid black; /* Viền giữa các hàng màu xám đậm */
 }
 
 th {
-    background-color: #0073aa;
+    background-color: #e53935; 
     color: #fff;
 }
 
+.table-container table tbody tr:nth-child(odd) {
+    background-color: #1e1e1e; 
+}
+
+.table-container table tbody tr:nth-child(even) {
+    background-color: #282828; 
+}
+
+.table-container table tbody tr:hover {
+    background-color: #3a3a3a; 
+}
+
+th:last-child {
+    border-right: none;
+}
+
 tr:hover {
-    background-color: #f1f1f1;
+    background-color: #3a3a3a; /* Hiệu ứng hover tông xám đậm */
 }
 
 /* --- Action buttons --- */
@@ -336,15 +391,16 @@ tr:hover {
 }
 
 .btn-edit {
-    background-color: #0073aa;
+    background-color: #e53935; /* Đổi từ Xanh Dương sang Đỏ */
 }
 
 .btn-edit:hover {
-    background-color: #005f8a;
+    background-color: #d32f2f; /* Đỏ đậm hơn khi hover */
 }
 
+/* Nút Xóa (Delete) */
 .btn-delete {
-    background-color: #d9534f;
+    background-color: #d9534f; /* Giữ màu đỏ/hồng để phù hợp với tông Đỏ-Đen */
 }
 
 .btn-delete:hover {
@@ -352,11 +408,11 @@ tr:hover {
 }
 a.btn-edit,
 a.btn-delete {
-  text-decoration: none;
-  display: inline-block;
+    text-decoration: none;
+    display: inline-block;
 }
 
 a.btn-edit:hover,
 a.btn-delete:hover {
-  text-decoration: none;
+    text-decoration: none;
 }
