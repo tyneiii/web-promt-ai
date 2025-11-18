@@ -118,7 +118,7 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : 'posts';
                 WHERE l.account_id = $profile_id AND l.status = 'OPEN'
                 ORDER BY l.love_at DESC";
     } else if ($tab === 'posts') {
-        $sql = "SELECT p.*, a.username, a.avatar 
+        $sql = "SELECT p.*, a.username, a.avatar
                 FROM prompt p 
                 JOIN account a ON p.account_id = a.account_id
                 WHERE p.account_id = $profile_id 
@@ -188,7 +188,8 @@ $result = mysqli_query($conn, $sql);
         <?php while ($row = mysqli_fetch_assoc($result)): ?>
             <?php 
                 $post_avatar = $row['avatar'];
-                if (!$post_avatar || strtolower($post_avatar) === "null" || !file_exists(__DIR__ . "/../../public/img/$post_avatar")) {
+                // $post_avatar = $row['author_avatar'];
+                if (empty($post_avatar) || strtolower($post_avatar) === "null") {
                     $post_avatar = "default_avatar.png"; 
                 }
             ?>
