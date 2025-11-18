@@ -379,6 +379,7 @@ tr:hover {
     gap: 8px;
 }
 
+.btn-edit,
 .btn-delete {
     border: none;
     padding: 6px 10px;
@@ -388,12 +389,20 @@ tr:hover {
     color: #fff;
 }
 
+.btn-edit {
+    background-color: rgb(85, 85, 241); /* Giữ màu đỏ/hồng để phù hợp với tông Đỏ-Đen */
+}
+
 .btn-delete {
     background-color: #d9534f; /* Giữ màu đỏ/hồng để phù hợp với tông Đỏ-Đen */
 }
 
 .btn-delete:hover {
     background-color: #b52b27;
+}
+
+.btn-edit:hover {
+    background-color: rgb(58, 58, 239); /* Giữ màu đỏ/hồng để phù hợp với tông Đỏ-Đen */
 }
 a.btn-edit,
 a.btn-delete {
