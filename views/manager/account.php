@@ -40,7 +40,6 @@
                 <?php foreach ($search_columns as $col_name): ?>
                   <input type="hidden" name="search_columns[]" value="<?= htmlspecialchars($col_name) ?>">
                 <?php endforeach; ?>
-
                 <div class="search-group-styled">
                   <input type="text" name="search" class="search-bar-styled"
                     title="Tìm kiếm theo tên tài khoản hoặc email" placeholder="Tìm kiếm tài khoản..."
@@ -49,7 +48,6 @@
                     <i class="fa-solid fa-magnifying-glass"></i>
                   </button>
                 </div>
-
                 <select name="role">
                   <option value="">Loại tài khoản</option>
                   <option value="Admin" <?= ($role === 'Admin') ? 'selected' : '' ?>>Admin</option>
@@ -63,7 +61,6 @@
               <form method="get" id="column-search-form">
                 <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
                 <input type="hidden" name="role" value="<?= htmlspecialchars($role) ?>">
-              </form>
               <table>
                 <thead>
                   <tr>
@@ -92,6 +89,7 @@
                     <th>Thao tác</th>
                   </tr>
                 </thead>
+              </form>
                 <tbody>
                   <?php while ($acc = $accounts->fetch_assoc()): ?>
                     <tr>
