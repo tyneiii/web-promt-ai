@@ -97,6 +97,17 @@ unset($_POST);
                         </button>
                     </div>
                     <h4><?= htmlspecialchars($prompt['description']) ?></h4>
+                    <?php if (!empty($prompt['tags'])): ?>
+                        <div class="home-tags">
+                            <?php foreach ($prompt['tags'] as $tag): ?>
+                                <a class="tag-item" href="home.php?tag=<?= $tag['id'] ?>">
+                                    #<?= htmlspecialchars($tag['name']) ?>
+                                </a>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+
+
                     <p>
                         <?php 
                         if (is_array($prompt['details']) && !empty($prompt['details'])) {
