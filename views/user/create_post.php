@@ -1,5 +1,11 @@
 <?php
     include_once __DIR__ . '/../../config.php';
+    session_start();
+
+    if (!isset($_SESSION['id_user'])) {
+        header("Location: ../login/login.php");
+        exit;
+    }
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'];
     $short = $_POST['short_description'];
@@ -227,17 +233,22 @@
   }
 
   function removeTopic(tag_id) {
-    chosen = chosen.filter(t => t.tag_id !== tag_id);
+    tag_id = Number(tag_id); // ép kiểu để so sánh chính xác
+
+    chosen = chosen.filter(t => Number(t.tag_id) !== tag_id);
+
     renderSelected();
     renderDropdown(topicInput.value);
     updateTagsHidden();
-}
+  }
+
   function renderSelected() {
     selectedTopics.innerHTML = "";
     chosen.forEach(t => {
       const tag = document.createElement("div");
       tag.className = "tag";
-      tag.innerHTML = `#${t.tag_name} <button onclick="removeTopic(${t.tag_id})">×</button>`;
+      tag.innerHTML = `#${t.tag_name} 
+    <button type="button" onclick="event.stopPropagation(); removeTopic(${t.tag_id});">×</button>`;
       selectedTopics.appendChild(tag);
     });
   }
