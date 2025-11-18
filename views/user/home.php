@@ -54,9 +54,15 @@ unset($_POST);
     <a href="profile.php?id=<?= $id_user ?>&tab=favorites" title="Danh sách yêu thích">
         <i class="fa-regular fa-heart"></i>
     </a>
+    <?php if (isset($_SESSION['id_user'])): ?>
     <a href="create_post.php" class="sidebar-btn" title="Tạo bài viết mới">
         <i class="fa-solid fa-plus"></i>
     </a>
+    <?php else: ?>
+        <a href="../login/login.php" class="sidebar-btn" title="Đăng nhập để tạo bài viết">
+            <i class="fa-solid fa-plus"></i>
+        </a>
+    <?php endif; ?>
     <i class="fa-regular fa-comment"></i>
 </div>
 
