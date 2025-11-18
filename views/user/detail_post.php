@@ -2,7 +2,7 @@
 session_start();
 include_once __DIR__ . '/layout/header.php';
 include_once __DIR__ . '/../../config.php';
-include_once __DIR__ . '/../../Controller/user/prompt.php';  // Include controller for lovePrompt/savePrompt
+include_once __DIR__ . '/../../Controller/user/prompt.php';  
 
 if (!isset($_GET['id'])) {
   echo "<p>Bài viết không tồn tại.</p>";
@@ -10,9 +10,8 @@ if (!isset($_GET['id'])) {
 }
 
 $id = (int)$_GET['id'];
-$id_user = $_SESSION['id_user'] ?? 0;  // Get logged user ID, 0 if guest
+$id_user = $_SESSION['id_user'] ?? 0;  
 
-// Handle POST actions (like/save)
 if ($id_user > 0) {
   if (isset($_POST['loveBtn'])) {
     $mess = lovePrompt($id_user, $id, $conn);
@@ -64,7 +63,7 @@ $sql_details = "SELECT pd.content, p.short_description
                 FROM promptdetail pd
                 JOIN prompt p ON pd.prompt_id = p.prompt_id
                 WHERE pd.prompt_id = ?
-                ORDER BY pd.component_order ASC";  // Ordered by component_order
+                ORDER BY pd.component_order ASC";  
 $stmt2 = $conn->prepare($sql_details);
 $stmt2->bind_param("i", $id);
 $stmt2->execute();
