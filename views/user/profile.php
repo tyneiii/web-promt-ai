@@ -95,21 +95,42 @@ $followingCountQuery->close();
 $tab = isset($_GET['tab']) ? $_GET['tab'] : 'posts';
 
 // Lấy bài viết
-if ($tab === 'favorites') {
-    $sql = "SELECT p.* 
+// if ($tab === 'favorites') {
+//     $sql = "SELECT p.* 
+//                 FROM love l 
+//                 JOIN prompt p ON l.prompt_id = p.prompt_id 
+//                 WHERE l.account_id = $profile_id AND l.status = 'OPEN'
+//                 ORDER BY l.love_at DESC ";
+// } else if ($tab === 'posts') {
+//     $sql = "SELECT * FROM prompt WHERE account_id = $profile_id ORDER BY prompt_id DESC";
+// } else {
+//     $sql = "SELECT p.* 
+//                 FROM save s 
+//                 JOIN prompt p ON s.prompt_id = p.prompt_id 
+//                 WHERE s.account_id = $profile_id 
+//                 ORDER BY s.save_id DESC ";
+// }
+    if ($tab === 'favorites') {
+        $sql = "SELECT p.*, a.username, a.avatar 
                 FROM love l 
                 JOIN prompt p ON l.prompt_id = p.prompt_id 
+                JOIN account a ON p.account_id = a.account_id
                 WHERE l.account_id = $profile_id AND l.status = 'OPEN'
-                ORDER BY l.love_at DESC ";
-} else if ($tab === 'posts') {
-    $sql = "SELECT * FROM prompt WHERE account_id = $profile_id ORDER BY prompt_id DESC";
-} else {
-    $sql = "SELECT p.* 
+                ORDER BY l.love_at DESC";
+    } else if ($tab === 'posts') {
+        $sql = "SELECT p.*, a.username, a.avatar 
+                FROM prompt p 
+                JOIN account a ON p.account_id = a.account_id
+                WHERE p.account_id = $profile_id 
+                ORDER BY prompt_id DESC";
+    } else {
+        $sql = "SELECT p.*, a.username, a.avatar 
                 FROM save s 
                 JOIN prompt p ON s.prompt_id = p.prompt_id 
+                JOIN account a ON p.account_id = a.account_id
                 WHERE s.account_id = $profile_id 
-                ORDER BY s.save_id DESC ";
-}
+                ORDER BY s.save_id DESC";
+    }
 
 $result = mysqli_query($conn, $sql);
 ?>
@@ -165,7 +186,18 @@ $result = mysqli_query($conn, $sql);
 <div class="write-container">
     <?php if (mysqli_num_rows($result) > 0): ?>
         <?php while ($row = mysqli_fetch_assoc($result)): ?>
+            <?php 
+                $post_avatar = $row['avatar'];
+                if (!$post_avatar || strtolower($post_avatar) === "null" || !file_exists(__DIR__ . "/../../public/img/$post_avatar")) {
+                    $post_avatar = "default_avatar.png"; 
+                }
+            ?>
             <a href="detail_post.php?id=<?= $row['prompt_id'] ?>" class="write-item" style="text-decoration:none;">
+                <div class="card-mini-header">
+                    <img src="../../public/img/<?= $post_avatar ?>" alt="ava" style="width:35px; height:35px; border-radius:50%;">
+                    <strong><?= $row['username'] ?></strong>
+                </div>
+                <div class="card-divider"></div>
                 <h2><?= $row['title'] ?></h2>
                 <h3><?= $row['short_description'] ?></h3>
                 <span><?= $row['love_count'] ?> ❤️ • <?= number_format($row['comment_count']) ?> bình luận</span>

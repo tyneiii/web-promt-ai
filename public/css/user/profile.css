@@ -151,12 +151,14 @@
     border: 1px solid #2c2c2c;
     border-radius: 12px;
     padding: 16px;
-    width: 38%;
+    /* width: 38%; */
+    width: calc(50% - 20px);
     min-height: 150px;               /* giúp card cao đều */
     color: #e0e0e0;
     text-align: left;
     transition: all 0.3s ease;
     box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    box-sizing: border-box;
 }
 
 .write-item:hover {
@@ -165,10 +167,15 @@
     box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     transform: translateY(-3px);
 }
-
+.write-item h2 {
+    margin-top: 0;
+    font-size: 1.1rem; 
+    color: #fff;
+    margin-bottom: 8px;
+}
 .write-item h3 {
     font-size: 16px;
-    margin-bottom: 32px;             /* chừa khoảng trống cho phần like/comment */
+    margin-bottom: 35px;             /* chừa khoảng trống cho phần like/comment */
     color: #ffffff;
     line-height: 1.4;
 }
@@ -182,6 +189,34 @@
     gap: 8px;
     font-size: 14px;
     color: #aaa;
+}
+.card-mini-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.card-mini-header img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ff2d55; /* Viền đỏ/hồng cho nổi bật */
+}
+
+.card-mini-header strong {
+    font-size: 0.95rem;
+    color: #fff;
+}
+
+.card-divider {
+    height: 2px;
+    width: 100%;
+    background: linear-gradient(to right, red, orange);
+    margin-bottom: 15px;
+    border-radius: 2px;
+    opacity: 0.8;
 }
 .tabs a {
   text-decoration: none;        /* Bỏ gạch dưới */
