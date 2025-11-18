@@ -8,7 +8,7 @@
     $title = $_POST['title'];
     $short = $_POST['short_description'];
     $contents = $_POST['content'];
-    $tags = json_decode($_POST['tags'], true); // danh sách tag_id
+    $tags = json_decode($_POST['tags'], true); 
     $acc_id = $_SESSION['id_user'];
     $imageName = "";
 
