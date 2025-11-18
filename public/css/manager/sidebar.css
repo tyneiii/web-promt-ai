@@ -374,13 +374,11 @@ tr:hover {
     background-color: #3a3a3a; /* Hiệu ứng hover tông xám đậm */
 }
 
-/* --- Action buttons --- */
 .actions {
     display: flex;
     gap: 8px;
 }
 
-.btn-edit,
 .btn-delete {
     border: none;
     padding: 6px 10px;
@@ -390,15 +388,6 @@ tr:hover {
     color: #fff;
 }
 
-.btn-edit {
-    background-color: #e53935; /* Đổi từ Xanh Dương sang Đỏ */
-}
-
-.btn-edit:hover {
-    background-color: #d32f2f; /* Đỏ đậm hơn khi hover */
-}
-
-/* Nút Xóa (Delete) */
 .btn-delete {
     background-color: #d9534f; /* Giữ màu đỏ/hồng để phù hợp với tông Đỏ-Đen */
 }
@@ -415,4 +404,26 @@ a.btn-delete {
 a.btn-edit:hover,
 a.btn-delete:hover {
     text-decoration: none;
+}
+
+.role-select {
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  min-width: 100px;
+}
+
+.btn-save-role {
+  background-color: #28a745; 
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 5px; 
+}
+
+.actions button {
+  margin-right: 5px;
+  margin-bottom: 5px; 
 }
