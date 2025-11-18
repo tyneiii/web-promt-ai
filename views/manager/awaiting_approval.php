@@ -12,6 +12,32 @@
     <div class="container">
         <?php 
             include_once __DIR__ . '/layout/sidebar.php'; 
+            // ================= XỬ LÝ DUYỆT BÀI =================
+            if (isset($_POST['approve_id'])) {
+                $id = (int)$_POST['approve_id'];
+                $conn->query("UPDATE prompt SET status = 'public' WHERE prompt_id = $id");
+                header("Location: ".$_SERVER['PHP_SELF']);
+                exit;
+            }
+
+            // ================= XỬ LÝ XÓA BÀI =====================
+            if (isset($_POST['delete_id'])) {
+                $id = (int)$_POST['delete_id'];
+
+                // Xóa prompt → nên xóa các bảng liên quan trước
+                $conn->query("DELETE FROM promptdetail WHERE prompt_id = $id");
+                $conn->query("DELETE FROM prompttag WHERE prompt_id = $id");
+                $conn->query("DELETE FROM love WHERE prompt_id = $id");
+                $conn->query("DELETE FROM save WHERE prompt_id = $id");
+                $conn->query("DELETE FROM report WHERE prompt_id = $id");
+
+                // Cuối cùng xóa prompt
+                $conn->query("DELETE FROM prompt WHERE prompt_id = $id");
+
+                header("Location: ".$_SERVER['PHP_SELF']);
+                exit;
+            }
+
             $search = $_GET['search'] ?? '';
             $posts = getAwaitingPrompts($conn,$search);
         ?>
@@ -55,8 +81,21 @@
                                         <td><?= $post['short_description'] ?></td>
                                         <td style="text-transform: capitalize; color:#ffc107; font-weight: bold;"><?= $post['status'] ?></td>
                                         <td class="actions">
-                                            <button class="btn-edit"><i class="fa-solid fa-magnifying-glass"></i> Kiểm tra</button>
-                                            <button class="btn-delete"><i class="fa-solid fa-trash"></i> Xóa</button>
+                                            <!-- NÚT DUYỆT -->
+                                            <form method="POST" style="display:inline;">
+                                                <input type="hidden" name="approve_id" value="<?= $post['prompt_id'] ?>">
+                                                <button class="btn-edit" onclick="return confirm('Duyệt bài này?');">
+                                                    <i class="fa-solid fa-circle-check"></i> Duyệt
+                                                </button>
+                                            </form>
+
+                                            <!-- NÚT XÓA -->
+                                            <form method="POST" style="display:inline;">
+                                                <input type="hidden" name="delete_id" value="<?= $post['prompt_id'] ?>">
+                                                <button class="btn-delete" onclick="return confirm('Bạn có chắc muốn xóa prompt này?');">
+                                                    <i class="fa-solid fa-trash"></i> Xóa
+                                                </button>
+                                            </form>
                                         </td>
                                     </tr>
                                 <?php endwhile; ?>
