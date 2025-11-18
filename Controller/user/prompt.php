@@ -1,12 +1,11 @@
 <?php
 
 function getPrompt($account_id, $searchString, $tag_id, $conn) {
-    $account_id = (int)$account_id;  // Sanitize
+    $account_id = (int)$account_id;
     $search = trim($searchString ?? '');
     $tag_id = (int)$tag_id;
 
-    // Bước 1: Fetch prompts (không JOIN details để include all public prompts)
-    // Fallback description: COALESCE(title, short_description, '')
+    // Tạo SQL cơ bản
     $prompt_sql = "
         SELECT 
             p.prompt_id,
@@ -21,69 +20,120 @@ function getPrompt($account_id, $searchString, $tag_id, $conn) {
         FROM prompt p
         LEFT JOIN account a ON a.account_id = p.account_id
         LEFT JOIN love l ON l.prompt_id = p.prompt_id AND l.account_id = ?
-        " . ($tag_id > 0 ? "JOIN prompttag pt ON pt.prompt_id = p.prompt_id AND pt.tag_id = $tag_id" : "") . "
-        WHERE p.status = 'public'
-        " . ($search ? "AND (p.title LIKE ? OR p.short_description LIKE ? OR a.username LIKE ?)" : "") . "
-        ORDER BY p.create_at DESC
-        LIMIT 20
     ";
-    
+
+    // Nếu lọc theo tag
+    if ($tag_id > 0) {
+        $prompt_sql .= " 
+            JOIN prompttag pt ON pt.prompt_id = p.prompt_id 
+            AND pt.tag_id = ?
+        ";
+    }
+
+    $prompt_sql .= " WHERE p.status = 'public' ";
+
+    // Nếu có search
+    if (!empty($search)) {
+        $prompt_sql .= " 
+            AND (p.title LIKE ? 
+            OR p.short_description LIKE ?
+            OR a.username LIKE ?)
+        ";
+    }
+
+    $prompt_sql .= " 
+        ORDER BY p.create_at DESC
+        LIMIT 50
+    ";
+
+    // ===== BUILD BIND PARAM =====
+    $types = "i";     // 1: account_id cho love check
+    $params = [$account_id];
+
+    if ($tag_id > 0) {
+        $types .= "i";
+        $params[] = $tag_id;
+    }
+
+    if (!empty($search)) {
+        $types .= "sss";
+        $like = "%$search%";
+        $params[] = $like;
+        $params[] = $like;
+        $params[] = $like;
+    }
+
+    // Chuẩn bị statement
     $prompt_stmt = $conn->prepare($prompt_sql);
     if (!$prompt_stmt) {
-        error_log("Prepare prompt query failed: " . $conn->error);
+        error_log("Prepare failed: ".$conn->error);
         return [];
     }
-    
-    $prompt_params = [$account_id];
-    $prompt_types = 'i';
-    if ($search) {
-        $like = '%' . $search . '%';
-        $prompt_params = array_merge($prompt_params, [$like, $like, $like]);
-        $prompt_types .= 'sss';
-    }
-    $prompt_stmt->bind_param($prompt_types, ...$prompt_params);
+
+    // bind_param động
+    $prompt_stmt->bind_param($types, ...$params);
     $prompt_stmt->execute();
     $prompt_result = $prompt_stmt->get_result();
-    
+
+    // ===== Build kết quả =====
     $prompts = [];
     while ($row = $prompt_result->fetch_assoc()) {
         $prompt_id = $row['prompt_id'];
+
         $prompts[$prompt_id] = [
             'prompt_id' => $prompt_id,
-            'username' => $row['username'] ?? 'Unknown',
+            'username' => $row['username'],
             'avatar' => $row['avatar'] ?? 'default-avatar.png',
             'description' => $row['description'],
             'love_count' => (int)$row['love_count'],
             'comment_count' => (int)$row['comment_count'],
             'save_count' => (int)$row['save_count'],
-            'is_loved' => (bool)($row['is_loved'] == 1),
-            'details' => []  // Always set, even if empty
+            'is_loved' => $row['is_loved'] == 1,
+            'details' => [],
+            'tags' => []
         ];
-        
-        // Bước 2: Fetch details riêng, ordered by component_order
+
+        // ===== LẤY TAG =====
+        $tag_sql = "
+            SELECT t.tag_id, t.tag_name 
+            FROM prompttag pt
+            JOIN tag t ON t.tag_id = pt.tag_id
+            WHERE pt.prompt_id = ?
+        ";
+
+        $tag_stmt = $conn->prepare($tag_sql);
+        $tag_stmt->bind_param("i", $prompt_id);
+        $tag_stmt->execute();
+        $tags_res = $tag_stmt->get_result();
+
+        while ($tag_row = $tags_res->fetch_assoc()) {
+            $prompts[$prompt_id]['tags'][] = [
+                'id' => $tag_row['tag_id'],
+                'name' => $tag_row['tag_name']
+            ];
+
+        }
+
+        // ===== LẤY DETAILS =====
         $detail_sql = "
             SELECT content 
             FROM promptdetail 
-            WHERE prompt_id = ? 
+            WHERE prompt_id = ?
             ORDER BY component_order ASC
         ";
         $detail_stmt = $conn->prepare($detail_sql);
-        if ($detail_stmt) {
-            $detail_stmt->bind_param('i', $prompt_id);
-            $detail_stmt->execute();
-            $detail_result = $detail_stmt->get_result();
-            while ($detail_row = $detail_result->fetch_assoc()) {
-                $prompts[$prompt_id]['details'][] = $detail_row['content'];
-            }
-            $detail_stmt->close();
-        } else {
-            error_log("Prepare detail query failed for prompt_id $prompt_id: " . $conn->error);
+        $detail_stmt->bind_param("i", $prompt_id);
+        $detail_stmt->execute();
+        $dres = $detail_stmt->get_result();
+
+        while ($d = $dres->fetch_assoc()) {
+            $prompts[$prompt_id]['details'][] = $d['content'];
         }
     }
-    
-    // Reindex to list (not assoc by id)
+
     return array_values($prompts);
 }
+
 
 function lovePrompt($account_id, $prompt_id, $conn) {
     // Validate inputs

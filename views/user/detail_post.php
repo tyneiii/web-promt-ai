@@ -69,6 +69,26 @@ $stmt2->bind_param("i", $id);
 $stmt2->execute();
 $details_result = $stmt2->get_result();
 $details = $details_result->fetch_all(MYSQLI_ASSOC);
+$tag_sql = "
+    SELECT t.tag_id, t.tag_name 
+    FROM prompttag pt
+    JOIN tag t ON t.tag_id = pt.tag_id
+    WHERE pt.prompt_id = ?
+";
+
+$tag_stmt = $conn->prepare($tag_sql);
+$tag_stmt->bind_param("i", $id);
+$tag_stmt->execute();
+$tag_result = $tag_stmt->get_result();
+
+$tags = [];
+while ($row = $tag_result->fetch_assoc()) {
+    $tags[] = [
+      'id' => $row['tag_id'],
+      'name' => $row['tag_name']
+    ];
+}
+
 
 // Xây dựng nội dung prompt đầy đủ cho data-prompt
 $full_prompt = $prompt['short_description'] ?? '';
@@ -107,6 +127,15 @@ $comments = $cmt_result->fetch_all(MYSQLI_ASSOC);
   </div>
 
   <h1 class="detail-title"><?= htmlspecialchars($prompt['short_description'] ?? $prompt['title'] ?? 'Untitled') ?></h1>
+  <?php if (!empty($tags)): ?>
+    <div class="detail-tags">
+        <?php foreach ($tags as $t): ?>
+            <a class="tag-item" href="home.php?tag=<?= $t['id'] ?>">
+                #<?= htmlspecialchars($t['name']) ?>
+            </a>
+        <?php endforeach; ?>
+    </div>
+  <?php endif; ?>
 
   <?php if (!empty($prompt['image'])): ?>
     <img class="post-image" src="../../<?= htmlspecialchars($prompt['image']) ?>" alt="Ảnh bài viết" style="max-width: 100%; border-radius: 8px; margin-bottom: 20px;">
@@ -320,7 +349,16 @@ $comments = $cmt_result->fetch_all(MYSQLI_ASSOC);
     border-radius: 10px;
     border: 1px solid #222;
   }
-
+  .tag-item {
+    display: inline-block;
+    background: #222;
+    color: #fff;
+    border: 1px solid #444;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+}
   .comment-avatar img {
     width: 48px;
     height: 48px;
