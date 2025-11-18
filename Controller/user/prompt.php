@@ -1,8 +1,9 @@
 <?php
 
-function getPrompt($account_id, $searchString, $conn) {
+function getPrompt($account_id, $searchString, $tag_id, $conn) {
     $account_id = (int)$account_id;  // Sanitize
     $search = trim($searchString ?? '');
+    $tag_id = (int)$tag_id;
 
     // Bước 1: Fetch prompts (không JOIN details để include all public prompts)
     // Fallback description: COALESCE(title, short_description, '')
@@ -20,6 +21,7 @@ function getPrompt($account_id, $searchString, $conn) {
         FROM prompt p
         LEFT JOIN account a ON a.account_id = p.account_id
         LEFT JOIN love l ON l.prompt_id = p.prompt_id AND l.account_id = ?
+        " . ($tag_id > 0 ? "JOIN prompttag pt ON pt.prompt_id = p.prompt_id AND pt.tag_id = $tag_id" : "") . "
         WHERE p.status = 'public'
         " . ($search ? "AND (p.title LIKE ? OR p.short_description LIKE ? OR a.username LIKE ?)" : "") . "
         ORDER BY p.create_at DESC

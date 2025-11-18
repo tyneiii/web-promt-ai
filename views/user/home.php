@@ -25,9 +25,14 @@ if (isset($_POST['loveBtn']) && $id_user) {
     exit;
 } elseif (isset($_POST['cmtBtn']) && $id_user) {
     $id_prompt = (int)$_POST['cmtBtn'];
-    // TODO: Implement commentPrompt or redirect to comment page
-    // $mess = commentPrompt($id_user, $id_prompt, $conn); // If adding comment form later
-    header("Location: detail_post.php?id=" . $id_prompt . "&search=" . urlencode($search)); // Redirect to detail for commenting
+
+    // Nếu có biến search thì thêm vào URL, không thì bỏ qua
+    $redirect = "detail_post.php?id=" . $id_prompt;
+    if (!empty($search)) {
+        $redirect .= "&search=" . urlencode($search);
+    }
+
+    header("Location: $redirect");
     exit;
 } elseif (isset($_POST['saveBtn']) && $id_user) {
     $id_prompt = (int)$_POST['saveBtn'];
@@ -39,7 +44,9 @@ if (isset($_POST['loveBtn']) && $id_user) {
 // Guest mode: Optional message (display in main-content if needed)
 $guest_message = !$id_user ? '<p class="guest-notice">Đăng nhập để like, comment và save prompt!</p>' : '';
 
-$prompts = getPrompt($id_user, $search, $conn);
+$tag = isset($_GET['tag']) ? (int)$_GET['tag'] : 0;
+$prompts = getPrompt($id_user, $search, $tag, $conn);
+
 unset($_POST);
 ?>
 

@@ -1,7 +1,60 @@
 <?php
     include_once __DIR__ . '/../../config.php';
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $title = $_POST['title'];
+    $short = $_POST['short_description'];
+    $contents = $_POST['content'];
+    $tags = json_decode($_POST['tags'], true); // danh sách tag_id
+    $acc_id = $_SESSION['id_user'];
+    $imageName = "";
+
+    // Upload image
+    if (!empty($_FILES['image']['name'])) {
+        $imageName = time() . "_" . $_FILES['image']['name'];
+        move_uploaded_file($_FILES['image']['tmp_name'], "../../public/img/" . $imageName);
+    }
+
+    // INSERT prompt
+    $stmt = $conn->prepare("
+        INSERT INTO prompt (account_id, title, short_description, image, status, love_count, comment_count, save_count, create_at)
+        VALUES (?, ?, ?, ?, 'waiting', 0, 0, 0, NOW())
+    ");
+    $stmt->bind_param("isss", $acc_id, $title, $short, $imageName);
+    $stmt->execute();
+
+    $prompt_id = $stmt->insert_id;
+
+    // INSERT promptdetail
+    $order = 1;
+    $detailStmt = $conn->prepare("INSERT INTO promptdetail (prompt_id, component_order, content) VALUES (?, ?, ?)");
+    foreach ($contents as $ct) {
+        $detailStmt->bind_param("iis", $prompt_id, $order, $ct);
+        $detailStmt->execute();
+        $order++;
+    }
+
+    // INSERT prompttag
+    if (!empty($tags)) {
+    foreach ($tags as $tag_id) {
+        $tag_id = (int)$tag_id;
+        $conn->query("INSERT INTO prompttag (prompt_id, tag_id) VALUES ($prompt_id, $tag_id)");
+      }
+    }
+    // Chuyển về trang chủ
+    header("Location: home.php?msg=submitted");
+    exit;
+}
+
     $acc_id = $_SESSION['id_user'] ;
     $sql_user = "SELECT * FROM account WHERE account_id = $acc_id ";
+    // Lấy danh sách tag từ DB
+    $tag_query = "SELECT tag_id, tag_name FROM tag ORDER BY tag_name ASC";
+    $tag_result = mysqli_query($conn, $tag_query);
+
+    $tags_list = [];
+    while ($row = mysqli_fetch_assoc($tag_result)) {
+        $tags_list[] = $row;
+    }
     $user_result = mysqli_query($conn, $sql_user);
     $user = mysqli_fetch_assoc($user_result);
 ?>
@@ -18,7 +71,7 @@
 
 <body>
   <button type="button" class="close-btn" title="Hủy bài viết mới" onclick="confirmCancel()">×</button>
-  <div class="form-card">
+  <form class="form-card" action="create_post.php" method="POST" enctype="multipart/form-data">
     <div class="user-info">
       <img src="../../public/img/<?= $user['avatar'] ?? 'avatar.png' ?>" class="avatar">
     <div class="name"><?= $user['username'] ?></div>
@@ -26,6 +79,7 @@
         <input type="text" class="topic-input" placeholder="Chọn chủ đề...">
         <div class="topic-dropdown"></div>
         <div class="selected-topics"></div>
+        <input type="hidden" name="tags" id="tags-hidden">
       </div>
     </div>
     <div class="form-content">
@@ -35,7 +89,7 @@
           <span class="indicator">+</span>
         </div>
         <div class="collapsible-content">
-          <input type="text" placeholder="Nhập tiêu đề cho bài viết của bạn...">
+          <input type="text" name="title" placeholder="Nhập tiêu đề cho bài viết của bạn..." required>
         </div>
       </div>
 
@@ -45,7 +99,7 @@
           <span class="indicator">+</span>
         </div>
         <div class="collapsible-content">
-          <textarea placeholder="Thêm mô tả ngắn gọn..."></textarea>
+          <textarea name="short_description" placeholder="Thêm mô tả ngắn gọn..." required></textarea>
         </div>
       </div>
 
@@ -55,9 +109,7 @@
           <span class="indicator">+</span>
         </div>
         <div class="collapsible-content content-fields">
-        
-          <textarea placeholder="Nhập nội dung chính của bài viết..."></textarea>
-          
+          <textarea name="content[]" placeholder="Nhập nội dung chính của bài viết..." required></textarea>    
         </div>
       </div>
 
@@ -67,8 +119,10 @@
           <span class="indicator">+</span>
         </div>
         <div class="collapsible-content">
-          <button class="upload-btn-main" onclick="document.getElementById('fileInput').click()">Chọn ảnh từ thiết bị</button>
-          <input type="file" id="fileInput" accept="image/*" hidden>
+          <button type="button" class="upload-btn-main" onclick="document.getElementById('fileInput').click()">
+              Chọn ảnh từ thiết bị
+          </button>
+          <input type="file" name="image" id="fileInput" accept="image/*" hidden>
           <div id="image-preview"></div>
         </div>
       </div>
@@ -77,10 +131,10 @@
     <div class="form-footer">
       <div class="right-buttons">
         <button class="cancel-btn" onclick="confirmCancel()">Cancel</button>
-        <button class="submit-btn" onclick="handleSubmit()">Upload</button>
+        <button class="submit-btn" type="submit" onclick="updateTagsHidden()">Upload</button>
       </div>
     </div>
-  </div>
+  </form>
 </body>
 
 </html>
@@ -145,14 +199,17 @@
   const topicInput = document.querySelector(".topic-input");
   const topicDropdown = document.querySelector(".topic-dropdown");
   const selectedTopics = document.querySelector(".selected-topics");
-  const topics = ["Công nghệ", "AI", "Học tập", "Thiết kế", "Phần mềm", "Kinh doanh", "Marketing", "Thủ thuật", "Đời sống", "Sáng tạo"];
+  const topics = <?= json_encode($tags_list, JSON_UNESCAPED_UNICODE); ?>;
   let chosen = [];
   // (Toàn bộ các hàm renderDropdown, selectTopic, removeTopic, renderSelected và event listeners cho topicInput được giữ nguyên như file cũ của bạn)
   function renderDropdown(filter = "") {
     topicDropdown.innerHTML = "";
-    topics.filter(t => t.toLowerCase().includes(filter.toLowerCase()) && !chosen.includes(t)).forEach(t => {
+    topics
+  .filter(t => t.tag_name.toLowerCase().includes(filter.toLowerCase()) 
+           && !chosen.some(c => c.tag_id === t.tag_id))
+  .forEach(t => {
       const div = document.createElement("div");
-      div.textContent = t;
+      div.textContent = t.tag_name;
       div.onclick = () => selectTopic(t);
       topicDropdown.appendChild(div);
     });
@@ -166,20 +223,21 @@
     chosen.push(topic);
     renderSelected();
     renderDropdown(topicInput.value);
+    updateTagsHidden();
   }
 
-  function removeTopic(topic) {
-    chosen = chosen.filter(t => t !== topic);
+  function removeTopic(tag_id) {
+    chosen = chosen.filter(t => t.tag_id !== tag_id);
     renderSelected();
     renderDropdown(topicInput.value);
-  }
-
+    updateTagsHidden();
+}
   function renderSelected() {
     selectedTopics.innerHTML = "";
     chosen.forEach(t => {
       const tag = document.createElement("div");
       tag.className = "tag";
-      tag.innerHTML = `#${t} <button onclick="removeTopic('${t}')">×</button>`;
+      tag.innerHTML = `#${t.tag_name} <button onclick="removeTopic(${t.tag_id})">×</button>`;
       selectedTopics.appendChild(tag);
     });
   }
@@ -191,4 +249,9 @@
     setTimeout(() => topicDropdown.classList.remove("show"), 150);
   });
   topicInput.addEventListener("input", () => renderDropdown(topicInput.value));
+  function updateTagsHidden() {
+    document.getElementById("tags-hidden").value = JSON.stringify(
+    chosen.map(t => t.tag_id)
+    );
+  }
 </script>

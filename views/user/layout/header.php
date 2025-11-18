@@ -89,6 +89,13 @@
   }
   include_once __DIR__ . '/../../../config.php';
   ?>
+  <?php
+    // Lấy danh sách tag từ DB
+    $tag_query = "SELECT tag_id, tag_name FROM tag ORDER BY tag_name ASC";
+    $tag_result = mysqli_query($conn, $tag_query);
+    $tags = mysqli_fetch_all($tag_result, MYSQLI_ASSOC);
+  ?>
+
   <nav class="navbar">
     <div class="navbar-left">
       <a href="home.php" class="logo" style="text-decoration: none;" title="Trang chủ">Prompt AI</a>
@@ -104,12 +111,18 @@
       </form>
     </div>
     <div class="navbar-right">
-      <select>
-        <option>Chủ đề</option>
-        <option>AI Chat</option>
-        <option>Image</option>
-        <option>Code</option>
-      </select>
+      <form action="home.php" method="get">
+        <select name="tag" onchange="this.form.submit()">
+            <option value="">Chủ đề</option>
+            <?php foreach ($tags as $tag): ?>
+                <option value="<?= $tag['tag_id'] ?>"
+                    <?= (isset($_GET['tag']) && $_GET['tag'] == $tag['tag_id']) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($tag['tag_name']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+      </form>
+
       <?php if (isset($_SESSION['id_user']) && !empty($_SESSION['id_user'])): ?>
         <i class="fa-regular fa-bell icon"></i>
         <div class="dropdown">
