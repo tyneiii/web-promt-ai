@@ -44,7 +44,9 @@ unset($_POST);
 ?>
 
 <div class="left-sidebar">
-    <i class="fa-regular fa-heart"></i>
+    <a href="profile.php?id=<?= $id_user ?>&tab=favorites" title="Danh sách yêu thích">
+        <i class="fa-regular fa-heart"></i>
+    </a>
     <a href="create_post.php" class="sidebar-btn" title="Tạo bài viết mới">
         <i class="fa-solid fa-plus"></i>
     </a>
