@@ -97,7 +97,7 @@ $comments = $cmt_result->fetch_all(MYSQLI_ASSOC);
 
   <div class="detail-header">
     <div class="user-info">
-      <img src="<?= htmlspecialchars($prompt['avatar'] ?? '../../public/img/user5.png') ?>"
+      <img src="../../public/img/<?= htmlspecialchars($prompt['avatar'] ?? 'default-avatar.png') ?>" 
         alt="<?= htmlspecialchars($prompt['username']) ?>">
       <div>
         <strong><?= htmlspecialchars($prompt['username']) ?></strong>
