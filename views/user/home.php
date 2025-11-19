@@ -42,7 +42,7 @@ if (isset($_POST['loveBtn']) && $id_user) {
 }
 
 // Guest mode: Optional message (display in main-content if needed)
-$guest_message = !$id_user ? '<p class="guest-notice">Đăng nhập để like, comment và save prompt!</p>' : '';
+// $guest_message = !$id_user ? '<p class="guest-notice">Đăng nhập để like, comment và save prompt!</p>' : '';
 
 $tag = isset($_GET['tag']) ? (int)$_GET['tag'] : 0;
 $prompts = getPrompt($id_user, $search, $tag, $conn);
@@ -55,15 +55,17 @@ unset($_POST);
         <i class="fa-regular fa-heart"></i>
     </a>
     <?php if (isset($_SESSION['id_user'])): ?>
-    <a href="create_post.php" class="sidebar-btn" title="Tạo bài viết mới">
-        <i class="fa-solid fa-plus"></i>
-    </a>
+        <a href="create_post.php" class="sidebar-btn" title="Tạo bài viết mới">
+            <i class="fa-solid fa-plus"></i>
+        </a>
     <?php else: ?>
         <a href="../login/login.php" class="sidebar-btn" title="Đăng nhập để tạo bài viết">
             <i class="fa-solid fa-plus"></i>
         </a>
     <?php endif; ?>
+    <a href="my_comments.php" title="Danh sách bình luận của bạn" class="sidebar-btn">
     <i class="fa-regular fa-comment"></i>
+</a>
 </div>
 
 <div class="right-sidebar">
@@ -78,7 +80,6 @@ unset($_POST);
 </div>
 
 <div class="main-content">
-    <?= $guest_message ?>
     <?php if (empty($prompts)): ?>
         <p>Không có prompt nào phù hợp. Thử tìm kiếm khác!</p>
     <?php else: ?>
@@ -87,9 +88,9 @@ unset($_POST);
                 <div class="card" data-id="<?= $prompt['prompt_id'] ?>">
                     <div class="card-header">
                         <div class="user-info">
-                            <img src="../../public/img/<?= htmlspecialchars($prompt['avatar'] ?? 'default-avatar.png') ?>" 
-                                 alt="<?= htmlspecialchars($prompt['username']) ?>" 
-                                 style="width:35px; height:35px; border-radius:50%;">
+                            <img src="../../public/img/<?= htmlspecialchars($prompt['avatar'] ?? 'default-avatar.png') ?>"
+                                alt="<?= htmlspecialchars($prompt['username']) ?>"
+                                style="width:35px; height:35px; border-radius:50%;">
                             <strong><?= htmlspecialchars($prompt['username']) ?></strong>
                         </div>
                         <button class="report-btn" type="button">
@@ -109,10 +110,10 @@ unset($_POST);
 
 
                     <p>
-                        <?php 
+                        <?php
                         if (is_array($prompt['details']) && !empty($prompt['details'])) {
                             echo implode('<br><br>', array_map('htmlspecialchars', $prompt['details']));
-                        } 
+                        }
                         ?>
                     </p>
                     <div class="card-buttons">
@@ -133,14 +134,14 @@ unset($_POST);
 </div>
 
 <script>
-document.querySelectorAll('.card').forEach(card => {
-    card.addEventListener('click', function(e) {
-        // Không mở khi bấm vào nút trong card
-        if (e.target.closest('button') || e.target.closest('.run-btn')) return;
-        const id = this.getAttribute('data-id');
-        window.location.href = `detail_post.php?id=${id}`;
+    document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            // Không mở khi bấm vào nút trong card
+            if (e.target.closest('button') || e.target.closest('.run-btn')) return;
+            const id = this.getAttribute('data-id');
+            window.location.href = `detail_post.php?id=${id}`;
+        });
     });
-});
 </script>
-
+<script src="../../public/js/user_comments.js"></script>
 <?php include_once __DIR__ . '/layout/footer.php'; ?>

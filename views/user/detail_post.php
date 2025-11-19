@@ -203,7 +203,7 @@ $comments = $cmt_result->fetch_all(MYSQLI_ASSOC);
         <?php foreach ($comments as $c): ?>
           <div class="comment-item">
             <div class="comment-avatar">
-              <img src="<?= htmlspecialchars($c['avatar'] ?? '../../public/img/user5.png') ?>"
+              <img src="../../public/img/<?= htmlspecialchars($prompt['avatar'] ?? 'default-avatar.png') ?>" 
                 alt="<?= htmlspecialchars($c['username']) ?>">
             </div>
             <div class="comment-body">
