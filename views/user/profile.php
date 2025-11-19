@@ -132,7 +132,9 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : 'posts';
                 ORDER BY s.save_id DESC";
     }
 
+    
 $result = mysqli_query($conn, $sql);
+
 ?>
 
 <link rel="stylesheet" href="../../public/css/user/profile.css">
@@ -170,7 +172,7 @@ $result = mysqli_query($conn, $sql);
     </div>
 
     <div class="stats">
-        <span><strong id="following-count"><?php echo $followingCount; ?></strong> Đang follow</span>
+        <span><strong id="following-count"><?php echo $followingCount; ?></strong> Đã follow</span>
         <span><strong id="follower-count"><?php echo $followerCount; ?></strong> Follower</span>
     </div>
 
@@ -214,61 +216,62 @@ $result = mysqli_query($conn, $sql);
 </html>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const followBtn = document.getElementById("follow-btn");
-        if (!followBtn) return;
+document.addEventListener("DOMContentLoaded", function() {
+    const followBtn = document.getElementById("follow-btn");
+    if (!followBtn) return;
 
-        // Lấy trạng thái ban đầu
-        let isFollowing = followBtn.dataset.following === "1";
-        const profileId = <?= $profile_id ?>;
+    // Lấy giá trị ban đầu từ data-following (0/1)
+    let isFollowing = followBtn.dataset.following === "1";
+    const profileId = <?= $profile_id ?>;
 
-        // Hàm cập nhật nút ngay lập tức
-        function updateButton() {
-            if (isFollowing == "1") {
-                followBtn.innerHTML = '<i class="fa-solid fa-user-check"></i> Đã follow';
-                followBtn.classList.add("following");
-                followBtn.dataset.following = "1";
-            } else {
-                followBtn.innerHTML = 'Theo dõi';
-                followBtn.classList.remove("following");
-                followBtn.dataset.following = "0";
-            }
+    function updateButton() {
+        if (isFollowing) {
+            followBtn.innerHTML = '<i class="fa-solid fa-user-check"></i> Đã follow';
+            followBtn.classList.add("following");
+        } else {
+            followBtn.innerHTML = 'Theo dõi';
+            followBtn.classList.remove("following");
         }
+    }
 
-        // Hiển thị đúng trạng thái ban đầu
+    updateButton();
+
+    followBtn.addEventListener("click", function(e) {
+        e.preventDefault();
+
+        // 🔥 Đổi UI ngay lập tức
+        isFollowing = !isFollowing;
         updateButton();
 
-        followBtn.addEventListener("click", function(e) {
-            e.preventDefault();
+        const formData = new FormData();
+        formData.append("action", "follow_toggle");
+        formData.append("following_id", profileId);
 
-            // 🔥 Đổi nút NGAY LẬP TỨC (không chờ server)
+        fetch("profile.php?id=<?= $profile_id ?>", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("Server:", data);
+
+            if (data.status !== "follow" && data.status !== "unfollow") {
+                // rollback nếu server báo lỗi
+                isFollowing = !isFollowing;
+                updateButton();
+                return;
+            }
+
+            // Cập nhật số follower / following
+            document.getElementById("follower-count").textContent = data.followerCount;
+            document.getElementById("following-count").textContent = data.followingCount;
+        })
+        .catch(err => {
+            console.error(err);
+            // rollback nếu fetch lỗi
             isFollowing = !isFollowing;
             updateButton();
-
-            // Gửi AJAX lên đúng file profile.php
-            const formData = new FormData();
-            formData.append("action", "follow_toggle");
-            formData.append("following_id", profileId);
-
-            fetch("profile.php?id=<?= $profile_id ?>", {
-                    method: "POST",
-                    body: formData
-                })
-                .then(res => res.text())
-                .then(result => {
-                    // Nếu server trả về lỗi thì rollback lại
-                    if (result !== "follow" && result !== "unfollow") {
-                        console.error("Server error:", result);
-                        isFollowing = !isFollowing;
-                        updateButton();
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    // rollback nếu fetch lỗi
-                    isFollowing = !isFollowing;
-                    updateButton();
-                });
         });
     });
+});
 </script>
