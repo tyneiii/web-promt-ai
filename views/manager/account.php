@@ -31,16 +31,15 @@
               Tổng số tài khoản: <strong><?= $accounts->num_rows ?></strong>
             </div>
             <?php if (!empty($mess)): ?>
-                <div class="alert-success">
-                    <?= htmlspecialchars($mess) ?>
-                </div>
+              <div class="alert-success">
+                <?= htmlspecialchars($mess) ?>
+              </div>
             <?php endif; ?>
             <div class="search-box">
               <form method="get" id="search-form">
                 <?php foreach ($search_columns as $col_name): ?>
                   <input type="hidden" name="search_columns[]" value="<?= htmlspecialchars($col_name) ?>">
                 <?php endforeach; ?>
-
                 <div class="search-group-styled">
                   <input type="text" name="search" class="search-bar-styled"
                     title="Tìm kiếm theo tên tài khoản hoặc email" placeholder="Tìm kiếm tài khoản..."
@@ -49,7 +48,6 @@
                     <i class="fa-solid fa-magnifying-glass"></i>
                   </button>
                 </div>
-
                 <select name="role">
                   <option value="">Loại tài khoản</option>
                   <option value="Admin" <?= ($role === 'Admin') ? 'selected' : '' ?>>Admin</option>
@@ -58,47 +56,40 @@
               </form>
             </div>
           </div>
-
           <div class="table-wrapper">
             <div class="table-container">
-
               <form method="get" id="column-search-form">
                 <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
                 <input type="hidden" name="role" value="<?= htmlspecialchars($role) ?>">
-
-                <table>
-                  <thead>
-                    <tr>
-                      <th>
-                        <label>
-                          <input type="checkbox" name="search_columns[]" value="account_id"
-                            <?= in_array('account_id', $search_columns) ? 'checked' : '' ?>
-                            onchange="document.getElementById('column-search-form').submit()"> ID
-                        </label>
-                      </th>
-                      <th>
-                        <label>
-                          <input type="checkbox" name="search_columns[]" value="username"
-                            <?= in_array('username', $search_columns) ? 'checked' : '' ?>
-                            onchange="document.getElementById('column-search-form').submit()"> Tên tài khoản
-                        </label>
-                      </th>
-                      <th>
-                        <label>
-                          <input type="checkbox" name="search_columns[]" value="email"
-                            <?= in_array('email', $search_columns) ? 'checked' : '' ?>
-                            onchange="document.getElementById('column-search-form').submit()"> Email
-                        </label>
-                      </th>
-                      <th>Loại tài khoản</th>
-                      <th>Thao tác</th>
-                    </tr>
-                  </thead>
-                </table>
-              </form>
               <table>
                 <thead>
+                  <tr>
+                    <th>
+                      <label>
+                        <input type="checkbox" name="search_columns[]" value="account_id"
+                          <?= in_array('account_id', $search_columns) ? 'checked' : '' ?>
+                          onchange="document.getElementById('column-search-form').submit()"> ID
+                      </label>
+                    </th>
+                    <th>
+                      <label>
+                        <input type="checkbox" name="search_columns[]" value="username"
+                          <?= in_array('username', $search_columns) ? 'checked' : '' ?>
+                          onchange="document.getElementById('column-search-form').submit()"> Tên tài khoản
+                      </label>
+                    </th>
+                    <th>
+                      <label>
+                        <input type="checkbox" name="search_columns[]" value="email"
+                          <?= in_array('email', $search_columns) ? 'checked' : '' ?>
+                          onchange="document.getElementById('column-search-form').submit()"> Email
+                      </label>
+                    </th>
+                    <th>Loại tài khoản</th>
+                    <th>Thao tác</th>
+                  </tr>
                 </thead>
+              </form>
                 <tbody>
                   <?php while ($acc = $accounts->fetch_assoc()): ?>
                     <tr>
