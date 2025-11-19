@@ -127,7 +127,7 @@
         <i class="fa-regular fa-bell icon"></i>
         <div class="dropdown">
           <button class="dropbtn">
-            <img src="../../public/img/<?=($_SESSION['avatar']); ?>"
+            <img src="../../public/img/<?=($_SESSION['avatar'])?? 'default_avatar.png'; ?>"
               alt="Ảnh đại diện"
               class="avatar-image">
           </button>

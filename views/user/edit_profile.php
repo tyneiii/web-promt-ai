@@ -12,7 +12,7 @@ if (!isset($_SESSION['id_user'])) {
     exit;
 }
 
-$acc_id = intval($_SESSION['id_user']);
+$acc_id = $_SESSION['id_user'];
 
 // Lấy thông tin người dùng
 $sql_user = "SELECT * FROM account WHERE account_id = $acc_id";
@@ -23,14 +23,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fullname = mysqli_real_escape_string($conn, $_POST['name']);
     $description = mysqli_real_escape_string($conn, $_POST['bio']);
 
-    // --- XỬ LÝ AVATAR (giữ nguyên logic cũ, chỉ thêm một vài bảo vệ) ---
     // Giữ ảnh cũ nếu không tải ảnh mới
-    $avatarPath = $user['avatar'] ?? null;
+    $avatarPath = $user['avatar'];
 
     if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === 0) {
         $fileName = time() . '_' . basename($_FILES['avatar']['name']);
-        // dùng đường dẫn tuyệt đối an toàn hơn
-        $targetDir = __DIR__ . '/../../public/img/';
+        $targetDir = '../../public/img/';
 
         // Tạo thư mục nếu chưa có
         if (!is_dir($targetDir)) {
@@ -39,11 +37,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $targetFile = $targetDir . $fileName;
         if (move_uploaded_file($_FILES['avatar']['tmp_name'], $targetFile)) {
-            $avatarPath = $fileName; // lưu vào DB chỉ tên file
-            // lưu đường dẫn đầy đủ vào session (giống logic cũ)
-            $_SESSION['avatar'] = $targetFile;
+            $avatarPath = $fileName; // chỉ lưu tên file
         }
+        $_SESSION['avatar'] = $targetFile ;
     }
+
 
     // --- XỬ LÝ BACKGROUND: sửa lại để mirror avatar ---
     // Giữ ảnh nền cũ nếu không tải ảnh mới
