@@ -69,7 +69,7 @@ unset($_SESSION['register_inputs']);
                 </div>
 
                 <div class="input-group">
-                    <input type="password" id="password" name="password" placeholder="Password" class="<?php echo $password_error ? 'input-error' : ''; ?>" required>
+                    <input type="password" id="password" name="password" placeholder="Password" class="<?php echo $password_error ? 'input-error' : ''; ?>" required required minlength="6">
                      <?php
                     // Hiển thị lỗi password
                     if ($password_error) {
@@ -79,7 +79,7 @@ unset($_SESSION['register_inputs']);
                 </div>
 
                 <div class="input-group">
-                    <input type="password" id="repeat_password" name="repeat_password" placeholder="Repeat password" class="<?php echo $repeat_password_error ? 'input-error' : ''; ?>" required>
+                    <input type="password" id="repeat_password" name="repeat_password" placeholder="Repeat password" class="<?php echo $repeat_password_error ? 'input-error' : ''; ?>" required required minlength="6">
                      <?php
                     // Hiển thị lỗi repeat_password
                     if ($repeat_password_error) {
