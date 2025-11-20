@@ -96,10 +96,12 @@ unset($_SESSION['register_inputs']);
             </div>
 
             <!-- Đăng ký với Google -->
-            <button type="button" class="google-btn">
-                <i class="fab fa-google"></i>
-                <span>Đăng ký với Google</span>
-            </button>
+            <a href="../../controller/authentification/GoogleController.php" style="text-decoration: none; width: 100%;">
+                <button type="button" class="google-btn">
+                    <i class="fab fa-google"></i>
+                    <span>Đăng ký với Google</span>
+                </button>
+            </a>
 
             <!-- Chuyển sang trang Đăng nhập -->
             <p class="switch-auth">
