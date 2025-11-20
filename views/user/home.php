@@ -51,9 +51,19 @@ unset($_POST);
 ?>
 
 <div class="left-sidebar">
-    <a href="profile.php?id=<?= $id_user ?>&tab=favorites" title="Danh sách yêu thích">
+    <!-- <a href="profile.php?id=<?= $id_user ?>&tab=favorites" title="Danh sách yêu thích">
         <i class="fa-regular fa-heart"></i>
-    </a>
+    </a> -->
+    <?php if (isset($_SESSION['id_user'])): ?>
+        <a href="profile.php?id=<?= $id_user ?>&tab=favorites" title="Danh sách yêu thích">
+            <i class="fa-regular fa-heart"></i>
+        </a>
+    <?php else: ?>
+        <a href="../login/login.php?require_login=favorites" title="Đăng nhập để xem yêu thích">
+            <i class="fa-regular fa-heart"></i>
+        </a>
+    <?php endif; ?>
+
     <?php if (isset($_SESSION['id_user'])): ?>
         <a href="create_post.php" class="sidebar-btn" title="Tạo bài viết mới">
             <i class="fa-solid fa-plus"></i>
@@ -64,8 +74,8 @@ unset($_POST);
         </a>
     <?php endif; ?>
     <a href="my_comments.php" title="Danh sách bình luận của bạn" class="sidebar-btn">
-    <i class="fa-regular fa-comment"></i>
-</a>
+        <i class="fa-regular fa-comment"></i>
+    </a>
 </div>
 
 <div class="right-sidebar">

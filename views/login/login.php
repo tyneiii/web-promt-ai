@@ -20,6 +20,11 @@ session_start();
             echo '</div>';
             unset($_SESSION['register_success']);
         }
+        if (isset($_GET['require_login']) && $_GET['require_login'] === 'favorites') {
+            echo '<div class="toast toast-error">'; 
+            echo '<span><i class="fas fa-exclamation-circle"></i> Vui lòng đăng nhập để xem danh sách yêu thích!</span>';
+            echo '</div>';
+        }
         if (isset($_SESSION['inactive_error'])) {
             echo '<div class="toast toast-error">'; 
             echo '<span><i class="fas fa-exclamation-circle"></i> ' . htmlspecialchars($_SESSION['inactive_error']) . '</span>'; // Icon lỗi
