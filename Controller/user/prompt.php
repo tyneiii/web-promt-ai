@@ -352,4 +352,37 @@ function getAlldPrompts($conn, $search, $status) {  // Typo in original: getAlld
     $stmt->execute();
     return $stmt->get_result();
 }
+
+// Hàm mới: Lấy top prompt hot dựa trên lượt like
+function getHotPrompts($conn, $limit = 5) {
+    $sql = "
+        SELECT 
+            p.prompt_id,
+            COALESCE(p.title, p.short_description, '') AS description,
+            p.love_count
+        FROM prompt p
+        WHERE p.status = 'public'
+        ORDER BY p.love_count DESC, p.create_at DESC
+        LIMIT ?
+    ";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        error_log("Prepare failed for hot prompts: " . $conn->error);
+        return [];
+    }
+    $stmt->bind_param("i", $limit);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    $hot_prompts = [];
+    while ($row = $result->fetch_assoc()) {
+        $hot_prompts[] = [
+            'prompt_id' => $row['prompt_id'],
+            'description' => $row['description'],
+            'love_count' => (int)$row['love_count']
+        ];
+    }
+    return $hot_prompts;
+}
 ?>
+
