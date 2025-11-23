@@ -2,8 +2,8 @@
     require_once __DIR__ . '/ErrorController.php';
     require_once __DIR__ . '/MailServiceController.php'; 
 
-    function handleRegister($conn)
-    {
+    function handleRegister($conn){
+        cleanupExpiredAccounts($conn);
         if ($_SERVER["REQUEST_METHOD"] == "POST" and isset($_POST["btnregister"])) {
             $username = $_POST['username'];
             $email = $_POST['email'];
@@ -138,5 +138,10 @@
             header("Location: ../../views/login/login.php");
             exit;
         }
+    }
+
+    function cleanupExpiredAccounts($conn) {
+        $sql = "DELETE FROM account WHERE token IS NOT NULL AND create_at < DATE_SUB(NOW(), INTERVAL 30 MINUTE)";
+        $conn->query($sql);
     }
 ?>
