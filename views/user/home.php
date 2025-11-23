@@ -46,7 +46,8 @@ if (isset($_POST['loveBtn']) && $id_user) {
 
 $tag = isset($_GET['tag']) ? (int)$_GET['tag'] : 0;
 $prompts = getPrompt($id_user, $search, $tag, $conn);
-
+// Lấy top 5 prompt hot dựa trên lượt like
+$hot_prompts = getHotPrompts($conn, 5);
 unset($_POST);
 ?>
 
@@ -82,11 +83,15 @@ unset($_POST);
     <div class="border-top"></div>
     <div class="border-bottom"></div>
     <h3>Bảng tin hot 🔥</h3>
-    <div class="item">Prompt tạo ảnh phong cách anime</div>
-    <div class="item">Prompt phân tích văn bản bằng GPT</div>
-    <div class="item">Prompt viết bài SEO tự động</div>
-    <div class="item">Prompt vẽ concept nhân vật fantasy</div>
-    <div class="item">Prompt tạo website bằng HTML</div>
+    <?php if (empty($hot_prompts)): ?>
+        <div class="item">Chưa có bài viết hot nào.</div>
+    <?php else: ?>
+        <?php foreach ($hot_prompts as $hot): ?>
+            <a href="detail_post.php?id=<?= $hot['prompt_id'] ?>" class="item-link">
+                <div class="item"><?= htmlspecialchars($hot['description']) ?></div>
+            </a>
+        <?php endforeach; ?>
+    <?php endif; ?>
 </div>
 
 <div class="main-content">
