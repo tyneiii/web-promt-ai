@@ -1,0 +1,289 @@
+/* public/css/my_comments.css - Trang My Comments: Dark Theme, Mỗi Khung Riêng + Menu 3 Chấm */
+.my-comments-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #111 100%);
+    min-height: 100vh;
+    color: #fff;
+}
+
+/* Header trang */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #333;
+}
+.page-header h2 {
+    margin: 0;
+    font-size: 28px;
+    color: #ff6a3d; /* Cam nổi bật */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.page-header h2 i {
+    font-size: 32px;
+}
+.back-btn {
+    background: linear-gradient(135deg, #ff6a3d, #ff944d);
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.back-btn:hover {
+    opacity: 0.9;
+}
+
+/* Empty state nếu không có comments */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #888;
+}
+.empty-state i {
+    display: block;
+    margin-bottom: 20px;
+}
+.empty-state p {
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+/* Grid comments: Mỗi cái một khung riêng */
+.comments-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.comment-item-full {
+    background: #222;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+.comment-item-full:hover {
+    border-color: #ff6a3d;
+    box-shadow: 0 8px 25px rgba(255, 106, 61, 0.2);
+    transform: translateY(-4px);
+}
+
+/* Header khung: Avatar + User info */
+.comment-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+.comment-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #444;
+    transition: border-color 0.2s ease;
+}
+.comment-item-full:hover .comment-avatar {
+    border-color: #ff6a3d;
+}
+.user-info {
+    flex: 1;
+}
+.user-info strong {
+    display: block;
+    font-size: 15px;
+    color: #fff;
+    margin-bottom: 2px;
+}
+.comment-date {
+    font-size: 12px;
+    color: #888;
+}
+
+/* Title prompt */
+.comment-title {
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #ff6a3d;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.comment-title i {
+    font-size: 16px;
+    color: #ff6a3d;
+}
+.comment-title a {
+    color: #ff6a3d;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+.comment-title a:hover {
+    color: #fff;
+}
+
+/* Nội dung comment */
+.comment-content {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #ccc;
+    margin-bottom: 15px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+.comment-content:empty::after {
+    content: 'Nội dung trống...';
+    color: #666;
+    font-style: italic;
+}
+
+/* DẤU 3 CHẤM: Vertical ellipsis ở góc phải */
+.comment-menu {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+.comment-menu summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 8px;
+    border-radius: 50%;
+    background: #333;
+    color: #fff;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #444;
+}
+.comment-menu summary:hover {
+    background: #ff6a3d;
+    transform: scale(1.05);
+    box-shadow: 0 2px 10px rgba(255, 106, 61, 0.3);
+}
+.comment-menu summary i {
+    font-size: 16px;
+}
+
+/* SUB-MENU: 2 OPTIONS */
+.comment-menu ul {
+    background: #222;
+    border: 1px solid #333;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    min-width: 180px;
+    margin-top: 8px;
+    list-style: none;
+    padding: 0;
+    z-index: 1000;
+}
+.comment-menu ul li {
+    padding: 12px 16px;
+    cursor: pointer;
+    color: #fff;
+    border-bottom: 1px solid #333;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+.comment-menu ul li:last-child {
+    border-bottom: none;
+}
+.comment-menu ul li:hover {
+    background: #ff6a3d;
+    color: #fff;
+}
+.comment-menu ul li.delete-option {
+    color: #ff4757;
+    border-top: 1px solid #333;
+}
+.comment-menu ul li.delete-option:hover {
+    background: #ff3838;
+}
+.comment-menu ul li i {
+    font-size: 14px;
+    width: 18px;
+}
+
+/* Footer trang */
+.page-footer {
+    text-align: center;
+    padding: 20px;
+    color: #888;
+    border-top: 1px solid #333;
+    margin-top: 30px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .my-comments-container {
+        padding: 10px;
+    }
+    .page-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    .comment-item-full {
+        padding: 15px;
+    }
+    .comment-header {
+        gap: 8px;
+    }
+    .comment-avatar {
+        width: 32px;
+        height: 32px;
+    }
+    .comment-title {
+        font-size: 16px;
+    }
+    .comment-content {
+        font-size: 13px;
+    }
+}
+
+/* public/css/my_comments.css - Update kích thước avatar nhỏ hơn */
+.comment-avatar {
+    width: 32px !important;  /* Nhỏ hơn từ 40px */
+    height: 32px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    border: 2px solid #444 !important;
+    transition: border-color 0.2s ease !important;
+}
+.comment-item-full:hover .comment-avatar {
+    border-color: #ff6a3d !important;
+}
+.user-info {
+    flex: 1 !important;
+    margin-left: 8px !important;  /* Thêm space nếu avatar nhỏ */
+}
+
+/* Responsive: Nhỏ hơn nữa trên mobile */
+@media (max-width: 768px) {
+    .comment-avatar {
+        width: 28px !important;
+        height: 28px !important;
+    }
+    .comment-header {
+        gap: 8px !important;  /* Giảm gap cho compact */
+    }
+}

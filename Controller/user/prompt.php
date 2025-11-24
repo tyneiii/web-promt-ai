@@ -268,8 +268,54 @@ function savePrompt($account_id, $prompt_id, $conn) {
         return "Bạn đã lưu bài viết thành công";
     }
 }
-function commentPrompt($account_id, $prompt_id, $content, $conn) {
+// Thêm vào prompt.php
+function getUserComments($account_id, $conn) {
+    $account_id = (int)$account_id;
+    if ($account_id <= 0) {
+        return [];
+    }
 
+    $sql = "
+        SELECT 
+            c.comment_id, c.prompt_id, c.content, c.created_at,
+            p.title, p.short_description AS prompt_desc,
+            -- Người bình luận (commenter: user hiện tại)
+            a_c.username AS commenter_username, a_c.avatar AS commenter_avatar,
+            -- Người đăng bài (author)
+            a_p.username AS author_username, a_p.avatar AS author_avatar
+        FROM comment c
+        JOIN prompt p ON c.prompt_id = p.prompt_id
+        -- Join commenter (user hiện tại)
+        JOIN account a_c ON c.account_id = a_c.account_id
+        -- Join author (người đăng bài)
+        JOIN account a_p ON p.account_id = a_p.account_id
+        WHERE c.account_id = ?
+        ORDER BY c.created_at DESC
+        LIMIT 50
+    ";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $account_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    $comments = [];
+    while ($row = $result->fetch_assoc()) {
+        $comments[] = [
+            'comment_id' => $row['comment_id'],
+            'prompt_id' => $row['prompt_id'],
+            'content' => $row['content'],
+            'created_at' => $row['created_at'],
+            'title' => $row['title'] ?? $row['prompt_desc'] ?? 'Bài viết không có tiêu đề',
+            // Người bình luận
+            'username' => $row['commenter_username'],  // Giữ tên cũ cho tương thích
+            'avatar' => $row['commenter_avatar'] ?? 'default-avatar.png',
+            // Người đăng bài (mới thêm)
+            'author_username' => $row['author_username'],
+            'author_avatar' => $row['author_avatar'] ?? 'default-avatar.png'
+        ];
+    }
+    return $comments;
 }
 
 function getAwaitingPrompts($conn, $search) {
@@ -370,4 +416,35 @@ function changestatus($conn, $prompt_id, $status){
         ];
     }
 }
+function getHotPrompts($conn, $limit = 5) {
+    $sql = "
+        SELECT 
+            p.prompt_id,
+            COALESCE(p.title, p.short_description, '') AS description,
+            p.love_count
+        FROM prompt p
+        WHERE p.status = 'public'
+        ORDER BY p.love_count DESC, p.create_at DESC
+        LIMIT ?
+    ";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        error_log("Prepare failed for hot prompts: " . $conn->error);
+        return [];
+    }
+    $stmt->bind_param("i", $limit);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    $hot_prompts = [];
+    while ($row = $result->fetch_assoc()) {
+        $hot_prompts[] = [
+            'prompt_id' => $row['prompt_id'],
+            'description' => $row['description'],
+            'love_count' => (int)$row['love_count']
+        ];
+    }
+    return $hot_prompts;
+}
 ?>
+
