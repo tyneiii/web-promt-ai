@@ -20,6 +20,11 @@ session_start();
             echo '</div>';
             unset($_SESSION['register_success']);
         }
+        if (isset($_GET['require_login']) && $_GET['require_login'] === 'favorites') {
+            echo '<div class="toast toast-error">'; 
+            echo '<span><i class="fas fa-exclamation-circle"></i> Vui lòng đăng nhập để xem danh sách yêu thích!</span>';
+            echo '</div>';
+        }
         if (isset($_SESSION['inactive_error'])) {
             echo '<div class="toast toast-error">'; 
             echo '<span><i class="fas fa-exclamation-circle"></i> ' . htmlspecialchars($_SESSION['inactive_error']) . '</span>'; // Icon lỗi
@@ -50,7 +55,7 @@ session_start();
             $email_attempt = '';
             if (isset($_SESSION['login_email_attempt'])) {
                 $email_attempt = htmlspecialchars($_SESSION['login_email_attempt']);
-                unset($_SESSION['login_email_attempt']); // Xóa đi sau khi dùng
+                unset($_SESSION['login_email_attempt']); 
             }
             $email_error = isset($_SESSION['email_error']) ? $_SESSION['email_error'] : null;
             $password_error = isset($_SESSION['password_error']) ? $_SESSION['password_error'] : null;
@@ -85,10 +90,12 @@ session_start();
             <div class="divider">
                 <span>hoặc</span>
             </div>
-            <button type="button" class="google-btn">
-                <i class="fab fa-google"></i>
-                <span>Đăng nhập với Google</span>
-            </button>
+            <a href="../../controller/authentification/GoogleController.php" style="text-decoration: none; width: 100%;">
+                <button type="button" class="google-btn">
+                    <i class="fab fa-google"></i>
+                    <span>Đăng nhập với Google</span>
+                </button>
+            </a>
             <p class="switch-auth">
                 Chưa có tài khoản? <a href="register.php">Đăng ký ngay</a>
             </p>
