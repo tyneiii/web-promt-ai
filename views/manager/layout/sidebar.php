@@ -26,29 +26,10 @@
             <i class="fa-solid fa-users"></i>Quản lý tài khoản
         </a>
     </li>
-
-    <li class="menu-parent <?= isParentActive(['post.php','awaiting_approval.php','report.php']) ?>">
-        <span class="menu-parent-title">
-            <i class="fa-solid fa-file-lines"></i>
-            <span>Quản lý bài đăng</span>
-        </span>
-        <ul class="submenu">
-            <li>
-                <a href="../manager/post.php" class="menu-link <?= isActive('QlyBaiDang.php') ?>">
-                    <i class="fa-solid fa-pager"></i>Bài đăng
-                </a>
-            </li>
-            <li>
-                <a href="../manager/awaiting_approval.php" class="menu-link <?= isActive('baidang_choduyet.php') ?>">
-                    <i class="fa-solid fa-clock"></i>Bài đăng chờ duyệt
-                </a>
-            </li>
-            <li>
-                <a href="../manager/report.php" class="menu-link <?= isActive('baidang_baocao.php') ?>">
-                    <i class="fa-solid fa-triangle-exclamation"></i>Bài đăng bị báo cáo
-                </a>
-            </li>
-        </ul>
+    <li>
+        <a href="../manager/post.php" class="menu-link <?= isActive('post.php') ?>">
+            <i class="fa-solid fa-file-lines"></i>Quản lý bài đăng
+        </a>
     </li>
 </ul>
 </div>

@@ -11,30 +11,34 @@
 
   <body>
     <div class="container">
-      <?php include_once __DIR__ . '/layout/sidebar.php'; ?>
+      <?php include_once __DIR__ . '/layout/sidebar.php'; 
+      include_once __DIR__ . '/../../helpers/helper.php'?>
       <div class="main">
-        <?php
+      <?php
         if (isset($_POST["btnSave"])) {
           $account_id = (int)$_POST["account_id"];
           $new_role = (int)$_POST["new_role"];
-          $mess = changeRole($conn, $account_id, $new_role);
+          $mess_result = changeRole($conn, $account_id, $new_role);
+          $query_params = array_filter([
+            'search' => $_GET['search'] ?? '',
+            'role' => $_GET['role'] ?? '',
+            'search_columns' => $_GET['search_columns'] ?? [],
+          ]);
+          handlePrgRedirect($mess_result, $query_params);
         }
+        $mess=getMess();
         $search = $_GET['search'] ?? '';
         $role = $_GET["role"] ?? '';
         $search_columns = $_GET['search_columns'] ?? [];
         $accounts = getAccounts($conn, $search, $role, $search_columns);
-        ?>
+      ?>
         <fieldset class="account-fieldset">
           <legend>Quản lý tài khoản</legend>
           <div class="top-bar">
             <div class="stats">
               Tổng số tài khoản: <strong><?= $accounts->num_rows ?></strong>
             </div>
-            <?php if (!empty($mess)): ?>
-              <div class="alert-success">
-                <?= htmlspecialchars($mess) ?>
-              </div>
-            <?php endif; ?>
+            <?php printMess($mess); ?>
             <div class="search-box">
               <form method="get" id="search-form">
                 <?php foreach ($search_columns as $col_name): ?>
@@ -48,8 +52,8 @@
                     <i class="fa-solid fa-magnifying-glass"></i>
                   </button>
                 </div>
-                <select name="role">
-                  <option value="">Loại tài khoản</option>
+                <select name="role" onchange="document.getElementById('search-form').submit()">
+                  <option value="">Tất cả tài khoản</option>
                   <option value="Admin" <?= ($role === 'Admin') ? 'selected' : '' ?>>Admin</option>
                   <option value="User" <?= ($role === 'User') ? 'selected' : '' ?>>User</option>
                 </select>
@@ -61,62 +65,59 @@
               <form method="get" id="column-search-form">
                 <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
                 <input type="hidden" name="role" value="<?= htmlspecialchars($role) ?>">
-              <table>
-                <thead>
-                  <tr>
-                    <th>
-                      <label>
-                        <input type="checkbox" name="search_columns[]" value="account_id"
-                          <?= in_array('account_id', $search_columns) ? 'checked' : '' ?>
-                          onchange="document.getElementById('column-search-form').submit()"> ID
-                      </label>
-                    </th>
-                    <th>
-                      <label>
-                        <input type="checkbox" name="search_columns[]" value="username"
-                          <?= in_array('username', $search_columns) ? 'checked' : '' ?>
-                          onchange="document.getElementById('column-search-form').submit()"> Tên tài khoản
-                      </label>
-                    </th>
-                    <th>
-                      <label>
-                        <input type="checkbox" name="search_columns[]" value="email"
-                          <?= in_array('email', $search_columns) ? 'checked' : '' ?>
-                          onchange="document.getElementById('column-search-form').submit()"> Email
-                      </label>
-                    </th>
-                    <th>Loại tài khoản</th>
-                    <th>Thao tác</th>
-                  </tr>
-                </thead>
-              </form>
-                <tbody>
-                  <?php while ($acc = $accounts->fetch_assoc()): ?>
+                <table>
+                  <thead>
                     <tr>
-                      <td><?= $acc["account_id"] ?></td>
-                      <td><?= htmlspecialchars($acc["username"]) ?></td>
-                      <td><?= htmlspecialchars($acc["email"]) ?></td>
-                      <form method="POST" action="" class="role-update-form">
-                        <td>
-                          <select class="role-select" name="new_role" data-original-role="<?= $acc["role_name"] ?>">
-                            <option value="1" <?= ($acc['role_name'] === 'Admin') ? 'selected' : '' ?>>Admin</option>
-                            <option value="2" <?= ($acc['role_name'] === 'User') ? 'selected' : '' ?>>User</option>
-                          </select>
-                        </td>
-                        <td class="actions">
-                          <input type="hidden" name="account_id" value="<?= $acc['account_id'] ?>">
-                          <input type="hidden" class="hidden-role-input" name="role" value="<?= $acc['role_name'] ?>">
-
-                          <button class="btn-delete" type="button"><i class="fa-solid fa-trash"></i> Xóa</button>
-
-                          <button type="submit" name="btnSave" class="btn-save-role">
-                            <i class="fa-solid fa-floppy-disk"></i> Lưu
-                          </button>
-                      </form>
-                      </td>
+                      <th>
+                        <label>
+                          <input type="checkbox" name="search_columns[]" value="account_id"
+                            <?= in_array('account_id', $search_columns) ? 'checked' : '' ?>
+                            onchange="document.getElementById('column-search-form').submit()"> ID
+                        </label>
+                      </th>
+                      <th>
+                        <label>
+                          <input type="checkbox" name="search_columns[]" value="username"
+                            <?= in_array('username', $search_columns) ? 'checked' : '' ?>
+                            onchange="document.getElementById('column-search-form').submit()"> Tên tài khoản
+                        </label>
+                      </th>
+                      <th>
+                        <label>
+                          <input type="checkbox" name="search_columns[]" value="email"
+                            <?= in_array('email', $search_columns) ? 'checked' : '' ?>
+                            onchange="document.getElementById('column-search-form').submit()"> Email
+                        </label>
+                      </th>
+                      <th>Loại tài khoản</th>
+                      <th>Thao tác</th>
                     </tr>
-                  <?php endwhile; ?>
-                </tbody>
+                  </thead>
+              </form>
+              <tbody>
+                <?php while ($acc = $accounts->fetch_assoc()): ?>
+                  <tr>
+                    <td><?= $acc["account_id"] ?></td>
+                    <td><?= htmlspecialchars($acc["username"]) ?></td>
+                    <td><?= htmlspecialchars($acc["email"]) ?></td>
+                    <form method="POST" action="" class="role-update-form">
+                      <td>
+                        <select class="role-select" name="new_role" data-original-role="<?= $acc["role_name"] ?>">
+                          <option value="1" <?= ($acc['role_name'] === 'Admin') ? 'selected' : '' ?>>Admin</option>
+                          <option value="2" <?= ($acc['role_name'] === 'User') ? 'selected' : '' ?>>User</option>
+                        </select>
+                      </td>
+                      <td class="actions">
+                        <input type="hidden" name="account_id" value="<?= $acc['account_id'] ?>">
+                        <button class="btn-delete" type="button"><i class="fa-solid fa-trash"></i> Xóa</button>
+                        <button type="submit" name="btnSave" class="btn-save-role">
+                          <i class="fa-solid fa-floppy-disk"></i> Lưu
+                        </button>
+                    </form>
+                    </td>
+                  </tr>
+                <?php endwhile; ?>
+              </tbody>
               </table>
             </div>
           </div>
