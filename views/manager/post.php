@@ -29,7 +29,7 @@
 <body>
     <div class="container">
         <?php include_once __DIR__ . '/layout/sidebar.php';
-              include_once __DIR__ . '/../../helpers/helper.php'?>
+        include_once __DIR__ . '/../../helpers/helper.php' ?>
         <div class="main">
             <?php
             $mess = "";
@@ -143,7 +143,9 @@
                                         </td>
                                         <td class="actions">
                                             <input type="hidden" name="prompt_id" value="<?= $post['prompt_id'] ?>">
-                                            <input type="hidden" name="btnUpdateStatus" value="<?= $post['prompt_id'] ?>"> <button class="btn-edit" type="button"><i class="fa-solid fa-magnifying-glass"></i> Xem chi tiết</button>
+                                            <a class="btn-edit" href="check_post.php?id=<?= $post['prompt_id'] ?>">
+                                                <i class="fa-solid fa-magnifying-glass"></i> Xem chi tiết
+                                            </a>
                                             <button class="btn-delete" type="button" value="<?= $post['prompt_id'] ?>"><i class="fa-solid fa-trash"></i> Xóa</button>
                                             <button type="submit" name="btnSave" class="btn-save-role">
                                                 <i class="fa-solid fa-floppy-disk"></i> Lưu

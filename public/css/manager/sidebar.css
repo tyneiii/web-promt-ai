@@ -345,6 +345,9 @@ table {
 th, td {
     padding: 12px 16px;
     text-align: left;
+}
+
+tr{
     border-bottom: 2px solid black; /* Viền giữa các hàng màu xám đậm */
 }
 

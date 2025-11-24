@@ -45,7 +45,7 @@ if (isset($_POST['loveBtn']) && $id_user) {
 // $guest_message = !$id_user ? '<p class="guest-notice">Đăng nhập để like, comment và save prompt!</p>' : '';
 
 $tag = isset($_GET['tag']) ? (int)$_GET['tag'] : 0;
-$prompts = getPrompt($id_user, $search, $tag, $conn);
+$prompts = getPrompts($id_user, $search, $tag, $conn);
 // Lấy top 5 prompt hot dựa trên lượt like
 $hot_prompts = getHotPrompts($conn, 5);
 unset($_POST);

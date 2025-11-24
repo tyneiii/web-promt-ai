@@ -1,6 +1,6 @@
 <?php
 
-function getPrompt($account_id, $searchString, $tag_id, $conn) {
+function getPrompts($account_id, $searchString, $tag_id, $conn) {
     $account_id = (int)$account_id;
     $search = trim($searchString ?? '');
     $tag_id = (int)$tag_id;
@@ -445,6 +445,23 @@ function getHotPrompts($conn, $limit = 5) {
         ];
     }
     return $hot_prompts;
+}
+function getPrompt($conn, $prompt_id) {
+    $sql = "SELECT title, short_description, image FROM prompt WHERE prompt_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $prompt_id);
+    $stmt->execute();
+    $prompt = $stmt->get_result()->fetch_assoc();
+    if (!$prompt) return null;
+    $sqlDetail = "SELECT * FROM promptdetail WHERE prompt_id = ? ORDER BY component_order ASC";
+    $stmtDetail = $conn->prepare($sqlDetail);
+    $stmtDetail->bind_param("i", $prompt_id);
+    $stmtDetail->execute();
+    $details= $stmtDetail->get_result()->fetch_assoc();
+    return [
+        'prompt' => $prompt,
+        'details' => $details
+    ];
 }
 ?>
 
