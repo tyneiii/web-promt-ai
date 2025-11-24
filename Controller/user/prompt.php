@@ -295,15 +295,79 @@ function getReportedPrompts($conn, $search) {
     return $stmt->get_result();
 }
 
-function getAlldPrompts($conn, $search, $status) {  // Typo in original: getAlldPrompts -> getAllPrompts?
-    $sql = "SELECT prompt_id, title, short_description, status
-            FROM prompt
-            WHERE (prompt_id = ? OR title LIKE ? OR short_description LIKE ?) AND status LIKE ?";
-    $stmt = $conn->prepare($sql);
+function getAlldPrompts($conn, $search, $status, $search_columns)
+{
+    $search = trim($search ?? '');
+    $status = trim($status ?? ''); 
+    $allowed_columns = ['prompt_id', 'title', 'short_description'];
+    if (empty($search_columns)) {
+        $search_columns = $allowed_columns;
+    }
+    $column_conditions = [];
+    $bind_types = "";
+    $params = [];
     $like_search = "%" . $search . "%";
     $status_like = empty($status) ? "%" : $status;
-    $stmt->bind_param("isss", $search, $like_search, $like_search, $status_like);
+    if (!empty($search)) {
+        foreach ($search_columns as $column) {
+            if (in_array($column, $allowed_columns)) {
+                $column_conditions[] = "$column LIKE ?";
+                $bind_types .= "s";
+                $params[] = $like_search;
+            }
+        }
+    } else {
+        $column_conditions[] = "1=1"; 
+    }
+    
+    $search_where = implode(" OR ", $column_conditions);
+    $sql = "SELECT prompt_id, title, short_description, status
+            FROM prompt
+            WHERE ($search_where) 
+            AND status LIKE ?";
+    $bind_types .= "s";
+    $params[] = $status_like;
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        error_log("Prepare failed: " . $conn->error);
+        return false;
+    }
+    $stmt->bind_param($bind_types, ...$params);
     $stmt->execute();
     return $stmt->get_result();
+}
+
+function changestatus($conn, $prompt_id, $status){
+    $sql = "UPDATE prompt SET status = ? WHERE prompt_id = ?";
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        error_log("SQL Prepare Failed (changestatus): " . $conn->error . " | Query: " . $sql);
+        return [
+            'success' => false,
+            'message' => "Lỗi hệ thống (Mã 501). Không thể chuẩn bị truy vấn."
+        ];
+    }
+    $stmt->bind_param("si", $status, $prompt_id);
+    $execute_success = $stmt->execute();
+    $rows_affected = $stmt->affected_rows;
+    $stmt->close();
+    if (!$execute_success) {
+        error_log("SQL Execute Failed (changestatus): " . $stmt->error . " | Prompt ID: " . $prompt_id);
+        return [
+            'success' => false,
+            'message' => "Có lỗi nghiêm trọng xảy ra trong quá trình cập nhật trạng thái."
+        ];
+    }
+    if ($rows_affected > 0) {
+        return [
+            'success' => true,
+            'message' => "Cập nhật thành công bài đăng có ID={$prompt_id}."
+        ];
+    } else {
+        return [
+            'success' => true, 
+            'message' => "Thao tác trên bài đăng có ID={$prompt_id}, không có thay đổi nào."
+        ];
+    }
 }
 ?>

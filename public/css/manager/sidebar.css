@@ -107,7 +107,6 @@ input.add-btn:hover {
 }
 
 .sidebar ul li a.menu-link:hover{
-    border-left: 3px solid red;
     color: #fff;
 }
 .sidebar ul li a.menu-link.active {
@@ -434,4 +433,13 @@ a.btn-delete:hover {
 
 .actions button {
   margin-right: 5px;
+}
+
+.alert-error {
+    color: #f48583; /* Màu chữ đỏ đậm */
+    font-size: 17px;
+}
+.alert-success {
+    color: #84e286;
+    font-size: 17px;
 }
