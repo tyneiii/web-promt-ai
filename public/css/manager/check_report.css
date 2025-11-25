@@ -1,17 +1,14 @@
 body {
   margin: 0;
-  font-family: "Segoe UI", Arial, sans-serif;
   background-color: #18191a;
   color: #e4e6eb;
 }
 
-/* Container chia ngang 2 ô */
 .container {
   display: flex;
   min-height: 100vh;
 }
 
-/* Main chứa 2 section ngang hàng */
 .main {
   flex: 1;
   display: flex;
@@ -21,7 +18,6 @@ body {
   box-sizing: border-box;
 }
 
-/* Mỗi section chiếm 1 phần ngang */
 .section {
   border-radius: 10px;
   overflow: hidden;
@@ -39,12 +35,18 @@ body {
   overflow: hidden;
   border-radius: 10px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+
+  height: 650px; 
 }
 
 .top-row {
   display: flex;
   gap: 24px;
-  flex: 1;
+  height: 60%; 
+}
+
+.bottom-side {
+  height: 40%;
 }
 
 .left-side {
@@ -60,7 +62,6 @@ body {
   gap: 10px;
 }
 
-/* RIGHT SIDE */
 .right-side {
   flex: 1;
   background: #242526;
@@ -72,7 +73,6 @@ body {
   gap: 10px;
 }
 
-/* BOTTOM SIDE - vùng hiển thị ảnh */
 .bottom-side {
   background: #111;
   border-radius: 10px;
@@ -82,7 +82,8 @@ body {
   justify-content: center;
   color: #b0b3b8;
   font-size: 14px;
-  border: 1px dashed #555;
+  border: 1px solid #555;
+  height: 300px;
 }
 
 /* Nút hành động */
@@ -156,11 +157,8 @@ body {
 .section-title {
   text-align: center;
   font-size: 1.5rem;
-  /* bạn có thể tùy chỉnh */
   font-weight: 600;
-  /* ví dụ in đậm */
   margin: 15px 0;
-  /* khoảng cách trên/dưới */
   color: white;
 }
 
@@ -199,6 +197,17 @@ body {
   text-align: center;
 }
 
+#labelImg{
+  text-align: center;
+  font-size: 16px;
+}
+
+.post-image {
+  max-width: 100%;          /* không vượt quá khung ngang */
+  max-height: 100%;         /* không vượt quá khung dọc */
+  object-fit: contain;      /* giữ nguyên tỉ lệ, không cắt */
+  border-radius: 10px;      /* bo góc */
+}
 .img-preview {
   background: #111;
   border: 1px dashed #555;
@@ -247,7 +256,6 @@ body {
   border: 1px solid #3a3b3c;
   background-color: #242526;
   color: #e4e6eb;
-  font-family: Inter, system-ui, Arial, sans-serif;
   font-size: 1rem;
   resize: vertical;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
@@ -258,7 +266,6 @@ body {
 #run-result button {
   cursor: pointer;
 }
-/* Focus cho textarea chung */
 .short-desc:focus,
 .info-block textarea:focus,
 #run-result textarea:focus {

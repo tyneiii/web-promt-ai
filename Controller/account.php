@@ -40,23 +40,38 @@
         $stmt->execute();
         return $stmt->get_result();
     }
-    function changeRole($conn, $account_id, $role)
-    {
-        $sql = "UPDATE account SET role_id = ? WHERE account_id = ?";
-        $stmt = $conn->prepare($sql);
-        if ($stmt === false) {
-            return $conn->error;
-        }
-        $stmt->bind_param("ii", $role, $account_id);
-        $execute_success = $stmt->execute();
-        $rows_affected = $stmt->affected_rows;
-        $stmt->close();
-        if ($execute_success && $rows_affected > 0) {
-            return "Cập nhật thành công tài khoản có ID={$account_id}";
-        } elseif ($execute_success && $rows_affected === 0) {
-            return "Thao tác trên tài khoản có ID={$account_id}, không có thay đổi";
-        } else {
-            return $conn->error;
-        }
+   function changeRole($conn, $account_id, $role)
+{
+    $sql = "UPDATE account SET role_id = ? WHERE account_id = ?";
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        error_log("SQL Prepare Failed (changeRole): " . $conn->error . " | Query: " . $sql);
+        return [
+            'success' => false,
+            'message' => "Lỗi hệ thống (Mã 502). Không thể chuẩn bị truy vấn."
+        ];
     }
+    $stmt->bind_param("ii", $role, $account_id);
+    $execute_success = $stmt->execute();
+    $rows_affected = $stmt->affected_rows;
+    $stmt->close();
+    if (!$execute_success) {
+        error_log("SQL Execute Failed (changeRole): " . $stmt->error . " | Account ID: " . $account_id);
+        return [
+            'success' => false,
+            'message' => "Có lỗi xảy ra trong quá trình cập nhật vai trò."
+        ];
+    }
+    if ($rows_affected > 0) {
+        return [
+            'success' => true,
+            'message' => "Cập nhật thành công tài khoản có ID={$account_id}."
+        ];
+    } else {
+        return [
+            'success' => true, 
+            'message' => "Thao tác trên tài khoản có ID={$account_id}, không có thay đổi nào."
+        ];
+    }
+}
     ?>
