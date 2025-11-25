@@ -1,23 +1,19 @@
 <?php
-include_once __DIR__ . '/layout/header.php';
+// Bắt đầu session và include DB sớm (trước output)
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+include_once __DIR__ . '/../../config.php';  // Giả sử config.php có $conn; nếu không, thay bằng config.php
+
+$id_user = $_SESSION['id_user'] ?? '';
+$name_user = $_SESSION['name_user'] ?? '';
+
+$search = $_GET['search'] ?? '';
+
+// Include prompt.php chỉ khi cần cho handle form (tránh load không cần)
 include_once __DIR__ . '/../../Controller/user/prompt.php';
-?>
-<link rel="stylesheet" href="../../public/css/run_prompt.css">
 
-<?php
-$id_user = '';
-$name_user = '';
-if (isset($_SESSION['id_user'])) {
-    $id_user = $_SESSION['id_user'];
-    $name_user = $_SESSION['name_user'];
-}
-
-$search = '';
-if (isset($_GET['search'])) {
-    $search = $_GET['search'];
-}
-
-// Handle form submits
+// Handle form submits NGAY ĐẦU (trước include header, tránh output)
 if (isset($_POST['loveBtn']) && $id_user) {
     $id_prompt = (int)$_POST['loveBtn'];
     $mess = lovePrompt($id_user, $id_prompt, $conn);
@@ -25,13 +21,10 @@ if (isset($_POST['loveBtn']) && $id_user) {
     exit;
 } elseif (isset($_POST['cmtBtn']) && $id_user) {
     $id_prompt = (int)$_POST['cmtBtn'];
-
-    // Nếu có biến search thì thêm vào URL, không thì bỏ qua
     $redirect = "detail_post.php?id=" . $id_prompt;
     if (!empty($search)) {
         $redirect .= "&search=" . urlencode($search);
     }
-
     header("Location: $redirect");
     exit;
 } elseif (isset($_POST['saveBtn']) && $id_user) {
@@ -41,6 +34,13 @@ if (isset($_POST['loveBtn']) && $id_user) {
     exit;
 }
 
+// Bây giờ mới include header (sau handle, không redirect nữa)
+include_once __DIR__ . '/layout/header.php';
+?>
+
+<link rel="stylesheet" href="../../public/css/run_prompt.css">
+
+<?php
 // Guest mode: Optional message (display in main-content if needed)
 // $guest_message = !$id_user ? '<p class="guest-notice">Đăng nhập để like, comment và save prompt!</p>' : '';
 
