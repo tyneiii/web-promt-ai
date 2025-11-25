@@ -1,5 +1,4 @@
 <?php
-// Controller/user/notifications.php - Sửa để khớp schema DB thực tế (bảng notification, cột reciever_id, sender_id, isRead)
 
 function getNotifications($reciever_id, $conn, $limit = 10, $unread_only = false) {
     $reciever_id = (int)$reciever_id;
@@ -36,15 +35,15 @@ function getNotifications($reciever_id, $conn, $limit = 10, $unread_only = false
     $notifications = [];
     while ($row = $result->fetch_assoc()) {
         $notifications[] = [
-            'notification_id' => $row['notification_id'],  // Sửa thành notification_id
+            'notification_id' => $row['notification_id'],  
             'reciever_id' => $row['reciever_id'],
             'sender_id' => $row['sender_id'],
             'prompt_id' => $row['prompt_id'],
             'message' => $row['message'],
-            'isRead' => (int)$row['isRead'],  // Sửa thành isRead
+            'isRead' => (int)$row['isRead'],  
             'created_at' => $row['created_at'],
             'prompt_desc' => $row['prompt_desc'],
-            'sender_username' => $row['sender_username'] ?? 'Hệ thống'  // Sửa thành sender_username
+            'sender_username' => $row['sender_username'] ?? 'Hệ thống'  
         ];
     }
     return $notifications;
@@ -54,7 +53,7 @@ function getUnreadCount($reciever_id, $conn) {
     $reciever_id = (int)$reciever_id;
     if ($reciever_id <= 0) return 0;
     
-    $sql = "SELECT COUNT(*) as count FROM notification WHERE reciever_id = ? AND isRead = 0";  // Sửa bảng và cột
+    $sql = "SELECT COUNT(*) as count FROM notification WHERE reciever_id = ? AND isRead = 0";  
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
         error_log("Prepare failed for getUnreadCount: " . $conn->error);
@@ -72,7 +71,7 @@ function markAsRead($reciever_id, $conn, $notification_id = null) {
     
     if ($notification_id) {
         $notification_id = (int)$notification_id;
-        $sql = "UPDATE notification SET isRead = 1 WHERE notification_id = ? AND reciever_id = ?";  // Sửa bảng và cột
+        $sql = "UPDATE notification SET isRead = 1 WHERE notification_id = ? AND reciever_id = ?";  
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
             error_log("Prepare failed for markAsRead single: " . $conn->error);
@@ -80,7 +79,7 @@ function markAsRead($reciever_id, $conn, $notification_id = null) {
         }
         $stmt->bind_param("ii", $notification_id, $reciever_id);
     } else {
-        $sql = "UPDATE notification SET isRead = 1 WHERE reciever_id = ?";  // Sửa bảng và cột
+        $sql = "UPDATE notification SET isRead = 1 WHERE reciever_id = ?";  
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
             error_log("Prepare failed for markAsRead all: " . $conn->error);
