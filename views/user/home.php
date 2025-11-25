@@ -103,7 +103,7 @@ unset($_POST);
                 <div class="card" data-id="<?= $prompt['prompt_id'] ?>">
                     <div class="card-header">
                         <div class="user-info">
-                            <img src="../../public/img/<?= htmlspecialchars($prompt['avatar'] ?? 'default-avatar.png') ?>"
+                             <img src="../../public/img/<?= htmlspecialchars($prompt['avatar'] ?? 'default-avatar.png') ?>" 
                                 alt="<?= htmlspecialchars($prompt['username']) ?>"
                                 style="width:35px; height:35px; border-radius:50%;">
                             <strong><?= htmlspecialchars($prompt['username']) ?></strong>
