@@ -179,7 +179,7 @@ function lovePrompt($account_id, $prompt_id, $conn) {
         return "Bạn đã bỏ tim bài viết";
     } else {
         // Chưa thả tim → thêm tim
-        $love_at = date('Y-m-d');  // DATE format to match DB schema
+        $love_at = date('Y-m-d');
         $insertSql = "INSERT INTO love (prompt_id, account_id, status, love_at) VALUES (?, ?, 'OPEN', ?)";
         $insertStmt = $conn->prepare($insertSql);
         if (!$insertStmt) {
@@ -199,6 +199,24 @@ function lovePrompt($account_id, $prompt_id, $conn) {
             $updateStmt->execute();
             $updateStmt->close();
         }
+        
+        // Tạo notification cho owner (nếu không phải chính mình)
+        $ownerSql = "SELECT account_id FROM prompt WHERE prompt_id = ?";
+        $ownerStmt = $conn->prepare($ownerSql);
+        $ownerStmt->bind_param("i", $prompt_id);
+        $ownerStmt->execute();
+        $owner = $ownerStmt->get_result()->fetch_assoc();
+        if ($owner && $owner['account_id'] != $account_id) {
+            // Lấy username sender để message đẹp
+            $senderSql = "SELECT username FROM account WHERE account_id = ?";
+            $senderStmt = $conn->prepare($senderSql);
+            $senderStmt->bind_param("i", $account_id);
+            $senderStmt->execute();
+            $sender = $senderStmt->get_result()->fetch_assoc();
+            $sender_name = $sender['username'] ?? 'Người dùng';
+            createNotification($owner['account_id'], $account_id, $prompt_id, $sender_name . ' đã thích bài viết của bạn', $conn);
+        }
+        
         return "Bạn đã tim bài viết";
     }
 }
@@ -242,6 +260,21 @@ function savePrompt($account_id, $prompt_id, $conn) {
             $updateStmt->bind_param("i", $prompt_id);
             $updateStmt->execute();
             $updateStmt->close();
+        }
+        // Tạo notification (optional)
+        $ownerSql = "SELECT account_id FROM prompt WHERE prompt_id = ?";
+        $ownerStmt = $conn->prepare($ownerSql);
+        $ownerStmt->bind_param("i", $prompt_id);
+        $ownerStmt->execute();
+        $owner = $ownerStmt->get_result()->fetch_assoc();
+        if ($owner && $owner['account_id'] != $account_id) {
+            $senderSql = "SELECT username FROM account WHERE account_id = ?";
+            $senderStmt = $conn->prepare($senderSql);
+            $senderStmt->bind_param("i", $account_id);
+            $senderStmt->execute();
+            $sender = $senderStmt->get_result()->fetch_assoc();
+            $sender_name = $sender['username'] ?? 'Người dùng';
+            createNotification($owner['account_id'], $account_id, $prompt_id, $sender_name . ' đã lưu bài viết của bạn', $conn);
         }
         return "Bạn đã bỏ lưu bài viết";
     } else {
@@ -453,15 +486,36 @@ function getPrompt($conn, $prompt_id) {
     $stmt->execute();
     $prompt = $stmt->get_result()->fetch_assoc();
     if (!$prompt) return null;
+    
     $sqlDetail = "SELECT * FROM promptdetail WHERE prompt_id = ? ORDER BY component_order ASC";
     $stmtDetail = $conn->prepare($sqlDetail);
     $stmtDetail->bind_param("i", $prompt_id);
     $stmtDetail->execute();
-    $details= $stmtDetail->get_result()->fetch_assoc();
+    $detail_result = $stmtDetail->get_result();
+    
+    $details = [];
+    while ($d = $detail_result->fetch_assoc()) {
+        $details[] = $d['content'];  // Hoặc $d nếu cần full fields
+    }
+    
     return [
         'prompt' => $prompt,
         'details' => $details
     ];
 }
-?>
 
+// Thêm function createNotification (gọi trong lovePrompt/savePrompt/changestatus khi approve)
+function createNotification($reciever_id, $sender_id, $prompt_id, $message, $conn) {
+    if ($reciever_id == $sender_id) return;  // Không notify chính mình
+
+    $sql = "INSERT INTO notification (reciever_id, sender_id, prompt_id, message, created_at, isRead) 
+            VALUES (?, ?, ?, ?, NOW(), 0)";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        error_log("Prepare failed for createNotification: " . $conn->error);
+        return;
+    }
+    $stmt->bind_param("iiis", $reciever_id, $sender_id, $prompt_id, $message);
+    $stmt->execute();
+    $stmt->close();
+}
