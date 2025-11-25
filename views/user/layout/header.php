@@ -15,6 +15,7 @@
         padding-top: 160px !important;
       }
     }
+    
     #sticky-ad-banner {
       position: fixed;
       bottom: 0;
@@ -30,8 +31,8 @@
       display: inline-block;
     }
     #sticky-ad-banner img {
-      height: 100px;
-      width: 850px;
+      height: 150px;
+      width: 950px;
       max-width: 200vw;
       border-radius: 6px;
     }
