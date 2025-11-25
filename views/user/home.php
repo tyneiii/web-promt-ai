@@ -1,9 +1,8 @@
 <?php
-// Bắt đầu session và include DB sớm (trước output)
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-include_once __DIR__ . '/../../config.php';  // Giả sử config.php có $conn; nếu không, thay bằng config.php
+include_once __DIR__ . '/../../config.php';  
 
 $id_user = $_SESSION['id_user'] ?? '';
 $name_user = $_SESSION['name_user'] ?? '';
