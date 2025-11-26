@@ -3,7 +3,7 @@
     require_once __DIR__ . '/MailServiceController.php'; 
 
     function handleRegister($conn){
-        cleanupExpiredAccounts($conn);
+        // cleanupExpiredAccounts($conn);
         if ($_SERVER["REQUEST_METHOD"] == "POST" and isset($_POST["btnregister"])) {
             $username = $_POST['username'];
             $email = $_POST['email'];
@@ -47,7 +47,7 @@
             $token = bin2hex(random_bytes(50));
             $role_id = 2;
             $create_at = date('Y-m-d H:i:s');
-            $avatar = "default_avatar.png";
+            $avatar = "../../public/img/default_avatar.png";
             $bg_avatar = "bg.png";
             $sql_insert = "INSERT INTO account (username, email, password, role_id, token, create_at, avatar, bg_avatar) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             try {

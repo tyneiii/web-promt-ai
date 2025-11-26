@@ -16,9 +16,7 @@
     include_once __DIR__ . "/../../Controller/user/prompt.php";
     include_once __DIR__ . "/../../config.php";
     $id = $_GET['id'] ?? null;
-    $data = getPrompt($conn, $id);
-    $prompt = $data["prompt"];
-    $details = $data["details"];
+    $prompt = getPromptDetails($conn, $id);
     ?>
     <div class="main">
       <div class="section section-1">
@@ -27,13 +25,17 @@
             <div class="post-preview">
               <div class="post-header">
                 <div class="user-info">
-                  <h3>Phạm Trung Kiên</h3>
+                  <img src="<?= htmlspecialchars($prompt['avatar']) ?>" alt="Avatar" class="user-avatar-img">
+                  <div class="user-details">
+                    <h3><?= htmlspecialchars($prompt['username']) ?></h3>
+                  </div>
                 </div>
                 <div>
                   <label for="">Tiêu đề</label>
                   <input type="text" class="title-input" value="<?= htmlspecialchars($prompt['title']) ?>" readonly>
                 </div>
               </div>
+              <label style="margin-top: 0px;">Mô tả ngắn</label>
               <textarea class="short-desc" readonly><?= htmlspecialchars($prompt['short_description']) ?></textarea>
             </div>
             <div class="button-group">
@@ -45,16 +47,16 @@
           <div class="right-side">
             <div class="info-block">
               <label for="">Nội dung</label>
-              <textarea readonly><?= htmlspecialchars($details['content']) ?></textarea>
+              <textarea readonly class="content"><?= htmlspecialchars($prompt['content']) ?></textarea>
             </div>
           </div>
         </div>
-        <label for="" id="labelImg">Ảnh kết quả </label>
+        <label for="" id="labelImg">Ảnh tham khảo</label>
         <div class="bottom-side">
           <?php if (!empty($prompt['image'])): ?>
-            <img class="post-image" src="../../public/<?= htmlspecialchars($prompt['image']) ?>" alt="Ảnh bài viết">
+            <img class="post-image" id="myImg" src="../../public/<?= htmlspecialchars($prompt['image']) ?>" alt="Ảnh bài viết" style="cursor: pointer;">
           <?php else: ?>
-            <span>Chưa có ảnh</span>
+            <span>Bài viết không có ảnh hoặc ảnh bị lỗi</span>
           <?php endif; ?>
         </div>
       </div>
@@ -64,45 +66,17 @@
       </div>
     </div>
   </div>
-
-  <script>
-    document.querySelectorAll('.short-desc').forEach(textarea => {
-      textarea.style.height = textarea.scrollHeight + 'px';
-      textarea.addEventListener('input', () => {
-        textarea.style.height = 'auto';
-        textarea.style.height = textarea.scrollHeight + 'px';
-      });
-    });
-    const runBtn = document.querySelector('.run-btn');
-    const runResult = document.getElementById('run-result');
-
-    runBtn.addEventListener('click', () => {
-      runResult.innerHTML = ''; // reset trước khi hiển thị
-
-      // Tạo textarea
-      const textarea = document.createElement('textarea');
-      textarea.placeholder = 'Nhập nhận xét/test prompt...';
-      textarea.style.width = '100%';
-      textarea.style.minHeight = '100px';
-      textarea.style.marginBottom = '10px';
-
-      // Tạo nút Duyệt bài đăng
-      const approveBtn = document.createElement('button');
-      approveBtn.textContent = 'Duyệt bài đăng';
-      approveBtn.className = 'action-btn run-btn';
-      approveBtn.style.marginRight = '10px';
-
-      // Tạo nút Từ chối bài đăng
-      const rejectBtn = document.createElement('button');
-      rejectBtn.textContent = 'Từ chối bài đăng';
-      rejectBtn.className = 'action-btn back-btn';
-
-      // Thêm vào Section 2
-      runResult.appendChild(textarea);
-      runResult.appendChild(approveBtn);
-      runResult.appendChild(rejectBtn);
-    });
-  </script>
+  <div id="imageModal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="img01">
+    <div id="caption"></div>
+  </div>
+  <body>
+    <script>
+        const promptStatus = "<?= htmlspecialchars($prompt['status'] ?? 'waiting') ?>";
+        const currentPromptId = "<?= htmlspecialchars($id) ?>";
+    </script>
+    
+    <script src="../../public/js/post_detail.js"></script> 
 </body>
-
 </html>

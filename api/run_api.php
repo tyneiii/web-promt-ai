@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-$API_TOKEN = HF_API_TOKEN ?? '';
+$API_TOKEN = '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' ?? '';
 $input = json_decode(file_get_contents("php://input"), true);
 $prompt = trim($input["prompt"] ?? "");
 

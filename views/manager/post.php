@@ -33,7 +33,7 @@
         <div class="main">
             <?php
             $mess = "";
-            if (isset($_POST["btnUpdateStatus"])) {
+            if (isset($_POST["btnSave"])) {
                 $prompt_id = (int)$_POST["prompt_id"];
                 $new_status = $_POST["new_status"];
                 $mess_result = changestatus($conn, $prompt_id, $new_status);
@@ -49,19 +49,6 @@
             $search = $_GET['search'] ?? '';
             $search_columns = $_GET['search_columns'] ?? [];
             $posts = getAlldPrompts($conn, $search, $selectedStatus, $search_columns);
-            function getStatusClass($status)
-            {
-                switch ($status) {
-                    case 'public':
-                        return 'status-public';
-                    case 'waiting':
-                        return 'status-waiting';
-                    case 'report':
-                        return 'status-reported';
-                    default:
-                        return '';
-                }
-            }
             ?>
             <fieldset class="account-fieldset">
                 <legend>Quản lý bài đăng</legend>
@@ -134,7 +121,7 @@
                                     <td><?= $post['title'] ?></td>
                                     <td><?= $post['short_description'] ?></td>
                                     <form method="POST" action="" class="status-update-form">
-                                        <td class="<?= getStatusClass($post['status']) ?>">
+                                        <td>
                                             <select class="status-select" name="new_status">
                                                 <option value="public" <?= ($post['status'] === 'public') ? 'selected' : '' ?>>Public</option>
                                                 <option value="waiting" <?= ($post['status'] === 'waiting') ? 'selected' : '' ?>>Waiting</option>
