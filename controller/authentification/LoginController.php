@@ -2,7 +2,7 @@
     require_once __DIR__ . '/ErrorController.php';
 
     function handleLogin($conn){
-        cleanupExpiredAccounts($conn);
+        // cleanupExpiredAccounts($conn);
         if ($_SERVER["REQUEST_METHOD"] == "POST" and isset($_POST["btnlogin"])) {
             $email = $_POST['email'];
             $password_input = $_POST['password'];

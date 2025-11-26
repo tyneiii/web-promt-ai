@@ -352,8 +352,16 @@ tr{
 }
 
 th {
-    background-color: #e53935; 
+    background-color: #97110e; 
     color: #fff;
+}
+
+.table-container table td:nth-child(3) {
+    width: 350px; 
+    max-width: 350px;
+    overflow: hidden; 
+    text-overflow: ellipsis;
+    white-space: nowrap; 
 }
 
 .table-container table tbody tr:nth-child(odd) {
@@ -365,7 +373,7 @@ th {
 }
 
 .table-container table tbody tr:hover {
-    background-color: #3a3a3a; 
+    background-color: #444B57; 
 }
 
 th:last-child {
@@ -382,34 +390,32 @@ tr:hover {
 }
 
 .btn-edit,
-.btn-delete {
+.btn-delete,
+.btn-save-role {
     border: none;
     padding: 6px 10px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
     color: #fff;
+    text-decoration: none;
+    display: inline-block;
 }
 
 .btn-edit {
-    background-color: rgb(85, 85, 241); /* Giữ màu đỏ/hồng để phù hợp với tông Đỏ-Đen */
+    background-color: rgb(6, 6, 145); /* Giữ màu đỏ/hồng để phù hợp với tông Đỏ-Đen */
 }
 
 .btn-delete {
-    background-color: #d9534f; /* Giữ màu đỏ/hồng để phù hợp với tông Đỏ-Đen */
+    background-color: #8b100c; /* Giữ màu đỏ/hồng để phù hợp với tông Đỏ-Đen */
 }
 
 .btn-delete:hover {
-    background-color: #b52b27;
+    background-color: #e21f18;
 }
 
 .btn-edit:hover {
-    background-color: rgb(58, 58, 239); /* Giữ màu đỏ/hồng để phù hợp với tông Đỏ-Đen */
-}
-a.btn-edit,
-a.btn-delete {
-    text-decoration: none;
-    display: inline-block;
+    background-color: rgb(33, 33, 228); /* Giữ màu đỏ/hồng để phù hợp với tông Đỏ-Đen */
 }
 
 a.btn-edit:hover,
@@ -423,17 +429,12 @@ a.btn-delete:hover {
   border: 1px solid #ccc;
   min-width: 100px;
 }
-
 .btn-save-role {
-  background-color: #28a745; 
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-left: 5px; 
+  background-color: #036b1c; 
 }
-
+.btn-save-role:hover{
+  background-color: #08b731; 
+}
 .actions button {
   margin-right: 5px;
 }

@@ -479,32 +479,20 @@ function getHotPrompts($conn, $limit = 5) {
     }
     return $hot_prompts;
 }
-function getPrompt($conn, $prompt_id) {
-    $sql = "SELECT title, short_description, image FROM prompt WHERE prompt_id = ?";
+function getPromptDetails($conn, $prompt_id) {
+    $sql = "SELECT p.title, p.short_description, p.image, pd.content, p.status,
+            a.username, a.avatar  
+            FROM prompt p
+            JOIN promptdetail pd ON p.prompt_id = pd.prompt_id
+            JOIN account a ON p.account_id = a.account_id 
+            WHERE p.prompt_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $prompt_id);
     $stmt->execute();
-    $prompt = $stmt->get_result()->fetch_assoc();
-    if (!$prompt) return null;
-    
-    $sqlDetail = "SELECT * FROM promptdetail WHERE prompt_id = ? ORDER BY component_order ASC";
-    $stmtDetail = $conn->prepare($sqlDetail);
-    $stmtDetail->bind_param("i", $prompt_id);
-    $stmtDetail->execute();
-    $detail_result = $stmtDetail->get_result();
-    
-    $details = [];
-    while ($d = $detail_result->fetch_assoc()) {
-        $details[] = $d['content'];  // Hoặc $d nếu cần full fields
-    }
-    
-    return [
-        'prompt' => $prompt,
-        'details' => $details
-    ];
+    $result = $stmt->get_result()->fetch_assoc();
+    return $result;
 }
 
-// Thêm function createNotification (gọi trong lovePrompt/savePrompt/changestatus khi approve)
 function createNotification($reciever_id, $sender_id, $prompt_id, $message, $conn) {
     if ($reciever_id == $sender_id) return;  // Không notify chính mình
 
@@ -518,4 +506,65 @@ function createNotification($reciever_id, $sender_id, $prompt_id, $message, $con
     $stmt->bind_param("iiis", $reciever_id, $sender_id, $prompt_id, $message);
     $stmt->execute();
     $stmt->close();
+}
+
+function updateStatus($conn, $prompt_id, $action) {
+    $sql = "";
+    $target_status = null;
+    $is_delete_action = false;
+    if ($action == "approve" || $action == "unreport") {
+        $target_status = "public";
+        $sql = "UPDATE prompt SET status = ? WHERE prompt_id = ?";
+    } 
+    else if ($action == "reject" || $action == "delete") {
+        $is_delete_action = true;
+        $sql = "DELETE FROM prompt WHERE prompt_id = ?";
+    } 
+    else if($action == "reject"){
+        $target_status = "reject";
+        $sql = "UPDATE prompt SET status = ? WHERE prompt_id = ?";
+    }
+    else {
+        return [
+            'success' => false,
+            'message' => "Hành động không hợp lệ: {$action}."
+        ];
+    }
+
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        error_log("SQL Prepare Failed (handlePromptAction): " . $conn->error . " | Query: " . $sql);
+        return [
+            'success' => false,
+            'message' => "Lỗi hệ thống (Mã 501). Không thể chuẩn bị truy vấn."
+        ];
+    }
+    if ($is_delete_action) {
+        $stmt->bind_param("i", $prompt_id);
+    } else {
+        $stmt->bind_param("si", $target_status, $prompt_id);
+    }
+    
+    $execute_success = $stmt->execute();
+    $rows_affected = $stmt->affected_rows;
+    $stmt->close();
+    if (!$execute_success) {
+        error_log("SQL Execute Failed (handlePromptAction): " . $stmt->error . " | Prompt ID: " . $prompt_id);
+        return [
+            'success' => false,
+            'message' => "Có lỗi nghiêm trọng xảy ra trong quá trình thực thi truy vấn."
+        ];
+    }
+    
+    if ($rows_affected > 0) {
+        return [
+            'success' => true,
+            'message' => "Xử lý thành công!"
+        ];
+    } else {
+        return [
+            'success' => true, 
+            'message' => "Không có thay đổi nào."
+        ];
+    }
 }
