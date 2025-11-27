@@ -91,28 +91,6 @@ $followingCountQuery->bind_result($followingCount);
 $followingCountQuery->fetch();
 $followingCountQuery->close();
 
-/* ==========================
-   LẤY THU NHẬP THÁNG HIỆN TẠI
-========================== */
-
-$currentMonth = date('Y-m');
-
-$payoutQuery = $conn->prepare("
-    SELECT money_received 
-    FROM user_payout 
-    WHERE account_id = ? AND month_year = ?
-");
-$payoutQuery->bind_param("is", $profile_id, $currentMonth);
-$payoutQuery->execute();
-$payoutQuery->bind_result($earnedMoney);
-$payoutQuery->fetch();
-$payoutQuery->close();
-
-if (!$earnedMoney) {
-    $earnedMoney = 0;
-}
-
-
 // Tab
 $tab = isset($_GET['tab']) ? $_GET['tab'] : 'posts';
 
@@ -197,13 +175,6 @@ $result = mysqli_query($conn, $sql);
         <span><strong id="following-count"><?php echo $followingCount; ?></strong> Đã follow</span>
         <span><strong id="follower-count"><?php echo $followerCount; ?></strong> Follower</span>
     </div>
-    <?php if ($acc_id === $profile_id): ?>
-        <div class="stats" style="margin-top: 10px; font-size: 18px;">
-            <span>💰 <strong><?= number_format($earnedMoney, 2) ?> USD</strong> / tháng này</span>
-        </div>
-    <?php endif; ?>
-
-
 
     <p class="bio"><?= $user['description'] ?? 'Chưa có tiểu sử.' ?></p>
 

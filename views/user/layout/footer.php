@@ -4,7 +4,7 @@
         <span id="close-ad-btn" onclick="closeStickyAd(event)">&times;</span>
 
         <a href="../../api/count_ad_click.php?ad=1" target="_blank">
-            <img src="../../public/img/tgdd_ads.gif" alt="Quảng cáo">
+            <img src="../../public/img/3bet_mb.gif" alt="Quảng cáo">
         </a>
     </div>
 </div>
