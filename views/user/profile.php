@@ -2,9 +2,6 @@
 include_once __DIR__ . '/layout/header.php';
 include_once __DIR__ . '/../../config.php';
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 
 /* ==========================
         XỬ LÝ FOLLOW/UNFOLLOW AJAX (TRẢ JSON)
@@ -110,29 +107,29 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : 'posts';
 //                 WHERE s.account_id = $profile_id 
 //                 ORDER BY s.save_id DESC ";
 // }
-    if ($tab === 'favorites') {
-        $sql = "SELECT p.*, a.username, a.avatar 
+if ($tab === 'favorites') {
+    $sql = "SELECT p.*, a.username, a.avatar 
                 FROM love l 
                 JOIN prompt p ON l.prompt_id = p.prompt_id 
                 JOIN account a ON p.account_id = a.account_id
                 WHERE l.account_id = $profile_id AND l.status = 'OPEN'
                 ORDER BY l.love_at DESC";
-    } else if ($tab === 'posts') {
-        $sql = "SELECT p.*, a.username, a.avatar
+} else if ($tab === 'posts') {
+    $sql = "SELECT p.*, a.username, a.avatar
                 FROM prompt p 
                 JOIN account a ON p.account_id = a.account_id
                 WHERE p.account_id = $profile_id 
                 ORDER BY prompt_id DESC";
-    } else {
-        $sql = "SELECT p.*, a.username, a.avatar 
+} else {
+    $sql = "SELECT p.*, a.username, a.avatar 
                 FROM save s 
                 JOIN prompt p ON s.prompt_id = p.prompt_id 
                 JOIN account a ON p.account_id = a.account_id
                 WHERE s.account_id = $profile_id 
                 ORDER BY s.save_id DESC";
-    }
+}
 
-    
+
 $result = mysqli_query($conn, $sql);
 
 ?>
@@ -188,12 +185,12 @@ $result = mysqli_query($conn, $sql);
 <div class="write-container">
     <?php if (mysqli_num_rows($result) > 0): ?>
         <?php while ($row = mysqli_fetch_assoc($result)): ?>
-            <?php 
-                $post_avatar = $row['avatar'];
-                // $post_avatar = $row['author_avatar'];
-                if (empty($post_avatar) || strtolower($post_avatar) === "null") {
-                    $post_avatar = "default_avatar.png"; 
-                }
+            <?php
+            $post_avatar = $row['avatar'];
+            // $post_avatar = $row['author_avatar'];
+            if (empty($post_avatar) || strtolower($post_avatar) === "null") {
+                $post_avatar = "default_avatar.png";
+            }
             ?>
             <a href="detail_post.php?id=<?= $row['prompt_id'] ?>" class="write-item" style="text-decoration:none;">
                 <div class="card-mini-header">
@@ -216,62 +213,66 @@ $result = mysqli_query($conn, $sql);
 </html>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    const followBtn = document.getElementById("follow-btn");
-    if (!followBtn) return;
+    document.addEventListener("DOMContentLoaded", function() {
+        const followBtn = document.getElementById("follow-btn");
+        if (!followBtn) return;
 
-    // Lấy giá trị ban đầu từ data-following (0/1)
-    let isFollowing = followBtn.dataset.following === "1";
-    const profileId = <?= $profile_id ?>;
+        // Lấy giá trị ban đầu từ data-following (0/1)
+        let isFollowing = followBtn.dataset.following === "1";
+        const profileId = <?= $profile_id ?>;
 
-    function updateButton() {
-        if (isFollowing) {
-            followBtn.innerHTML = '<i class="fa-solid fa-user-check"></i> Đã follow';
-            followBtn.classList.add("following");
-        } else {
-            followBtn.innerHTML = 'Theo dõi';
-            followBtn.classList.remove("following");
+        function updateButton() {
+            if (isFollowing) {
+                followBtn.innerHTML = '<i class="fa-solid fa-user-check"></i> Đã follow';
+                followBtn.classList.add("following");
+            } else {
+                followBtn.innerHTML = 'Theo dõi';
+                followBtn.classList.remove("following");
+            }
         }
-    }
 
-    updateButton();
-
-    followBtn.addEventListener("click", function(e) {
-        e.preventDefault();
-
-        // 🔥 Đổi UI ngay lập tức
-        isFollowing = !isFollowing;
         updateButton();
 
-        const formData = new FormData();
-        formData.append("action", "follow_toggle");
-        formData.append("following_id", profileId);
+        followBtn.addEventListener("click", function(e) {
+            e.preventDefault();
 
-        fetch("profile.php?id=<?= $profile_id ?>", {
-            method: "POST",
-            body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log("Server:", data);
-
-            if (data.status !== "follow" && data.status !== "unfollow") {
-                // rollback nếu server báo lỗi
-                isFollowing = !isFollowing;
-                updateButton();
-                return;
-            }
-
-            // Cập nhật số follower / following
-            document.getElementById("follower-count").textContent = data.followerCount;
-            document.getElementById("following-count").textContent = data.followingCount;
-        })
-        .catch(err => {
-            console.error(err);
-            // rollback nếu fetch lỗi
+            // 🔥 Đổi UI ngay lập tức
             isFollowing = !isFollowing;
             updateButton();
+
+            const formData = new FormData();
+            formData.append("action", "follow_toggle");
+            formData.append("following_id", profileId);
+
+            fetch("profile.php?id=<?= $profile_id ?>", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log("Server:", data);
+
+                    if (data.status !== "follow" && data.status !== "unfollow") {
+                        // rollback nếu server báo lỗi
+                        isFollowing = !isFollowing;
+                        updateButton();
+                        return;
+                    }
+
+                    // Cập nhật số follower / following
+                    document.getElementById("follower-count").textContent = data.followerCount;
+                    document.getElementById("following-count").textContent = data.followingCount;
+                    
+                })
+                .catch(err => {
+                    console.error(err);
+                    // rollback nếu fetch lỗi
+                    isFollowing = !isFollowing;
+                    updateButton();
+                });
+                setTimeout(() => {
+                        document.location.reload();
+                    }, 0);
         });
     });
-});
 </script>

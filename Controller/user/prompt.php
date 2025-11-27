@@ -568,3 +568,18 @@ function updateStatus($conn, $prompt_id, $action) {
         ];
     }
 }
+function getFollowingUsers($user_id, $conn) {
+    $sql = "
+        SELECT u.account_id, u.username, u.avatar
+        FROM follow f
+        INNER JOIN account u ON f.following_id = u.account_id
+        WHERE f.follower_id = ?
+    ";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    return $result->fetch_all(MYSQLI_ASSOC);
+}
