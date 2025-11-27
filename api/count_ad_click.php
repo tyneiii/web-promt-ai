@@ -8,7 +8,7 @@ if (!isset($conn) || $conn->connect_error) {
 }
 
 $metric_id = isset($_GET['ad']) ? (int)$_GET['ad'] : 1;
-$landing_url = "https://www.thegioididong.com/";
+$landing_url = "https://3bet.net/?a=five_fbef2c269fca6236245889459437af32&utm_campaign=cpd&utm_source=phimmoi&utm_medium=catfish2-720x90&utm_term=phim";
 
 // số tiền mỗi click (bạn thay theo ý)
 $revenue_per_click = 1; // vì last_month_revenue là DECIMAL(10,0), bạn dùng số nguyên

@@ -8,22 +8,8 @@
     $title = $_POST['title'];
     $short = $_POST['short_description'];
     $contents = $_POST['content'];
-
-    $rawTags = $_POST['tags'] ?? '[]';
-    $tags = json_decode($rawTags, true);
-    if (!is_array($tags)) {
-        $tags = [];
-    }
-
-    // ✅ BẮT BUỘC PHẢI CÓ ÍT NHẤT 1 CHỦ ĐỀ
-    if (empty($tags)) {
-        $_SESSION['create_post_error'] = "Vui lòng chọn ít nhất 1 chủ đề cho bài viết.";
-        header("Location: create_post.php");
-        exit;
-    }
-
+    $tags = json_decode($_POST['tags'], true); 
     $acc_id = $_SESSION['id_user'];
-
     $imageName = "";
 
     // Upload image
@@ -89,12 +75,6 @@
 
 <body>
   <button type="button" class="close-btn" title="Hủy bài viết mới" onclick="confirmCancel()">×</button>
-  <?php if (!empty($_SESSION['create_post_error'])): ?>
-    <div style="margin: 10px; padding: 8px 12px; border-radius: 6px; background:#ffdddd; color:#b30000;">
-      <?= $_SESSION['create_post_error']; unset($_SESSION['create_post_error']); ?>
-    </div>
-  <?php endif; ?>
-
   <form class="form-card" action="create_post.php" method="POST" enctype="multipart/form-data">
     <div class="user-info">
       <img src="../../public/img/<?= $user['avatar'] ?? 'avatar.png' ?>" class="avatar">
@@ -155,7 +135,7 @@
     <div class="form-footer">
       <div class="right-buttons">
         <button class="cancel-btn" onclick="confirmCancel()">Cancel</button>
-        <button class="submit-btn" type="submit" onclick="return handleSubmit()">Upload</button>
+        <button class="submit-btn" type="submit" onclick="updateTagsHidden()">Upload</button>
       </div>
     </div>
   </form>
@@ -214,13 +194,10 @@
   function handleSubmit() {
     if (chosen.length === 0) {
       alert("Vui lòng chọn ít nhất 1 chủ đề trước khi đăng bài!");
-      return false; // ❌ chặn submit
+      return;
     }
-    // cập nhật hidden input trước khi gửi form
-    updateTagsHidden();
-    return true; // ✅ cho submit
+    alert("Bài viết của bạn đã sẵn sàng để đăng!");
   }
-
 
   /* ===== Multi-select chủ đề (giữ nguyên) ===== */
   const topicInput = document.querySelector(".topic-input");
