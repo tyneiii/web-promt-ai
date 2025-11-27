@@ -12,32 +12,15 @@
 <body>
   <div class="container">
     <?php include_once __DIR__ . '/layout/sidebar.php';
-    include_once __DIR__ . '/../../helpers/helper.php' ?>
+          include_once __DIR__ . '/../../helpers/helper.php'; 
+          include_once __DIR__ . '/../../helpers/manager_account_logic.php';      
+    ?>
     <div class="main">
-      <?php
-      $action_result = handlePostActions($conn);
-      if ($action_result) {
-        $query_params = array_filter([
-          'search' => $_GET['search'] ?? '',
-          'role' => $_GET['role'] ?? '',
-          'is_active' => $_GET['is_active'] ?? '',
-          'search_columns' => $_GET['search_columns'] ?? [],
-        ]);
-        handlePrgRedirect($action_result, $query_params);
-      }
-
-      $mess = getMess();
-      $search = $_GET['search'] ?? '';
-      $role = $_GET["role"] ?? '';
-      $is_active = $_GET["is_active"] ?? '';
-      $search_columns = $_GET['search_columns'] ?? [];
-      $accounts = getAccounts($conn, $search, $role, $search_columns, $is_active);
-      ?>
       <fieldset class="account-fieldset">
         <legend>Quản lý tài khoản</legend>
         <div class="top-bar">
           <div class="stats">
-            Tổng số tài khoản: <strong><?= $accounts->num_rows ?></strong>
+            Đang hiển thị: <strong><?= (($current_page - 1) * $rows_per_page + $accounts->num_rows) . '/' . $total_rows ?></strong>
           </div>
           <?php printMess($mess); ?>
           <div class="search-box">
@@ -63,6 +46,13 @@
                 <option value="1" <?= (string)$is_active === '1' ? 'selected' : '' ?>>Open</option>
                 <option value="0" <?= (string)$is_active === '0' ? 'selected' : '' ?>>Block</option>
               </select>
+              <select name="rows_per_page" onchange="document.getElementById('search-form').submit()">
+                <option value="">Số hàng 1 trang</option>
+                <option value="25" <?= (string)$rows_per_page === '25' ? 'selected' : '' ?>>25</option>
+                <option value="50" <?= (string)$rows_per_page === '50' ? 'selected' : '' ?>>50</option>
+                <option value="75" <?= (string)$rows_per_page === '75' ? 'selected' : '' ?>>75</option>
+                <option value="100" <?= (string)$rows_per_page === '100' ? 'selected' : '' ?>>100</option>
+              </select>
             </form>
           </div>
         </div>
@@ -72,6 +62,7 @@
               <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
               <input type="hidden" name="role" value="<?= htmlspecialchars($role) ?>">
               <input type="hidden" name="is_active" value="<?= htmlspecialchars($is_active) ?>">
+              <input type="hidden" name="rows_per_page" value="<?= htmlspecialchars($rows_per_page) ?>">
               <table>
                 <thead>
                   <tr>
@@ -148,6 +139,7 @@
             </table>
           </div>
         </div>
+        <?php echo renderPagination($current_page, $total_pages, $rows_per_page, $pagination_params); ?>
       </fieldset>
     </div>
   </div>

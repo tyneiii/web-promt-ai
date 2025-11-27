@@ -11,19 +11,14 @@
 <body>
     <div class="container">
         <?php include_once __DIR__ . '/layout/sidebar.php';
-        include_once __DIR__ . '/../../helpers/helper.php' ?>
+        include_once __DIR__ . '/../../helpers/helper.php';
+        include_once __DIR__ . '/../../helpers/manager_prompt_logic.php'; ?>
         <div class="main">
-            <?php
-            $selectedStatus = $_GET['status'] ?? '';
-            $search = $_GET['search'] ?? '';
-            $search_columns = $_GET['search_columns'] ?? [];
-            $posts = getAlldPrompts($conn, $search, $selectedStatus, $search_columns);
-            ?>
             <fieldset class="account-fieldset">
                 <legend>Quản lý bài đăng</legend>
                 <div class="top-bar">
                     <div class="stats">
-                        Tổng số bài đăng: <strong><?= $posts->num_rows ?></strong>
+                        Tổng số bài đăng: <strong><?= (($current_page - 1) * $rows_per_page + $posts->num_rows) . '/' . $total_rows ?></strong>
                     </div>
                     <div class="search-box">
                         <form method="get" id="search-form">
@@ -45,6 +40,13 @@
                                 <option value="waiting" <?= ($selectedStatus === 'waiting') ? 'selected' : '' ?>>Waiting</option>
                                 <option value="report" <?= ($selectedStatus === 'report') ? 'selected' : '' ?>>Report</option>
                                 <option value="reject" <?= ($selectedStatus === 'reject') ? 'selected' : '' ?>>Reject</option>
+                            </select>
+                            <select name="rows_per_page" onchange="document.getElementById('search-form').submit()">
+                                <option value="">Số hàng 1 trang</option>
+                                <option value="25" <?= (string)$rows_per_page === '25' ? 'selected' : '' ?>>25</option>
+                                <option value="50" <?= (string)$rows_per_page === '50' ? 'selected' : '' ?>>50</option>
+                                <option value="75" <?= (string)$rows_per_page === '75' ? 'selected' : '' ?>>75</option>
+                                <option value="100" <?= (string)$rows_per_page === '100' ? 'selected' : '' ?>>100</option>
                             </select>
                         </form>
                     </div>
@@ -89,21 +91,22 @@
                                     <td><?= $post['prompt_id'] ?></td>
                                     <td><?= $post['title'] ?></td>
                                     <td><?= $post['short_description'] ?></td>
-                                        <td>
-                                           <span class="status-<?= strtolower($post['status']) ?>"><?= ucfirst($post['status']) ?></span>
-                                        </td>
-                                        <td class="actions">
-                                            <input type="hidden" name="prompt_id" value="<?= $post['prompt_id'] ?>">
-                                            <a class="btn-edit" href="prompt_detail.php?id=<?= $post['prompt_id'] ?>">
-                                                <i class="fa-solid fa-magnifying-glass"></i> Xem chi tiết
-                                            </a>
-                                        </td>
+                                    <td>
+                                        <span class="status-<?= strtolower($post['status']) ?>"><?= ucfirst($post['status']) ?></span>
+                                    </td>
+                                    <td class="actions">
+                                        <input type="hidden" name="prompt_id" value="<?= $post['prompt_id'] ?>">
+                                        <a class="btn-edit" href="prompt_detail.php?id=<?= $post['prompt_id'] ?>">
+                                            <i class="fa-solid fa-magnifying-glass"></i> Xem chi tiết
+                                        </a>
+                                    </td>
                                 </tr>
                             <?php endwhile; ?>
                         </tbody>
                         </table>
                     </div>
                 </div>
+                <?php echo renderPagination($current_page, $total_pages, $rows_per_page, $pagination_params); ?>
             </fieldset>
         </div>
     </div>

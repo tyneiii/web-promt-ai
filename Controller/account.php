@@ -35,7 +35,7 @@
             ];
         }
     }
-    function getAccounts($conn, $search, $role, $columns, $is_active)
+    function getAccounts($conn, $search, $role, $columns, $is_active, $rows_per_page, $offset)
     {
         $allowed_columns = ['account_id', 'username', 'email'];
         if (empty($columns)) {
@@ -51,14 +51,15 @@
             }
             $where = "(" . implode(" OR ", $conditions) . ")";
         }
-        $sql = "SELECT account.account_id, account.username, account.email, account.is_active, role.role_name
-            FROM account
-            JOIN role ON account.role_id=role.role_id
-            WHERE $where AND role.role_name LIKE ? AND account.is_active LIKE ? ";
-        $stmt = $conn->prepare($sql);
+        $where .= " AND role.role_name LIKE ? AND account.is_active LIKE ?";
         $like_search = "%" . $search . "%";
         $like_role = "%" . $role . "%";
         $like_active = "%" . $is_active . "%";
+        $sql = "SELECT COUNT(*) AS total_accounts
+                FROM account
+                JOIN role ON account.role_id=role.role_id
+                WHERE $where";
+        $stmt = $conn->prepare($sql);
         if (empty($columns)) {
             $stmt->bind_param($bind, $like_role, $like_active);
         } else {
@@ -75,8 +76,39 @@
             }
         }
         $stmt->execute();
-        return $stmt->get_result();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $total_rows = $row['total_accounts'];
+        $sql = "SELECT account.account_id, account.username, account.email, account.is_active, role.role_name
+                FROM account
+                JOIN role ON account.role_id=role.role_id
+                WHERE $where
+                LIMIT $rows_per_page OFFSET $offset";
+        $stmt = $conn->prepare($sql);
+
+        if (empty($columns)) {
+            $stmt->bind_param($bind, $like_role, $like_active);
+        } else {
+            switch (count($columns)) {
+                case 1:
+                    $stmt->bind_param($bind, $like_search, $like_role, $like_active);
+                    break;
+                case 2:
+                    $stmt->bind_param($bind, $like_search, $like_search, $like_role, $like_active);
+                    break;
+                case 3:
+                    $stmt->bind_param($bind, $like_search, $like_search, $like_search, $like_role, $like_active);
+                    break;
+            }
+        }
+        $stmt->execute();
+        $data_result = $stmt->get_result();
+        return [
+            'total' => $total_rows,
+            'accounts' => $data_result
+        ];
     }
+
     function updateRole($conn, $account_id, $role)
     {
         $sql = "UPDATE account SET role_id = ? WHERE account_id = ?";
@@ -92,7 +124,7 @@
         $execute_success = $stmt->execute();
         $rows_affected = $stmt->affected_rows;
         $stmt->close();
-        return checkSuccess($execute_success, $stmt, $rows_affected,$account_id);
+        return checkSuccess($execute_success, $stmt, $rows_affected, $account_id);
     }
     function updateAccountStatus($conn, $account_id, $status)
     {
