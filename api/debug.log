@@ -1,0 +1,292 @@
+2025-11-27 18:12:21 - Script bắt đầu chạy
+2025-11-27 18:12:21 - Đường dẫn key: D:\xampp\htdocs\web-promt-ai\api/key.php
+2025-11-27 18:12:21 - Require key.php thành công
+2025-11-27 18:12:21 - Token loaded: OK
+2025-11-27 18:12:21 - Prompt nhận: fh q
+WHIWQRHR  0
+2025-11-27 18:12:21 - Gọi API: https://router.huggingface.co/v1/chat/completions với model Qwen/Qwen2.5-72B-Instruct
+2025-11-27 18:12:25 - cURL kết quả: HTTP=200, Error=None, Response preview: {"id":"2995a594d726d36b0b76c66bdf6839e8","object":"chat.completion","created":1764263546,"model":"qwen/qwen-2.5-72b-instruct","choices":[{"index":0,"message":{"role":"assistant","content":"It looks li
+2025-11-27 18:12:25 - Thành công! Result dài: 157
+2025-11-27 18:12:38 - Script bắt đầu chạy
+2025-11-27 18:12:38 - Đường dẫn key: D:\xampp\htdocs\web-promt-ai\api/key.php
+2025-11-27 18:12:38 - Require key.php thành công
+2025-11-27 18:12:38 - Token loaded: OK
+2025-11-27 18:12:38 - Prompt nhận: Sinh mô tả SEO chuẩn cho sản phẩm điện
+2025-11-27 18:12:38 - Gọi API: https://router.huggingface.co/v1/chat/completions với model Qwen/Qwen2.5-72B-Instruct
+2025-11-27 18:12:45 - cURL kết quả: HTTP=500, Error=None, Response preview: {"message":"unknown error in the model inference server trace_id: 7bd80123cab16bde680f0b7d8a2fd951","type":"server_error"}
+
+2025-11-27 18:12:45 - Không extract được result: {"message":"unknown error in the model inference server trace_id: 7bd80123cab16bde680f0b7d8a2fd951","type":"server_error"}
+2025-11-27 18:13:48 - Script bắt đầu chạy
+2025-11-27 18:13:48 - Đường dẫn key: D:\xampp\htdocs\web-promt-ai\api/key.php
+2025-11-27 18:13:48 - Require key.php thành công
+2025-11-27 18:13:48 - Token loaded: OK
+2025-11-27 18:13:48 - Prompt nhận: Sinh mô tả SEO chuẩn cho sản phẩm điện
+2025-11-27 18:13:48 - Gọi API: https://router.huggingface.co/v1/chat/completions với model google/gemma-2-27b-it
+2025-11-27 18:13:49 - cURL kết quả: HTTP=400, Error=None, Response preview: {"error":{"message":"The requested model 'google/gemma-2-27b-it' is not supported by any provider you have enabled.","type":"invalid_request_error","param":"model","code":"model_not_supported"}}
+2025-11-27 18:13:49 - HF API error: {"message":"The requested model 'google\/gemma-2-27b-it' is not supported by any provider you have enabled.","type":"invalid_request_error","param":"model","code":"model_not_supported"}
+2025-11-27 18:13:59 - Script bắt đầu chạy
+2025-11-27 18:13:59 - Đường dẫn key: D:\xampp\htdocs\web-promt-ai\api/key.php
+2025-11-27 18:13:59 - Require key.php thành công
+2025-11-27 18:13:59 - Token loaded: OK
+2025-11-27 18:13:59 - Prompt nhận: Sinh mô tả SEO chuẩn cho sản phẩm điện
+2025-11-27 18:13:59 - Gọi API: https://router.huggingface.co/v1/chat/completions với model google/gemma-2-27b-it
+2025-11-27 18:13:59 - cURL kết quả: HTTP=400, Error=None, Response preview: {"error":{"message":"The requested model 'google/gemma-2-27b-it' is not supported by any provider you have enabled.","type":"invalid_request_error","param":"model","code":"model_not_supported"}}
+2025-11-27 18:13:59 - HF API error: {"message":"The requested model 'google\/gemma-2-27b-it' is not supported by any provider you have enabled.","type":"invalid_request_error","param":"model","code":"model_not_supported"}
+2025-11-27 18:14:47 - Script bắt đầu chạy
+2025-11-27 18:14:47 - Đường dẫn key: D:\xampp\htdocs\web-promt-ai\api/key.php
+2025-11-27 18:14:47 - Require key.php thành công
+2025-11-27 18:14:47 - Token loaded: OK
+2025-11-27 18:14:47 - Prompt nhận: Sinh mô tả SEO chuẩn cho sản phẩm điện
+2025-11-27 18:14:47 - Gọi API: https://router.huggingface.co/v1/chat/completions với model mistralai/Mistral-7B-Instruct-v0.
+2025-11-27 18:14:47 - cURL kết quả: HTTP=400, Error=None, Response preview: {"error":{"message":"The requested model 'mistralai/Mistral-7B-Instruct-v0.' does not exist.","type":"invalid_request_error","param":"model","code":"model_not_found"}}
+2025-11-27 18:14:47 - HF API error: {"message":"The requested model 'mistralai\/Mistral-7B-Instruct-v0.' does not exist.","type":"invalid_request_error","param":"model","code":"model_not_found"}
+2025-11-27 18:16:07 - Script bắt đầu chạy
+2025-11-27 18:16:07 - Đường dẫn key: D:\xampp\htdocs\web-promt-ai\api/key.php
+2025-11-27 18:16:07 - Require key.php thành công
+2025-11-27 18:16:07 - Token loaded: OK
+2025-11-27 18:16:07 - Prompt nhận: Sinh mô tả SEO chuẩn cho sản phẩm điện
+2025-11-27 18:16:07 - Gọi API: https://router.huggingface.co/v1/chat/completions với model mistralai/Mistral-7B-Instruct-v0.3
+2025-11-27 18:16:08 - cURL kết quả: HTTP=400, Error=None, Response preview: {"error":{"message":"The requested model 'mistralai/Mistral-7B-Instruct-v0.3' is not a chat model.","type":"invalid_request_error","param":"model","code":"model_not_supported"}}
+2025-11-27 18:16:08 - HF API error: {"message":"The requested model 'mistralai\/Mistral-7B-Instruct-v0.3' is not a chat model.","type":"invalid_request_error","param":"model","code":"model_not_supported"}
+2025-11-27 18:16:16 - Script bắt đầu chạy
+2025-11-27 18:16:16 - Đường dẫn key: D:\xampp\htdocs\web-promt-ai\api/key.php
+2025-11-27 18:16:16 - Require key.php thành công
+2025-11-27 18:16:16 - Token loaded: OK
+2025-11-27 18:16:16 - Prompt nhận: Giúp luyện speaking theo chủ đề.
+2025-11-27 18:16:16 - Gọi API: https://router.huggingface.co/v1/chat/completions với model mistralai/Mistral-7B-Instruct-v0.3
+2025-11-27 18:16:17 - cURL kết quả: HTTP=400, Error=None, Response preview: {"error":{"message":"The requested model 'mistralai/Mistral-7B-Instruct-v0.3' is not a chat model.","type":"invalid_request_error","param":"model","code":"model_not_supported"}}
+2025-11-27 18:16:17 - HF API error: {"message":"The requested model 'mistralai\/Mistral-7B-Instruct-v0.3' is not a chat model.","type":"invalid_request_error","param":"model","code":"model_not_supported"}
+2025-11-27 18:16:54 - Script bắt đầu chạy
+2025-11-27 18:16:54 - Đường dẫn key: D:\xampp\htdocs\web-promt-ai\api/key.php
+2025-11-27 18:16:54 - Require key.php thành công
+2025-11-27 18:16:54 - Token loaded: OK
+2025-11-27 18:16:54 - Prompt nhận: Giúp luyện speaking theo chủ đề.
+2025-11-27 18:16:54 - Gọi API: https://router.huggingface.co/v1/chat/completions với model HuggingFaceTB/SmolLM3-3B
+2025-11-27 18:17:05 - cURL kết quả: HTTP=200, Error=None, Response preview: {"id":"chatcmpl-Root=1-69288787-1677e41f47580f5a732e9e11","object":"chat.completion","created":1764263815,"model":"HuggingFaceTB/SmolLM3-3B","choices":[{"index":0,"message":{"role":"assistant","conten
+2025-11-27 18:17:05 - Thành công! Result dài: 4960
+2025-11-27 18:17:23 - Script bắt đầu chạy
+2025-11-27 18:17:23 - Đường dẫn key: D:\xampp\htdocs\web-promt-ai\api/key.php
+2025-11-27 18:17:23 - Require key.php thành công
+2025-11-27 18:17:23 - Token loaded: OK
+2025-11-27 18:17:23 - Prompt nhận: Sinh mô tả SEO chuẩn cho sản phẩm điện
+2025-11-27 18:17:23 - Gọi API: https://router.huggingface.co/v1/chat/completions với model HuggingFaceTB/SmolLM3-3B
+2025-11-27 18:17:34 - cURL kết quả: HTTP=200, Error=None, Response preview: {"id":"chatcmpl-Root=1-692887a4-77c72d4245eee5520714fa9e","object":"chat.completion","created":1764263844,"model":"HuggingFaceTB/SmolLM3-3B","choices":[{"index":0,"message":{"role":"assistant","conten
+2025-11-27 18:17:34 - Thành công! Result dài: 4807
+2025-11-27 18:17:55 - Script bắt đầu chạy
+2025-11-27 18:17:55 - Đường dẫn key: D:\xampp\htdocs\web-promt-ai\api/key.php
+2025-11-27 18:17:55 - Require key.php thành công
+2025-11-27 18:17:55 - Token loaded: OK
+2025-11-27 18:17:55 - Prompt nhận: Sinh mô tả SEO chuẩn cho sản phẩm điện
+2025-11-27 18:17:55 - Gọi API: https://router.huggingface.co/v1/chat/completions với model HuggingFaceTB/SmolLM3-3B
+2025-11-27 18:18:07 - cURL kết quả: HTTP=200, Error=None, Response preview: {"id":"chatcmpl-Root=1-692887c4-24cb9959120dae99305a4209","object":"chat.completion","created":1764263876,"model":"HuggingFaceTB/SmolLM3-3B","choices":[{"index":0,"message":{"role":"assistant","conten
+2025-11-27 18:18:07 - Thành công! Result dài: 4323
+2025-11-27 18:20:41 - Script bắt đầu chạy
+2025-11-27 18:20:41 - Đường dẫn key: D:\xampp\htdocs\web-promt-ai\api/key.php
+2025-11-27 18:20:41 - Require key.php thành công
+2025-11-27 18:20:41 - Token loaded: OK
+2025-11-27 18:20:41 - Prompt nhận: Sinh mô tả SEO chuẩn cho sản phẩm điện
+2025-11-27 18:20:41 - Gọi API: https://router.huggingface.co/v1/chat/completions với model 
+2025-11-27 18:20:42 - cURL kết quả: HTTP=400, Error=None, Response preview: {"error":"✖ Invalid input: expected string, received null\n  → at model"}
+2025-11-27 18:20:42 - HF API error: ✖ Invalid input: expected string, received null
+  → at model
+2025-11-27 18:22:00 - Script bắt đầu chạy
+2025-11-27 18:22:00 - Đường dẫn key: D:\xampp\htdocs\web-promt-ai\api/key.php
+2025-11-27 18:22:00 - Require key.php thành công
+2025-11-27 18:22:00 - Token loaded: OK
+2025-11-27 18:22:00 - Prompt nhận: Sinh mô tả SEO chuẩn cho sản phẩm điện
+2025-11-27 18:22:00 - Thử model: HuggingFaceTB/SmolLM3-3B
+2025-11-27 18:22:09 - Model HuggingFaceTB/SmolLM3-3B: HTTP=200, Error=None, Preview: {"id":"chatcmpl-Root=1-692888b9-0d6eaab06625d09b49a8c4bb","object":"chat.completion","created":1764264121,"model":"HuggingFaceTB/SmolLM3-3B","choices":[{"index":0,"message":{"role":"assistant","conten
+2025-11-27 18:22:09 - Thành công với HuggingFaceTB/SmolLM3-3B! Độ dài: 3852
+2025-11-27 18:22:40 - Script bắt đầu chạy
+2025-11-27 18:22:40 - Đường dẫn key: D:\xampp\htdocs\web-promt-ai\api/key.php
+2025-11-27 18:22:40 - Require key.php thành công
+2025-11-27 18:22:40 - Token loaded: OK
+2025-11-27 18:22:40 - Prompt nhận: công thức nấu ăn
+2025-11-27 18:22:40 - Thử model: HuggingFaceTB/SmolLM3-3B
+2025-11-27 18:22:42 - Model HuggingFaceTB/SmolLM3-3B: HTTP=200, Error=None, Preview: {"id":"chatcmpl-Root=1-692888e1-7c16a6cf430a2030553c1f3c","object":"chat.completion","created":1764264161,"model":"HuggingFaceTB/SmolLM3-3B","choices":[{"index":0,"message":{"role":"assistant","conten
+2025-11-27 18:22:42 - Thành công với HuggingFaceTB/SmolLM3-3B! Độ dài: 866
+2025-11-27 18:28:04 - Script bắt đầu chạy
+2025-11-27 18:28:04 - Đường dẫn key: D:\xampp\htdocs\web-promt-ai\api/key.php
+2025-11-27 18:28:04 - Require key.php thành công
+2025-11-27 18:28:04 - Token loaded: OK
+2025-11-27 18:28:04 - Prompt nhận: Tối ưu SEO và tăng chuyển đổi.
+2025-11-27 18:28:04 - Thử model: HuggingFaceTB/SmolLM3-3B
+2025-11-27 18:28:13 - Model HuggingFaceTB/SmolLM3-3B: HTTP=200, Error=None, Preview: {"id":"chatcmpl-Root=1-69288a25-13cf9c563e02bdc67e4a65c1","object":"chat.completion","created":1764264485,"model":"HuggingFaceTB/SmolLM3-3B","choices":[{"index":0,"message":{"role":"assistant","conten
+2025-11-27 18:28:13 - Thành công với HuggingFaceTB/SmolLM3-3B! Độ dài: 4037
+2025-11-27 18:28:35 - Script bắt đầu chạy
+2025-11-27 18:28:35 - Đường dẫn key: D:\xampp\htdocs\web-promt-ai\api/key.php
+2025-11-27 18:28:35 - Require key.php thành công
+2025-11-27 18:28:35 - Token loaded: OK
+2025-11-27 18:28:35 - Prompt nhận: Tạo kịch bản review chi tiết.
+2025-11-27 18:28:35 - Thử model: HuggingFaceTB/SmolLM3-3B
+2025-11-27 18:28:42 - Model HuggingFaceTB/SmolLM3-3B: HTTP=200, Error=None, Preview: {"id":"chatcmpl-Root=1-69288a44-5d793f725fc453cc268fe9e9","object":"chat.completion","created":1764264516,"model":"HuggingFaceTB/SmolLM3-3B","choices":[{"index":0,"message":{"role":"assistant","conten
+2025-11-27 18:28:42 - Thành công với HuggingFaceTB/SmolLM3-3B! Độ dài: 2511
+2025-11-27 18:28:45 - Script bắt đầu chạy
+2025-11-27 18:28:45 - Đường dẫn key: D:\xampp\htdocs\web-promt-ai\api/key.php
+2025-11-27 18:28:45 - Require key.php thành công
+2025-11-27 18:28:45 - Token loaded: OK
+2025-11-27 18:28:45 - Prompt nhận: Tạo kịch bản review chi tiết.
+2025-11-27 18:28:45 - Thử model: HuggingFaceTB/SmolLM3-3B
+2025-11-27 18:28:56 - Model HuggingFaceTB/SmolLM3-3B: HTTP=200, Error=None, Preview: {"id":"chatcmpl-Root=1-69288a4e-4d4161ff5e1f583e00de9e1c","object":"chat.completion","created":1764264526,"model":"HuggingFaceTB/SmolLM3-3B","choices":[{"index":0,"message":{"role":"assistant","conten
+2025-11-27 18:28:56 - Thành công với HuggingFaceTB/SmolLM3-3B! Độ dài: 4983
+2025-11-27 18:35:01 - Script bắt đầu chạy
+2025-11-27 18:35:01 - Đường dẫn key: D:\xampp\htdocs\web-promt-ai\api/key.php
+2025-11-27 18:35:01 - Require key.php thành công
+2025-11-27 18:35:01 - Token loaded: OK
+2025-11-27 18:35:01 - Prompt nhận: tóm tắt nội dung hoạt hình đảo hải t�
+2025-11-27 18:35:01 - Thử model: HuggingFaceTB/SmolLM3-3B
+2025-11-27 18:35:03 - Model HuggingFaceTB/SmolLM3-3B: HTTP=200, Error=None, Preview: {"id":"chatcmpl-Root=1-69288bc6-224c85851026baaf2a2172dc","object":"chat.completion","created":1764264902,"model":"HuggingFaceTB/SmolLM3-3B","choices":[{"index":0,"message":{"role":"assistant","conten
+2025-11-27 18:35:03 - Thành công với HuggingFaceTB/SmolLM3-3B! Độ dài: 1016
+2025-11-27 18:35:36 - Script bắt đầu chạy
+2025-11-27 18:35:36 - Đường dẫn key: D:\xampp\htdocs\web-promt-ai\api/key.php
+2025-11-27 18:35:36 - Require key.php thành công
+2025-11-27 18:35:36 - Token loaded: OK
+2025-11-27 18:35:36 - Prompt nhận: tóm tắt nội dung anime naruto
+2025-11-27 18:35:36 - Thử model: HuggingFaceTB/SmolLM3-3B
+2025-11-27 18:35:41 - Model HuggingFaceTB/SmolLM3-3B: HTTP=200, Error=None, Preview: {"id":"chatcmpl-Root=1-69288be9-434c2c070ac24c5d71db6211","object":"chat.completion","created":1764264937,"model":"HuggingFaceTB/SmolLM3-3B","choices":[{"index":0,"message":{"role":"assistant","conten
+2025-11-27 18:35:41 - Thành công với HuggingFaceTB/SmolLM3-3B! Độ dài: 1954
+2025-11-27 18:36:55 - Script bắt đầu chạy
+2025-11-27 18:36:55 - Đường dẫn key: D:\xampp\htdocs\web-promt-ai\api/key.php
+2025-11-27 18:36:55 - Require key.php thành công
+2025-11-27 18:36:55 - Token loaded: OK
+2025-11-27 18:36:55 - Prompt nhận: review anime naruto
+2025-11-27 18:36:55 - Thử model: HuggingFaceTB/SmolLM3-3B
+2025-11-27 18:37:05 - Model HuggingFaceTB/SmolLM3-3B: HTTP=200, Error=None, Preview: {"id":"chatcmpl-Root=1-69288c38-6677eb42170b09876e3ea26d","object":"chat.completion","created":1764265016,"model":"HuggingFaceTB/SmolLM3-3B","choices":[{"index":0,"message":{"role":"assistant","conten
+2025-11-27 18:37:05 - Thành công với HuggingFaceTB/SmolLM3-3B! Độ dài: 4357
+2025-11-27 18:37:42 - Script bắt đầu chạy
+2025-11-27 18:37:42 - Đường dẫn key: D:\xampp\htdocs\web-promt-ai\api/key.php
+2025-11-27 18:37:42 - Require key.php thành công
+2025-11-27 18:37:42 - Token loaded: OK
+2025-11-27 18:37:42 - Prompt nhận: Sinh mô tả SEO chuẩn cho sản phẩm điện
+2025-11-27 18:37:42 - Thử model: HuggingFaceTB/SmolLM3-3B
+2025-11-27 18:37:54 - Model HuggingFaceTB/SmolLM3-3B: HTTP=200, Error=None, Preview: {"id":"chatcmpl-Root=1-69288c68-5d8f3e521ae9ae470a0d06c7","object":"chat.completion","created":1764265064,"model":"HuggingFaceTB/SmolLM3-3B","choices":[{"index":0,"message":{"role":"assistant","conten
+2025-11-27 18:37:54 - Thành công với HuggingFaceTB/SmolLM3-3B! Độ dài: 4823
+2025-11-27 18:48:10 - Script bắt đầu chạy
+2025-11-27 18:48:10 - Đường dẫn key: D:\xampp\htdocs\web-promt-ai\api/key.php
+2025-11-27 18:48:10 - Require key.php thành công
+2025-11-27 18:48:10 - Token loaded: OK
+2025-11-27 18:48:10 - Prompt nhận: Viết một hàm Python để tính tổng các s
+2025-11-27 18:48:10 - Thử model: HuggingFaceTB/SmolLM3-3B
+2025-11-27 18:48:16 - Model HuggingFaceTB/SmolLM3-3B: HTTP=200, Error=None, Preview: {"id":"chatcmpl-Root=1-69288edb-4fc8927c49d1e3ff71646656","object":"chat.completion","created":1764265692,"model":"HuggingFaceTB/SmolLM3-3B","choices":[{"index":0,"message":{"role":"assistant","conten
+2025-11-27 18:48:16 - Thành công với HuggingFaceTB/SmolLM3-3B! Độ dài: 1771
+2025-11-27 18:50:25 - === YÊU CẦU MỚI ===
+2025-11-27 18:50:25 - Prompt: Viết một hàm Python để tính tổng các số nguyên tố nhỏ hơn N.
+2025-11-27 18:50:25 - Đang thử: Qwen/Qwen2.5-7B-Instruct
+2025-11-27 18:50:25 - HTTP 410 - Model: Qwen/Qwen2.5-7B-Instruct
+2025-11-27 18:50:25 - Đang thử: mistralai/Mistral-7B-Instruct-v0.3
+2025-11-27 18:50:25 - HTTP 410 - Model: mistralai/Mistral-7B-Instruct-v0.3
+2025-11-27 18:50:25 - Đang thử: google/gemma-2-9b-it
+2025-11-27 18:50:26 - HTTP 410 - Model: google/gemma-2-9b-it
+2025-11-27 18:50:26 - Đang thử: meta-llama/Llama-3.1-8B-Instruct
+2025-11-27 18:50:26 - HTTP 410 - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-11-27 18:50:26 - Đang thử: HuggingFaceTB/SmolLM-1.7B-Instruct
+2025-11-27 18:50:27 - HTTP 410 - Model: HuggingFaceTB/SmolLM-1.7B-Instruct
+2025-11-27 18:50:27 - TẤT CẢ MODEL FAIL
+2025-11-27 18:50:32 - === YÊU CẦU MỚI ===
+2025-11-27 18:50:32 - Prompt: Viết một hàm Python để tính tổng các số nguyên tố nhỏ hơn N.
+2025-11-27 18:50:32 - Đang thử: Qwen/Qwen2.5-7B-Instruct
+2025-11-27 18:50:33 - HTTP 410 - Model: Qwen/Qwen2.5-7B-Instruct
+2025-11-27 18:50:33 - Đang thử: mistralai/Mistral-7B-Instruct-v0.3
+2025-11-27 18:50:33 - HTTP 410 - Model: mistralai/Mistral-7B-Instruct-v0.3
+2025-11-27 18:50:33 - Đang thử: google/gemma-2-9b-it
+2025-11-27 18:50:33 - HTTP 410 - Model: google/gemma-2-9b-it
+2025-11-27 18:50:33 - Đang thử: meta-llama/Llama-3.1-8B-Instruct
+2025-11-27 18:50:34 - HTTP 410 - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-11-27 18:50:34 - Đang thử: HuggingFaceTB/SmolLM-1.7B-Instruct
+2025-11-27 18:50:34 - HTTP 410 - Model: HuggingFaceTB/SmolLM-1.7B-Instruct
+2025-11-27 18:50:34 - TẤT CẢ MODEL FAIL
+2025-11-27 18:50:35 - === YÊU CẦU MỚI ===
+2025-11-27 18:50:35 - Prompt: Viết một hàm Python để tính tổng các số nguyên tố nhỏ hơn N.
+2025-11-27 18:50:35 - Đang thử: Qwen/Qwen2.5-7B-Instruct
+2025-11-27 18:50:35 - HTTP 410 - Model: Qwen/Qwen2.5-7B-Instruct
+2025-11-27 18:50:35 - Đang thử: mistralai/Mistral-7B-Instruct-v0.3
+2025-11-27 18:50:36 - HTTP 410 - Model: mistralai/Mistral-7B-Instruct-v0.3
+2025-11-27 18:50:36 - Đang thử: google/gemma-2-9b-it
+2025-11-27 18:50:36 - HTTP 410 - Model: google/gemma-2-9b-it
+2025-11-27 18:50:36 - Đang thử: meta-llama/Llama-3.1-8B-Instruct
+2025-11-27 18:50:37 - HTTP 410 - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-11-27 18:50:37 - Đang thử: HuggingFaceTB/SmolLM-1.7B-Instruct
+2025-11-27 18:50:37 - HTTP 410 - Model: HuggingFaceTB/SmolLM-1.7B-Instruct
+2025-11-27 18:50:37 - TẤT CẢ MODEL FAIL
+2025-11-27 18:51:28 - === YÊU CẦU MỚI (2025 FIXED) ===
+2025-11-27 18:51:28 - Prompt: Viết một hàm Python để tính tổng các số nguyên tố nhỏ hơn N.
+2025-11-27 18:51:28 - Đang thử: HuggingFaceTB/SmolLM3-3B:hf-inference
+2025-11-27 18:51:36 - HTTP 200 - Model: HuggingFaceTB/SmolLM3-3B:hf-inference | Response preview: {"id":"chatcmpl-Root=1-69288fa1-52b248110677e3712310cb11","object":"chat.completion","created":1764265889,"model":"HuggingFaceTB/SmolLM3-3B","choices":[{"index":0,"message":{"role":"assistant","conten
+2025-11-27 18:51:36 - THÀNH CÔNG với HuggingFaceTB/SmolLM3-3B:hf-inference! Độ dài: 2300
+2025-11-27 18:53:46 - === YÊU CẦU MỚI (2025 FIXED) ===
+2025-11-27 18:53:46 - Prompt: Viết một hàm Python để tính tổng các số nguyên tố nhỏ hơn N.
+2025-11-27 18:53:46 - Đang thử: HuggingFaceTB/SmolLM3-3B:hf-inference
+2025-11-27 18:53:50 - HTTP 200 - Model: HuggingFaceTB/SmolLM3-3B:hf-inference | Response preview: {"id":"chatcmpl-Root=1-6928902b-79b5169f2aea3b343f6e2c4a","object":"chat.completion","created":1764266027,"model":"HuggingFaceTB/SmolLM3-3B","choices":[{"index":0,"message":{"role":"assistant","conten
+2025-11-27 18:53:50 - THÀNH CÔNG với HuggingFaceTB/SmolLM3-3B:hf-inference! Độ dài: 1293
+2025-11-27 18:54:47 - === YÊU CẦU MỚI (2025 FIXED) ===
+2025-11-27 18:54:47 - Prompt: Viết một hàm Python để tính tổng các số nguyên tố nhỏ hơn N.
+2025-11-27 18:54:47 - Đang thử: HuggingFaceTB/SmolLM3-3B:hf-inference
+2025-11-27 18:54:47 - HTTP 402 - Model: HuggingFaceTB/SmolLM3-3B:hf-inference | Response preview: {"error":"You have exceeded your monthly included credits for Inference Providers. Subscribe to PRO to get 20x more monthly included credits."}
+2025-11-27 18:54:47 - HTTP 402 - Không phải 200
+2025-11-27 18:54:47 - Đang thử: openai/gpt-oss-120b
+2025-11-27 18:54:48 - HTTP 402 - Model: openai/gpt-oss-120b | Response preview: {"error":"You have exceeded your monthly included credits for Inference Providers. Subscribe to PRO to get 20x more monthly included credits."}
+2025-11-27 18:54:48 - HTTP 402 - Không phải 200
+2025-11-27 18:54:48 - Đang thử: zai-org/GLM-4.6:cerebras
+2025-11-27 18:54:48 - HTTP 402 - Model: zai-org/GLM-4.6:cerebras | Response preview: {"error":"You have exceeded your monthly included credits for Inference Providers. Subscribe to PRO to get 20x more monthly included credits."}
+2025-11-27 18:54:48 - HTTP 402 - Không phải 200
+2025-11-27 18:54:48 - Đang thử: moonshotai/Kimi-K2-Instruct-0905
+2025-11-27 18:54:49 - HTTP 402 - Model: moonshotai/Kimi-K2-Instruct-0905 | Response preview: {"error":"You have exceeded your monthly included credits for Inference Providers. Subscribe to PRO to get 20x more monthly included credits."}
+2025-11-27 18:54:49 - HTTP 402 - Không phải 200
+2025-11-27 18:54:49 - Đang thử: CohereLabs/command-a-vision-07-2025:cohere
+2025-11-27 18:54:49 - HTTP 402 - Model: CohereLabs/command-a-vision-07-2025:cohere | Response preview: {"error":"You have exceeded your monthly included credits for Inference Providers. Subscribe to PRO to get 20x more monthly included credits."}
+2025-11-27 18:54:49 - HTTP 402 - Không phải 200
+2025-11-27 18:54:49 - TẤT CẢ MODEL FAIL (kiểm tra token hoặc quota)
+2025-11-27 18:54:58 - === YÊU CẦU MỚI (2025 FIXED) ===
+2025-11-27 18:54:58 - Prompt: Viết một hàm Python để tính tổng các số nguyên tố nhỏ hơn N.
+2025-11-27 18:54:58 - Đang thử: HuggingFaceTB/SmolLM3-3B:hf-inference
+2025-11-27 18:54:58 - HTTP 402 - Model: HuggingFaceTB/SmolLM3-3B:hf-inference | Response preview: {"error":"You have exceeded your monthly included credits for Inference Providers. Subscribe to PRO to get 20x more monthly included credits."}
+2025-11-27 18:54:58 - HTTP 402 - Không phải 200
+2025-11-27 18:54:58 - Đang thử: openai/gpt-oss-120b
+2025-11-27 18:54:58 - HTTP 402 - Model: openai/gpt-oss-120b | Response preview: {"error":"You have exceeded your monthly included credits for Inference Providers. Subscribe to PRO to get 20x more monthly included credits."}
+2025-11-27 18:54:58 - HTTP 402 - Không phải 200
+2025-11-27 18:54:58 - Đang thử: zai-org/GLM-4.6:cerebras
+2025-11-27 18:54:59 - HTTP 402 - Model: zai-org/GLM-4.6:cerebras | Response preview: {"error":"You have exceeded your monthly included credits for Inference Providers. Subscribe to PRO to get 20x more monthly included credits."}
+2025-11-27 18:54:59 - HTTP 402 - Không phải 200
+2025-11-27 18:54:59 - Đang thử: moonshotai/Kimi-K2-Instruct-0905
+2025-11-27 18:54:59 - HTTP 402 - Model: moonshotai/Kimi-K2-Instruct-0905 | Response preview: {"error":"You have exceeded your monthly included credits for Inference Providers. Subscribe to PRO to get 20x more monthly included credits."}
+2025-11-27 18:54:59 - HTTP 402 - Không phải 200
+2025-11-27 18:54:59 - Đang thử: CohereLabs/command-a-vision-07-2025:cohere
+2025-11-27 18:55:00 - HTTP 402 - Model: CohereLabs/command-a-vision-07-2025:cohere | Response preview: {"error":"You have exceeded your monthly included credits for Inference Providers. Subscribe to PRO to get 20x more monthly included credits."}
+2025-11-27 18:55:00 - HTTP 402 - Không phải 200
+2025-11-27 18:55:00 - TẤT CẢ MODEL FAIL (kiểm tra token hoặc quota)
+2025-11-27 18:55:20 - === YÊU CẦU MỚI (2025 FIXED) ===
+2025-11-27 18:55:20 - Prompt: Viết một hàm Python để tính tổng các số nguyên tố nhỏ hơn N.
+2025-11-27 18:55:20 - Đang thử: HuggingFaceTB/SmolLM3-3B:hf-inference
+2025-11-27 18:55:20 - HTTP 402 - Model: HuggingFaceTB/SmolLM3-3B:hf-inference | Response preview: {"error":"You have exceeded your monthly included credits for Inference Providers. Subscribe to PRO to get 20x more monthly included credits."}
+2025-11-27 18:55:20 - HTTP 402 - Không phải 200
+2025-11-27 18:55:20 - Đang thử: openai/gpt-oss-120b
+2025-11-27 18:55:20 - HTTP 402 - Model: openai/gpt-oss-120b | Response preview: {"error":"You have exceeded your monthly included credits for Inference Providers. Subscribe to PRO to get 20x more monthly included credits."}
+2025-11-27 18:55:20 - HTTP 402 - Không phải 200
+2025-11-27 18:55:20 - Đang thử: zai-org/GLM-4.6:cerebras
+2025-11-27 18:55:21 - HTTP 402 - Model: zai-org/GLM-4.6:cerebras | Response preview: {"error":"You have exceeded your monthly included credits for Inference Providers. Subscribe to PRO to get 20x more monthly included credits."}
+2025-11-27 18:55:21 - HTTP 402 - Không phải 200
+2025-11-27 18:55:21 - Đang thử: moonshotai/Kimi-K2-Instruct-0905
+2025-11-27 18:55:21 - HTTP 402 - Model: moonshotai/Kimi-K2-Instruct-0905 | Response preview: {"error":"You have exceeded your monthly included credits for Inference Providers. Subscribe to PRO to get 20x more monthly included credits."}
+2025-11-27 18:55:21 - HTTP 402 - Không phải 200
+2025-11-27 18:55:21 - Đang thử: CohereLabs/command-a-vision-07-2025:cohere
+2025-11-27 18:55:22 - HTTP 402 - Model: CohereLabs/command-a-vision-07-2025:cohere | Response preview: {"error":"You have exceeded your monthly included credits for Inference Providers. Subscribe to PRO to get 20x more monthly included credits."}
+2025-11-27 18:55:22 - HTTP 402 - Không phải 200
+2025-11-27 18:55:22 - TẤT CẢ MODEL FAIL (kiểm tra token hoặc quota)
+2025-11-27 18:55:26 - === YÊU CẦU MỚI (2025 FIXED) ===
+2025-11-27 18:55:26 - Prompt: Viết một hàm Python để tính tổng các số nguyên tố nhỏ hơn N.
+2025-11-27 18:55:26 - Đang thử: HuggingFaceTB/SmolLM3-3B:hf-inference
+2025-11-27 18:55:26 - HTTP 402 - Model: HuggingFaceTB/SmolLM3-3B:hf-inference | Response preview: {"error":"You have exceeded your monthly included credits for Inference Providers. Subscribe to PRO to get 20x more monthly included credits."}
+2025-11-27 18:55:26 - HTTP 402 - Không phải 200
+2025-11-27 18:55:26 - Đang thử: openai/gpt-oss-120b
+2025-11-27 18:55:27 - HTTP 402 - Model: openai/gpt-oss-120b | Response preview: {"error":"You have exceeded your monthly included credits for Inference Providers. Subscribe to PRO to get 20x more monthly included credits."}
+2025-11-27 18:55:27 - HTTP 402 - Không phải 200
+2025-11-27 18:55:27 - Đang thử: zai-org/GLM-4.6:cerebras
+2025-11-27 18:55:27 - HTTP 402 - Model: zai-org/GLM-4.6:cerebras | Response preview: {"error":"You have exceeded your monthly included credits for Inference Providers. Subscribe to PRO to get 20x more monthly included credits."}
+2025-11-27 18:55:27 - HTTP 402 - Không phải 200
+2025-11-27 18:55:27 - Đang thử: moonshotai/Kimi-K2-Instruct-0905
+2025-11-27 18:55:27 - HTTP 402 - Model: moonshotai/Kimi-K2-Instruct-0905 | Response preview: {"error":"You have exceeded your monthly included credits for Inference Providers. Subscribe to PRO to get 20x more monthly included credits."}
+2025-11-27 18:55:27 - HTTP 402 - Không phải 200
+2025-11-27 18:55:27 - Đang thử: CohereLabs/command-a-vision-07-2025:cohere
+2025-11-27 18:55:28 - HTTP 402 - Model: CohereLabs/command-a-vision-07-2025:cohere | Response preview: {"error":"You have exceeded your monthly included credits for Inference Providers. Subscribe to PRO to get 20x more monthly included credits."}
+2025-11-27 18:55:28 - HTTP 402 - Không phải 200
+2025-11-27 18:55:28 - TẤT CẢ MODEL FAIL (kiểm tra token hoặc quota)
