@@ -6,24 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý bài đăng</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        .status-tag {
-            text-transform: capitalize;
-            font-weight: bold;
-        }
-
-        .status-public .status-tag {
-            color: #4CAF50;
-        }
-
-        .status-waiting .status-tag {
-            color: #ffc107;
-        }
-
-        .status-reported .status-tag {
-            color: #f44336;
-        }
-    </style>
 </head>
 
 <body>
@@ -32,19 +14,6 @@
         include_once __DIR__ . '/../../helpers/helper.php' ?>
         <div class="main">
             <?php
-            $mess = "";
-            if (isset($_POST["btnSave"])) {
-                $prompt_id = (int)$_POST["prompt_id"];
-                $new_status = $_POST["new_status"];
-                $mess_result = changestatus($conn, $prompt_id, $new_status);
-                $query_params = array_filter([
-                    'status' => $_GET['status'] ?? '',
-                    'search' => $_GET['search'] ?? '',
-                    'search_columns' => $_GET['search_columns'] ?? [],
-                ]);
-                handlePrgRedirect($mess_result, $query_params);
-            }
-            $mess = getMess();
             $selectedStatus = $_GET['status'] ?? '';
             $search = $_GET['search'] ?? '';
             $search_columns = $_GET['search_columns'] ?? [];
@@ -56,7 +25,6 @@
                     <div class="stats">
                         Tổng số bài đăng: <strong><?= $posts->num_rows ?></strong>
                     </div>
-                    <?php printMess($mess); ?>
                     <div class="search-box">
                         <form method="get" id="search-form">
                             <?php foreach ($search_columns as $col_name): ?>
@@ -75,7 +43,8 @@
                                 <option value="">Tất cả bài viết</option>
                                 <option value="public" <?= ($selectedStatus === 'public') ? 'selected' : '' ?>>Public</option>
                                 <option value="waiting" <?= ($selectedStatus === 'waiting') ? 'selected' : '' ?>>Waiting</option>
-                                <option value="report" <?= ($selectedStatus === 'report') ? 'selected' : '' ?>>Reported</option>
+                                <option value="report" <?= ($selectedStatus === 'report') ? 'selected' : '' ?>>Report</option>
+                                <option value="reject" <?= ($selectedStatus === 'reject') ? 'selected' : '' ?>>Reject</option>
                             </select>
                         </form>
                     </div>
@@ -120,25 +89,15 @@
                                     <td><?= $post['prompt_id'] ?></td>
                                     <td><?= $post['title'] ?></td>
                                     <td><?= $post['short_description'] ?></td>
-                                    <form method="POST" action="" class="status-update-form">
                                         <td>
-                                            <select class="status-select" name="new_status">
-                                                <option value="public" <?= ($post['status'] === 'public') ? 'selected' : '' ?>>Public</option>
-                                                <option value="waiting" <?= ($post['status'] === 'waiting') ? 'selected' : '' ?>>Waiting</option>
-                                                <option value="report" <?= ($post['status'] === 'report') ? 'selected' : '' ?>>Reported</option>
-                                            </select>
+                                           <span class="status-<?= strtolower($post['status']) ?>"><?= ucfirst($post['status']) ?></span>
                                         </td>
                                         <td class="actions">
                                             <input type="hidden" name="prompt_id" value="<?= $post['prompt_id'] ?>">
-                                            <a class="btn-edit" href="check_post.php?id=<?= $post['prompt_id'] ?>">
+                                            <a class="btn-edit" href="prompt_detail.php?id=<?= $post['prompt_id'] ?>">
                                                 <i class="fa-solid fa-magnifying-glass"></i> Xem chi tiết
                                             </a>
-                                            <button class="btn-delete" type="button" value="<?= $post['prompt_id'] ?>"><i class="fa-solid fa-trash"></i> Xóa</button>
-                                            <button type="submit" name="btnSave" class="btn-save-role">
-                                                <i class="fa-solid fa-floppy-disk"></i> Lưu
-                                            </button>
                                         </td>
-                                    </form>
                                 </tr>
                             <?php endwhile; ?>
                         </tbody>

@@ -7,7 +7,7 @@
   <title>Duyệt Prompt</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="../../public/css/manager/sidebar.css">
-  <link rel="stylesheet" href="../../public/css/manager/check_report.css">
+  <link rel="stylesheet" href="../../public/css/manager/prompt_detail.css">
 </head>
 
 <body>
@@ -43,7 +43,6 @@
               <button class="action-btn run-btn">Run</button>
             </div>
           </div>
-
           <div class="right-side">
             <div class="info-block">
               <label for="">Nội dung</label>

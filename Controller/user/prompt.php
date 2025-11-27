@@ -508,21 +508,23 @@ function createNotification($reciever_id, $sender_id, $prompt_id, $message, $con
     $stmt->close();
 }
 
-function updateStatus($conn, $prompt_id, $action) {
+function updateStatus($conn, $prompt_id, $action, $comment) {
     $sql = "";
     $target_status = null;
     $is_delete_action = false;
+    $is_reject = false;
     if ($action == "approve" || $action == "unreport") {
         $target_status = "public";
         $sql = "UPDATE prompt SET status = ? WHERE prompt_id = ?";
     } 
-    else if ($action == "reject" || $action == "delete") {
+    else if ($action == "delete") {
         $is_delete_action = true;
         $sql = "DELETE FROM prompt WHERE prompt_id = ?";
     } 
     else if($action == "reject"){
+        $is_reject = true;
         $target_status = "reject";
-        $sql = "UPDATE prompt SET status = ? WHERE prompt_id = ?";
+        $sql = "UPDATE prompt SET status = ?, reason = ? WHERE prompt_id = ?";
     }
     else {
         return [
@@ -541,7 +543,10 @@ function updateStatus($conn, $prompt_id, $action) {
     }
     if ($is_delete_action) {
         $stmt->bind_param("i", $prompt_id);
-    } else {
+    } else if($is_reject) {
+        $stmt->bind_param("ssi", $target_status, $comment, $prompt_id);
+    }
+     else {
         $stmt->bind_param("si", $target_status, $prompt_id);
     }
     

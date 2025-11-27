@@ -1,12 +1,11 @@
 function handleAction(action, promptId, comment = null) {
-    console.log(`Đang xử lý...`);
+    console.log(`Đang xử lý: ${action}...`);
     const apiUrl = '../../Controller/user/prompt_detail.php'; 
     const postData = {
         action: action,
         prompt_id: promptId,
         comment: comment
     };
-
     fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -39,13 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("Lỗi: Các biến JavaScript cần thiết (promptStatus, currentPromptId) chưa được định nghĩa.");
         return;
     }
-    document.querySelectorAll('.short-desc').forEach(textarea => {
-        textarea.style.height = textarea.scrollHeight + 'px';
-        textarea.addEventListener('input', () => {
-            textarea.style.height = 'auto';
-            textarea.style.height = textarea.scrollHeight + 'px';
-        });
-    });
     const modal = document.getElementById("imageModal");
     const modalImg = document.getElementById("img01");
     const postImage = document.querySelector(".post-image");
@@ -119,25 +111,32 @@ document.addEventListener('DOMContentLoaded', () => {
                         handleAction('unreport', currentPromptId);
                     }
                 });
-
-
             } else if (promptStatus === 'public') {
                 const buttonContainer = document.createElement('div');
                 buttonContainer.style.textAlign = 'center';
-
                 const backToPrevBtn = document.createElement('button');
                 backToPrevBtn.textContent = 'Trở về';
                 backToPrevBtn.className = 'action-btn back-btn';
                 backToPrevBtn.style.minWidth = '100px';
                 backToPrevBtn.style.marginTop = '20px';
-
                 backToPrevBtn.onclick = function () {
                     window.history.back();
                 };
-
                 buttonContainer.appendChild(backToPrevBtn);
                 runResult.appendChild(buttonContainer);
             }
         });
     }
+});
+document.addEventListener('DOMContentLoaded', function() {
+    const textareas = document.querySelectorAll('.short-desc, .info-block textarea');
+    textareas.forEach(textarea => {
+        function autoGrow() {
+            textarea.style.height = 'auto'; 
+            const newHeight = textarea.scrollHeight;
+            textarea.style.height = newHeight + 'px';
+        }
+        textarea.addEventListener('input', autoGrow);
+        autoGrow();
+    });
 });
