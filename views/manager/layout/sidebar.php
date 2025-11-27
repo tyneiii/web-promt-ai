@@ -32,7 +32,7 @@
         </a>
     </li>
     <li>
-        <a href="../manager/revenue.php" class="menu-link <?= isActive('post.php') ?>">
+        <a href="../manager/revenue.php" class="menu-link <?= isActive('revenue.php') ?>">
             <i class="fa-solid fa-file-lines"></i>Doanh thu
         </a>
     </li>
