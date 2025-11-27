@@ -18,6 +18,6 @@ $comment = $data['comment'] ?? null;
 if (empty($action) || empty($promptId)) {
     sendResponse(false, 'Thiếu thông tin hành động hoặc ID Prompt.');
 }
-$result = updateStatus($conn, $promptId, $action);
+$result = updateStatus($conn, $promptId, $action, $comment);
 sendResponse($result['success'], $result['message']);
 ?>

@@ -145,17 +145,102 @@ unset($_POST);
             </form>
         <?php endforeach; ?>
     <?php endif; ?>
+    <div id="report-modal" class="report-modal" style="display:none;">
+        <div class="report-box">
+            <h3>Chọn lý do báo cáo</h3>
+
+            <select id="report-reason">
+                <option value="Nội dung không phù hợp">Nội dung không phù hợp</option>
+                <option value="Spam / Quảng cáo sai">Spam / Quảng cáo sai</option>
+                <option value="Thông tin sai lệch">Thông tin sai lệch</option>
+                <option value="Hình ảnh nhạy cảm">Hình ảnh nhạy cảm</option>
+                <option value="Khác">Khác</option>
+            </select>
+
+            <textarea id="report-custom" placeholder="Nếu chọn 'Khác', hãy nhập lý do..." style="display:none; margin-top:10px;"></textarea>
+
+            <div class="report-actions">
+                <button id="cancelReport">Hủy</button>
+                <button id="submitReport">Gửi báo cáo</button>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script>
-    document.querySelectorAll('.card').forEach(card => {
-        card.addEventListener('click', function(e) {
-            // Không mở khi bấm vào nút trong card
-            if (e.target.closest('button') || e.target.closest('.run-btn')) return;
-            const id = this.getAttribute('data-id');
-            window.location.href = `detail_post.php?id=${id}`;
-        });
+
+let currentPromptId = 0;
+
+/* CLICK CARD → MỞ CHI TIẾT */
+document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', function(e) {
+        if (e.target.closest('button') || e.target.closest('.run-btn')) return;
+        const id = this.getAttribute('data-id');
+        window.location.href = `detail_post.php?id=${id}`;
     });
+});
+
+
+/* MỞ POPUP BÁO CÁO */
+document.querySelectorAll(".report-btn").forEach(btn => {
+    btn.addEventListener("click", function (e) {
+        e.stopPropagation();
+
+        const card = this.closest(".card");
+        currentPromptId = card.getAttribute("data-id");
+
+        document.getElementById("report-modal").style.display = "flex";
+    });
+});
+
+
+/* SHOW/HIDE COMMENT WHEN SELECT "Khác" */
+document.getElementById("report-reason").addEventListener("change", function () {
+    document.getElementById("report-custom").style.display =
+        (this.value === "Khác") ? "block" : "none";
+});
+
+
+/* HỦY POPUP */
+document.getElementById("cancelReport").onclick = () => {
+    document.getElementById("report-modal").style.display = "none";
+};
+
+
+/* GỬI BÁO CÁO */
+document.getElementById("submitReport").onclick = () => {
+    let reason = document.getElementById("report-reason").value;
+
+    if (reason === "Khác") {
+        let custom = document.getElementById("report-custom").value.trim();
+        if (!custom) {
+            alert("Vui lòng nhập lý do báo cáo!");
+            return;
+        }
+        reason = custom;
+    }
+
+    fetch("report.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "id=" + currentPromptId + "&reason=" + encodeURIComponent(reason)
+    })
+    .then(res => res.text())
+    .then(msg => {
+        alert(msg);
+        document.getElementById("report-modal").style.display = "none";
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Lỗi khi báo cáo!");
+    });
+};
+
 </script>
+
+
 <script src="../../public/js/user_comments.js"></script>
 <?php include_once __DIR__ . '/layout/footer.php'; ?>

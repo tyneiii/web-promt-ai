@@ -374,11 +374,12 @@ function getReportedPrompts($conn, $search) {
     return $stmt->get_result();
 }
 
-function getAlldPrompts($conn, $search, $status, $search_columns)
+function getAlldPrompts($conn, $search, $status, $search_columns, $rows_per_page, $offset)
 {
     $search = trim($search ?? '');
-    $status = trim($status ?? ''); 
+    $status = trim($status ?? '');
     $allowed_columns = ['prompt_id', 'title', 'short_description'];
+    $rows_per_page = max(1, (int) $rows_per_page);
     if (empty($search_columns)) {
         $search_columns = $allowed_columns;
     }
@@ -398,24 +399,46 @@ function getAlldPrompts($conn, $search, $status, $search_columns)
     } else {
         $column_conditions[] = "1=1"; 
     }
-    
     $search_where = implode(" OR ", $column_conditions);
-    $sql = "SELECT prompt_id, title, short_description, status
-            FROM prompt
-            WHERE ($search_where) 
-            AND status LIKE ?";
-    $bind_types .= "s";
-    $params[] = $status_like;
-    $stmt = $conn->prepare($sql);
-    if (!$stmt) {
-        error_log("Prepare failed: " . $conn->error);
-        return false;
-    }
-    $stmt->bind_param($bind_types, ...$params);
-    $stmt->execute();
-    return $stmt->get_result();
-}
+    $status_bind_type = "s";
+    $status_param = $status_like;
+    $count_sql = "SELECT COUNT(*) AS total 
+                  FROM prompt
+                  WHERE ($search_where) 
+                  AND status LIKE ?";
 
+    $count_stmt = $conn->prepare($count_sql);
+    if (!$count_stmt) {
+        error_log("COUNT Prepare failed: " . $conn->error);
+        return ['total' => 0, 'data' => false];
+    }
+    $count_params = array_merge($params, [$status_param]);
+    $count_bind_types = $bind_types . $status_bind_type;
+    $count_stmt->bind_param($count_bind_types, ...$count_params);
+    $count_stmt->execute();
+    $total_rows = $count_stmt->get_result()->fetch_assoc()['total'];
+    $count_stmt->close();
+    $select_sql = "SELECT prompt_id, title, short_description, status
+                   FROM prompt
+                   WHERE ($search_where) 
+                   AND status LIKE ?
+                   LIMIT ? OFFSET ?";
+    $select_bind_types = $count_bind_types . "ii"; 
+    $select_params = array_merge($params, [$status_param, $rows_per_page, $offset]);
+    $select_stmt = $conn->prepare($select_sql);
+    if (!$select_stmt) {
+        error_log("SELECT Prepare failed: " . $conn->error);
+        return ['total' => $total_rows, 'data' => false];
+    }
+    $select_stmt->bind_param($select_bind_types, ...$select_params);
+    $select_stmt->execute();
+    $prompts_data = $select_stmt->get_result();
+    $select_stmt->close();
+    return [
+        'total' => $total_rows,
+        'prompts' => $prompts_data
+    ];
+}
 function changestatus($conn, $prompt_id, $status){
     $sql = "UPDATE prompt SET status = ? WHERE prompt_id = ?";
     $stmt = $conn->prepare($sql);
@@ -508,21 +531,23 @@ function createNotification($reciever_id, $sender_id, $prompt_id, $message, $con
     $stmt->close();
 }
 
-function updateStatus($conn, $prompt_id, $action) {
+function updateStatus($conn, $prompt_id, $action, $comment) {
     $sql = "";
     $target_status = null;
     $is_delete_action = false;
+    $is_reject = false;
     if ($action == "approve" || $action == "unreport") {
         $target_status = "public";
         $sql = "UPDATE prompt SET status = ? WHERE prompt_id = ?";
     } 
-    else if ($action == "reject" || $action == "delete") {
+    else if ($action == "delete") {
         $is_delete_action = true;
         $sql = "DELETE FROM prompt WHERE prompt_id = ?";
     } 
     else if($action == "reject"){
+        $is_reject = true;
         $target_status = "reject";
-        $sql = "UPDATE prompt SET status = ? WHERE prompt_id = ?";
+        $sql = "UPDATE prompt SET status = ?, reason = ? WHERE prompt_id = ?";
     }
     else {
         return [
@@ -541,7 +566,10 @@ function updateStatus($conn, $prompt_id, $action) {
     }
     if ($is_delete_action) {
         $stmt->bind_param("i", $prompt_id);
-    } else {
+    } else if($is_reject) {
+        $stmt->bind_param("ssi", $target_status, $comment, $prompt_id);
+    }
+     else {
         $stmt->bind_param("si", $target_status, $prompt_id);
     }
     
