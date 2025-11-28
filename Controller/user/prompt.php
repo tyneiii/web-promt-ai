@@ -587,4 +587,3 @@ function getFollowingUsers($user_id, $conn) {
     $result = $stmt->get_result();
     return $result->fetch_all(MYSQLI_ASSOC);
 }
-
