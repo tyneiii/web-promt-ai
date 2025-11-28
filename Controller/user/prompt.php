@@ -587,4 +587,11 @@ function getFollowingUsers($user_id, $conn) {
     $result = $stmt->get_result();
     return $result->fetch_all(MYSQLI_ASSOC);
 }
+<<<<<<< Updated upstream
 
+=======
+<<<<<<< HEAD
+=======
+
+>>>>>>> c736c2dc6a9f7ab831a6f91993d862a56139e147
+>>>>>>> Stashed changes
