@@ -66,14 +66,21 @@ async function confirmRunPrompt() {
   resultBox.innerHTML = `<div class="loading"><i class="fa fa-spinner fa-spin"></i> Đang hỏi AI...</div>`;
   openResultBox();
 
+  console.log("Đang gửi prompt:", prompt);  // ← THÊM DÒNG NÀY ĐỂ XEM CÓ GỬI ĐÚNG KHÔNG
+
   try {
-    const res = await fetch("api/run_api.php", {  // Đường dẫn đúng
+    const res = await fetch("http://localhost:8080/web-promt-ai/api/run_api.php",  {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt })
+      body: JSON.stringify({ prompt: prompt })  // ← Đảm bảo gửi đúng key "prompt"
     });
 
-    const data = await res.json();
+    // Thêm log để debug
+    console.log("Status:", res.status);
+    const text = await res.text();  // Dùng text() trước để xem thật sự nhận gì
+    console.log("Raw response:", text);
+
+    const data = JSON.parse(text);
 
     if (data.error) throw new Error(data.error);
 
@@ -82,7 +89,6 @@ async function confirmRunPrompt() {
     showResultError(err.message);
   }
 }
-
 function showResultSuccess(text) {
   resultBox.innerHTML = `
     <div class="result-success">
