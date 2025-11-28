@@ -47,13 +47,6 @@ $tag = isset($_GET['tag']) ? (int)$_GET['tag'] : 0;
 $prompts = getPrompts($id_user, $search, $tag, $conn);
 // Lấy top 5 prompt hot dựa trên lượt like
 $hot_prompts = getHotPrompts($conn, 5);
-$following_users = [];
-$following_users = [];
-if ($id_user) {
-    $following_users = getFollowingUsers($id_user, $conn);
-}
-
-
 unset($_POST);
 ?>
 
@@ -87,40 +80,20 @@ unset($_POST);
         <i class="fa-solid fa-circle-info"></i>
     </a>
 </div>
-<div class ="box-section">
-    <div class="right-sidebar">
-    <!-- <div class="border-top"></div>
-    <div class="border-bottom"></div> -->
-        <h3>Bảng tin hot 🔥</h3>
-        <?php if (empty($hot_prompts)): ?>
-            <div class="item">Chưa có bài viết hot nào.</div>
-        <?php else: ?>
-            <?php foreach ($hot_prompts as $hot): ?>
-                <a href="detail_post.php?id=<?= $hot['prompt_id'] ?>" class="item-link">
-                    <div class="item"><?= htmlspecialchars($hot['description']) ?></div>
-                </a>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </div>
 
-    <!-- BẢNG ĐANG THEO DÕI -->
-    <div class=" box-decor">
-         <!-- <div class="border-top"></div>
-        <div class="border-bottom"></div> -->
-    <h3 class="follow-title">Đang theo dõi 👥</h3>
-    <div class="follow-list">
-        <?php foreach ($following_users as $user): ?>
-            <a href="profile.php?id=<?= $user['account_id'] ?>" class="item-link">
-                <div class="item">
-                    <img src="../../public/img/<?= htmlspecialchars($user['avatar'] ?? 'default-avatar.png') ?>"
-                        style="width:28px; height:28px; border-radius:50%; margin-right:8px;">
-                    <?= htmlspecialchars($user['username']) ?>
-                </div>
+<div class="right-sidebar">
+    <div class="border-top"></div>
+    <div class="border-bottom"></div>
+    <h3>Bảng tin hot 🔥</h3>
+    <?php if (empty($hot_prompts)): ?>
+        <div class="item">Chưa có bài viết hot nào.</div>
+    <?php else: ?>
+        <?php foreach ($hot_prompts as $hot): ?>
+            <a href="detail_post.php?id=<?= $hot['prompt_id'] ?>" class="item-link">
+                <div class="item"><?= htmlspecialchars($hot['description']) ?></div>
             </a>
         <?php endforeach; ?>
-    </div>
-</div>
-</div>
+    <?php endif; ?>
 </div>
 
 <div class="main-content">
@@ -324,24 +297,65 @@ unset($_POST);
             reason = custom;
         }
 
-    fetch("report.php", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: "id=" + currentPromptId + "&reason=" + encodeURIComponent(reason)
-    })
-    .then(res => res.text())
-    .then(msg => {
-        alert(msg);
-        document.getElementById("report-modal").style.display = "none";
-    })
-    .catch(err => {
-        console.error(err);
-        alert("Lỗi khi báo cáo!");
-    });
-};
+        fetch("report.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "id=" + currentPromptId + "&reason=" + encodeURIComponent(reason)
+            })
+            .then(res => res.text())
+            .then(msg => {
+                alert(msg);
+                document.getElementById("report-modal").style.display = "none";
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Lỗi khi báo cáo!");
+            });
+    };
 
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. Xử lý đóng mở Modal
+        const modal = document.getElementById('rulesModal');
+        const btnOpen = document.getElementById('btnOpenRules');
+        const btnClose = document.querySelector('.close-modal');
+
+        // Mở modal khi click icon info
+        btnOpen.addEventListener('click', function() {
+            modal.style.display = 'flex';
+        });
+
+        // Đóng modal khi click dấu X
+        btnClose.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+
+        // Đóng modal khi click ra ngoài vùng nội dung
+        window.addEventListener('click', function(e) {
+            if (e.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // 2. Xử lý Accordion (Xổ nội dung)
+        const accordions = document.querySelectorAll('.accordion-header');
+
+        accordions.forEach(acc => {
+            acc.addEventListener('click', function() {
+                // Tìm thẻ cha (card)
+                const card = this.parentElement;
+
+                // Toggle class 'active' để hiện/ẩn content
+                card.classList.toggle('active');
+
+                // (Tuỳ chọn) Đóng các thẻ khác khi mở thẻ này (Accordian một chiều)
+                // document.querySelectorAll('.accordion-card').forEach(c => {
+                //     if (c !== card) c.classList.remove('active');
+                // });
+            });
+        });
+    });
 </script>
 
 

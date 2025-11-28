@@ -169,26 +169,16 @@ select {
   transform: scale(1.2);
 }
 
-.box-section {
+.right-sidebar {
   position: fixed;
   top: 90px;
-  right: 10px;
+  right: 2px;
   width: 260px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px; /* khoảng cách giữa 2 khối */
-}
-
-.box-section a {
-text-decoration: none;
-}
-
-.right-sidebar {
-   position: relative;
   background-color: black;
-  padding: 10px 12px;
+  padding: 15px;
   border-radius: 10px;
-  overflow: hidden;
+  overflow-y: auto;
+  z-index: 10;
 }
 
 .right-sidebar::before {
@@ -215,7 +205,7 @@ text-decoration: none;
   z-index: 11;
 }
 
-.right-sidebar.border-top {
+.right-sidebar .border-top {
   position: absolute;
   top: 0;
   right: 0;
@@ -226,7 +216,7 @@ text-decoration: none;
   z-index: 11;
 }
 
-.right-sidebar.border-bottom {
+.right-sidebar .border-bottom {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -246,92 +236,6 @@ text-decoration: none;
   -webkit-text-fill-color: transparent;
 }
 
-.box-decor {
-  position: relative;
-  background: black;
-  padding: 10px 12px;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-/* Viền trái */
-.box-decor::before {
- content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 3px;
-  height: 50%;
-  background: linear-gradient(to bottom, red, orange);
-  border-radius: 1.5px;
-  z-index: 11;
-}
-
-/* Viền dưới */
-.box-decor::after {
-   content: "";
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 3px;
-  height: 50%;
-  background: linear-gradient(to top, red, orange);
-  border-radius: 1.5px;
-  z-index: 11;
-}
-
-/* Tiêu đề gradient */
-.box-decor h3 {
-  margin-top: 0;
-  margin-bottom: 10px;
-  background: linear-gradient(to right, #ff3c3c, #ff7f50, #ffd700);
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-
-.follow-list {
-    max-height: 270px;     /* chiều cao scroll */
-    overflow-y: auto;      /* chỉ phần này scroll */
-    padding-right: 5px;
-}
-
-/* Scrollbar đẹp */
-.follow-list::-webkit-scrollbar {
-    width: 6px;
-}
-
-.follow-list::-webkit-scrollbar-thumb {
-    border-radius: 5px;
-}
-
-
-.item {
-    display: flex;
-    align-items: center;    /* Căn giữa chữ với ảnh */
-    gap: 8px;               /* khoảng cách giữa avatar và chữ */
-    padding: 8px 10px;
-    border-radius: 8px;
-    color: #fff;
-    transition: 0.25s ease;
-    text-decoration: none;
-   
-}
-
-.item img {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    object-fit: cover;      /* ép ảnh về đúng tỷ lệ, không méo */
-    flex-shrink: 0;         /* không cho ảnh bị co lại */
-}
-
-/* Hover */
-.item-link:hover .item {
-    background: #333;
-    transform: translateX(4px);
-    text-decoration: none;
-}
 .item {
   margin: 10px 0;
   padding: 8px;
@@ -340,7 +244,6 @@ text-decoration: none;
   color: white;
   font-size: 16px;
   transition: all 0.2s ease;
-  text-decoration: none;
 }
 
 .item:hover {
@@ -348,7 +251,6 @@ text-decoration: none;
   color: orange;
   transform: scale(1.075);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  text-decoration: none;
 }
 
 .main-content {
