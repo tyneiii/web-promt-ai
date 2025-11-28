@@ -77,7 +77,13 @@ async function runPromptWithAI(promptContent) {
         `;
     }
 }
+function openReportPopup() {
+  document.getElementById('reportPopup').style.display = 'flex';
+}
 
+function closeReportPopup() {
+  document.getElementById('reportPopup').style.display = 'none';
+}
 // Tạo nút hành động tùy theo trạng thái
 function getActionButtonsHTML() {
     let buttons = '<div class="action-buttons">';

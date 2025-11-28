@@ -134,7 +134,6 @@ function getPrompts($account_id, $searchString, $tag_id, $conn) {
     return array_values($prompts);
 }
 
-
 function lovePrompt($account_id, $prompt_id, $conn) {
     // Validate inputs
     $account_id = (int)$account_id;
@@ -349,29 +348,6 @@ function getUserComments($account_id, $conn) {
         ];
     }
     return $comments;
-}
-
-function getAwaitingPrompts($conn, $search) {
-    $sql = "SELECT prompt_id, title, short_description, status
-            FROM prompt
-            WHERE (prompt_id = ? OR title LIKE ? OR short_description LIKE ?) AND status = 'waiting'";
-    $stmt = $conn->prepare($sql);
-    $like_search = "%" . $search . "%";
-    $stmt->bind_param("iss", $search, $like_search, $like_search);
-    $stmt->execute();
-    return $stmt->get_result();
-}
-
-function getReportedPrompts($conn, $search) {
-    $sql = "SELECT p.prompt_id, p.title, p.status, r.reason
-            FROM prompt p
-            JOIN report r ON p.prompt_id = r.prompt_id
-            WHERE p.prompt_id = ? OR r.reason LIKE ?";
-    $stmt = $conn->prepare($sql);
-    $like_search = "%" . $search . "%";
-    $stmt->bind_param("is", $search, $like_search);
-    $stmt->execute();
-    return $stmt->get_result();
 }
 
 function getAlldPrompts($conn, $search, $status, $search_columns, $rows_per_page, $offset)
@@ -611,3 +587,4 @@ function getFollowingUsers($user_id, $conn) {
     $result = $stmt->get_result();
     return $result->fetch_all(MYSQLI_ASSOC);
 }
+
