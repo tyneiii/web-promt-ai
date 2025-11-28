@@ -10,9 +10,19 @@
 
 <body>
     <div class="container">
-        <?php include_once __DIR__ . '/layout/sidebar.php';
+        <?php 
+        include_once __DIR__ . '/layout/sidebar.php';
         include_once __DIR__ . '/../../helpers/helper.php';
-        include_once __DIR__ . '/../../helpers/manager_prompt_logic.php'; ?>
+        include_once __DIR__ . '/../../config.php';
+        include_once __DIR__ . '/../../Controller/user/report.php';
+        include_once __DIR__ . '/../../helpers/manager_prompt_logic.php'; 
+        function getReportCount($conn, $prompt_id, $status){
+            if(strtolower($status) == 'report'){
+                return getReportOfPrompt($conn, $prompt_id);
+            }
+            return "";
+        }
+        ?>
         <div class="main">
             <fieldset class="account-fieldset">
                 <legend>Quản lý bài đăng</legend>
@@ -93,6 +103,7 @@
                                     <td><?= $post['short_description'] ?></td>
                                     <td>
                                         <span class="status-<?= strtolower($post['status']) ?>"><?= ucfirst($post['status']) ?></span>
+                                        <sup style="font-weight: bold; color:red;"><?= getReportCount($conn, $post['prompt_id'], $post['status']); ?></sup>
                                     </td>
                                     <td class="actions">
                                         <input type="hidden" name="prompt_id" value="<?= $post['prompt_id'] ?>">

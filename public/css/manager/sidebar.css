@@ -39,7 +39,7 @@ body {
     font-weight: bold;
     cursor: pointer;
     color: #151515;
-    background: rgb(255, 42, 42);
+    background: rgb(204, 5, 5);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     text-align: center;

@@ -11,3 +11,18 @@ function getReports($conn, $prompt_id)
     $result = $stmt->get_result();
     return $result;
 }
+
+function getReportOfPrompt($conn, $prompt_id)
+{
+    $sql = "SELECT COUNT(*) AS total_reports FROM report WHERE prompt_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $prompt_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        return (int)$row['total_reports'];
+    }
+    $stmt->close();
+    return 0;
+}
