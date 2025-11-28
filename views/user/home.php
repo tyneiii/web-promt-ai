@@ -2,7 +2,7 @@
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-include_once __DIR__ . '/../../config.php';  
+include_once __DIR__ . '/../../config.php';
 
 $id_user = $_SESSION['id_user'] ?? '';
 $name_user = $_SESSION['name_user'] ?? '';
@@ -52,28 +52,31 @@ unset($_POST);
 
 <div class="left-sidebar">
     <?php if (isset($_SESSION['id_user'])): ?>
-        <a href="profile.php?id=<?= $id_user ?>&tab=favorites" title="Danh sách yêu thích">
-            <i class="fa-regular fa-heart"></i>
+        <a href="profile.php?id=<?= $id_user ?>&tab=favorites" title="Danh sách yêu thích" style="color:#FF4D4D">
+            <i class="fa-solid fa-heart"></i>
         </a>
     <?php else: ?>
-        <a href="../login/login.php?require_login=favorites" title="Đăng nhập để xem yêu thích">
-            <i class="fa-regular fa-heart"></i>
+        <a href="../login/login.php?require_login=favorites" title="Đăng nhập để xem yêu thích" style="color:#FF4D4D">
+            <i class="fa-solid fa-heart"></i>
         </a>
     <?php endif; ?>
 
     <?php if (isset($_SESSION['id_user'])): ?>
-        <a href="create_post.php" class="sidebar-btn" title="Tạo bài viết mới">
-            <i class="fa-solid fa-plus"></i>
+        <a href="create_post.php" class="sidebar-btn" title="Tạo bài viết mới" style="color:yellow">
+            <i class="fa-solid fa-pen"></i>
         </a>
     <?php else: ?>
-        <a href="../login/login.php" class="sidebar-btn" title="Đăng nhập để tạo bài viết">
-            <i class="fa-solid fa-plus"></i>
+        <a href="../login/login.php" class="sidebar-btn" title="Đăng nhập để tạo bài viết" style="color:yellow">
+            <i class="fa-solid fa-pen"></i>
         </a>
     <?php endif; ?>
-    <a href="my_comments.php" title="Danh sách bình luận của bạn" class="sidebar-btn">
-        <i class="fa-regular fa-comment"></i>
+    <a href="my_comments.php" title="Danh sách bình luận của bạn" class="sidebar-btn" style="color:#4D88FF">
+        <i class="fa-solid fa-comment-dots"></i>
     </a>
-    <a href="javascript:void(0)" id="btnOpenRules" title="Quy định & Hướng dẫn" class="sidebar-btn">
+    <a href="chat_page.php" title="Nhắn tin với quản trị viên" class="sidebar-btn" style="color:#00FF85">
+        <i class="fa-solid fa-comment-sms"></i>
+    </a>
+    <a href="javascript:void(0)" id="btnOpenRules" title="Quy định & Hướng dẫn" class="sidebar-btn" style="color:white">
         <i class="fa-solid fa-circle-info"></i>
     </a>
 </div>
@@ -102,7 +105,7 @@ unset($_POST);
                 <div class="card" data-id="<?= $prompt['prompt_id'] ?>">
                     <div class="card-header">
                         <div class="user-info">
-                             <img src="../../public/img/<?= htmlspecialchars($prompt['avatar'] ?? 'default-avatar.png') ?>" 
+                            <img src="../../public/img/<?= htmlspecialchars($prompt['avatar'] ?? 'default-avatar.png') ?>"
                                 alt="<?= htmlspecialchars($prompt['username']) ?>"
                                 style="width:35px; height:35px; border-radius:50%;">
                             <strong><?= htmlspecialchars($prompt['username']) ?></strong>
@@ -121,8 +124,6 @@ unset($_POST);
                             <?php endforeach; ?>
                         </div>
                     <?php endif; ?>
-
-
                     <p>
                         <?php
                         if (is_array($prompt['details']) && !empty($prompt['details'])) {
@@ -167,196 +168,194 @@ unset($_POST);
     </div>
 </div>
 
-    <div id="rulesModal" class="modal-overlay">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h2>Quy định & Hướng dẫn sử dụng</h2>
-                <span class="close-modal">&times;</span>
-            </div>
-            
-            <div class="modal-body">
-                <div class="accordion-card">
-                    <div class="accordion-header">
-                        <h3>I. Tiêu chuẩn cộng đồng & Quy tắc đăng bài</h3>
-                        <i class="fa-solid fa-chevron-down"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <ul>
-                            <span style="font-size: 1rem;">TUYỆT ĐỐI KHÔNG đăng tải các nội dung thuộc các nhóm sau:</span>
-                            <li>
-                                <strong>Vi phạm pháp luật và Thuần phong mỹ tục:</strong> 
-                                    <br> - <em> Nội dung chống phá Nhà nước, vi phạm Luật An ninh mạng.
-                                    <br> - <em> Nội dung khiêu dâm, đồi trụy, trái với đạo đức và truyền thống văn hóa.
+<div id="rulesModal" class="modal-overlay">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2>Quy định & Hướng dẫn sử dụng</h2>
+            <span class="close-modal">&times;</span>
+        </div>
+
+        <div class="modal-body">
+            <div class="accordion-card">
+                <div class="accordion-header">
+                    <h3>I. Tiêu chuẩn cộng đồng & Quy tắc đăng bài</h3>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <ul>
+                        <span style="font-size: 1rem;">TUYỆT ĐỐI KHÔNG đăng tải các nội dung thuộc các nhóm sau:</span>
+                        <li>
+                            <strong>Vi phạm pháp luật và Thuần phong mỹ tục:</strong>
+                            <br> - <em> Nội dung chống phá Nhà nước, vi phạm Luật An ninh mạng.
+                                <br> - <em> Nội dung khiêu dâm, đồi trụy, trái với đạo đức và truyền thống văn hóa.
                                     <br> - <em> Cổ xúy tệ nạn xã hội, mê tín dị đoan.
-                            </li>
-                            <li>
-                                <strong>Ngôn từ gây thù ghét và Bạo lực:</strong> 
-                                    <br> - <em> Nội dung phân biệt chủng tộc, vùng miền, giới tính, tôn giáo.
-                                    <br> - <em> Xúc phạm danh dự, nhân phẩm của cá nhân hoặc tổ chức khác.
+                        </li>
+                        <li>
+                            <strong>Ngôn từ gây thù ghét và Bạo lực:</strong>
+                            <br> - <em> Nội dung phân biệt chủng tộc, vùng miền, giới tính, tôn giáo.
+                                <br> - <em> Xúc phạm danh dự, nhân phẩm của cá nhân hoặc tổ chức khác.
                                     <br> - <em> Cổ xúy bạo lực, bắt nạt trực tuyến (cyberbullying).
-                            </li>
-                            <li>
-                                <strong>Spam & Lừa đảo:</strong> 
-                                    <br> - <em> Prompt nhằm mục đích tạo ra mã độc, lừa đảo (scam), hoặc tấn công mạng.</ol>
-                                    <br> - <em> Đăng tải nội dung rác, trùng lặp liên tục, hoặc quảng cáo trái phép.</ol>
-                            </li>
-                            <li>
-                                <strong>Bản quyền:</strong> 
-                                <br> - <em> Hãy tôn trọng quyền sở hữu trí tuệ.
+                        </li>
+                        <li>
+                            <strong>Spam & Lừa đảo:</strong>
+                            <br> - <em> Prompt nhằm mục đích tạo ra mã độc, lừa đảo (scam), hoặc tấn công mạng.</ol>
+                                <br> - <em> Đăng tải nội dung rác, trùng lặp liên tục, hoặc quảng cáo trái phép.</ol>
+                        </li>
+                        <li>
+                            <strong>Bản quyền:</strong>
+                            <br> - <em> Hãy tôn trọng quyền sở hữu trí tuệ.
                                 <br> - <em> Không chia sẻ các nội dung có bản quyền mà không được sự cho phép (ví dụ: prompt yêu cầu tạo ra tác phẩm y hệt phong cách độc quyền của nghệ sĩ cụ thể nhằm mục đích thương mại hóa trái phép).
-                            </li>
-                        </ul>
-                    </div>
+                        </li>
+                    </ul>
                 </div>
+            </div>
 
-                <div class="accordion-card">
-                    <div class="accordion-header">
-                        <h3>II. Hướng dẫn soạn nội dung (Prompt)</h3>
-                        <i class="fa-solid fa-chevron-down"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <p>Vì một Prompt chất lượng sẽ giúp AI hiểu và trả về kết quả chính xác, chúng tôi yêu cầu bài đăng cần đáp ứng các tiêu chuẩn sau:</p>
-                        <ul>
-                            <li><strong>Tiêu đề:</strong> Bao quát nội dung/mục đích của Prompt, không nên đặt tiêu đề chung chung. VD: [Hành động chính] + [Đối tượng/Lĩnh vực].</li>
-                            <li><strong>Mô tả:</strong> Ngắn gọn, nêu kết quả mong đợi, giúp người dùng hiểu nhanh Prompt này giải quyết vấn đề gì trước khi bấm vào xem chi tiết</li>
-                            <li><strong>Nội dung chính:</strong>bạn không nên viết một câu lệnh sơ sài. Hãy tư duy theo Cấu trúc thành phần (Component-based) Nên chia thành các phần:
-                                <br> - <em>Vai trò (Role)</em>
-                                <br> - <em>Bối cảnh/Dữ liệu đầu vào (Context/Input)</em>
-                                <br> - <em>Nhiệm vụ (Task)</em>
-                                <br> - <em>Ràng buộc & Định dạng (Constraints)/Định dạng đầu ra (Output Format)</em>
-                            </li>
-                        </ul>
-                    </div>
+            <div class="accordion-card">
+                <div class="accordion-header">
+                    <h3>II. Hướng dẫn soạn nội dung (Prompt)</h3>
+                    <i class="fa-solid fa-chevron-down"></i>
                 </div>
+                <div class="accordion-content">
+                    <p>Vì một Prompt chất lượng sẽ giúp AI hiểu và trả về kết quả chính xác, chúng tôi yêu cầu bài đăng cần đáp ứng các tiêu chuẩn sau:</p>
+                    <ul>
+                        <li><strong>Tiêu đề:</strong> Bao quát nội dung/mục đích của Prompt, không nên đặt tiêu đề chung chung. VD: [Hành động chính] + [Đối tượng/Lĩnh vực].</li>
+                        <li><strong>Mô tả:</strong> Ngắn gọn, nêu kết quả mong đợi, giúp người dùng hiểu nhanh Prompt này giải quyết vấn đề gì trước khi bấm vào xem chi tiết</li>
+                        <li><strong>Nội dung chính:</strong>bạn không nên viết một câu lệnh sơ sài. Hãy tư duy theo Cấu trúc thành phần (Component-based) Nên chia thành các phần:
+                            <br> - <em>Vai trò (Role)</em>
+                            <br> - <em>Bối cảnh/Dữ liệu đầu vào (Context/Input)</em>
+                            <br> - <em>Nhiệm vụ (Task)</em>
+                            <br> - <em>Ràng buộc & Định dạng (Constraints)/Định dạng đầu ra (Output Format)</em>
+                        </li>
+                    </ul>
+                </div>
+            </div>
 
-                <div class="accordion-card">
-                    <div class="accordion-header">
-                        <h3>III. Ví dụ bài đăng hợp lệ</h3>
-                        <i class="fa-solid fa-chevron-down"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <div class="example-box">
-                            <strong>Tiêu đề:</strong> Tạo CV chuyên nghiệp<br>
-                            <strong>Prompt:</strong> "Bạn là chuyên gia tuyển dụng. Hãy viết CV dựa trên thông tin: Tên [A], Kinh nghiệm [B]... Yêu cầu CV dài tối đa 2 trang, văn phong trang trọng."
-                        </div>
+            <div class="accordion-card">
+                <div class="accordion-header">
+                    <h3>III. Ví dụ bài đăng hợp lệ</h3>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="example-box">
+                        <strong>Tiêu đề:</strong> Tạo CV chuyên nghiệp<br>
+                        <strong>Prompt:</strong> "Bạn là chuyên gia tuyển dụng. Hãy viết CV dựa trên thông tin: Tên [A], Kinh nghiệm [B]... Yêu cầu CV dài tối đa 2 trang, văn phong trang trọng."
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 <script>
+    let currentPromptId = 0;
 
-let currentPromptId = 0;
-
-/* CLICK CARD → MỞ CHI TIẾT */
-document.querySelectorAll('.card').forEach(card => {
-    card.addEventListener('click', function(e) {
-        if (e.target.closest('button') || e.target.closest('.run-btn')) return;
-        const id = this.getAttribute('data-id');
-        window.location.href = `detail_post.php?id=${id}`;
-    });
-});
-
-
-/* MỞ POPUP BÁO CÁO */
-document.querySelectorAll(".report-btn").forEach(btn => {
-    btn.addEventListener("click", function (e) {
-        e.stopPropagation();
-
-        const card = this.closest(".card");
-        currentPromptId = card.getAttribute("data-id");
-
-        document.getElementById("report-modal").style.display = "flex";
-    });
-});
-
-
-/* SHOW/HIDE COMMENT WHEN SELECT "Khác" */
-document.getElementById("report-reason").addEventListener("change", function () {
-    document.getElementById("report-custom").style.display =
-        (this.value === "Khác") ? "block" : "none";
-});
-
-
-/* HỦY POPUP */
-document.getElementById("cancelReport").onclick = () => {
-    document.getElementById("report-modal").style.display = "none";
-};
-
-
-/* GỬI BÁO CÁO */
-document.getElementById("submitReport").onclick = () => {
-    let reason = document.getElementById("report-reason").value;
-
-    if (reason === "Khác") {
-        let custom = document.getElementById("report-custom").value.trim();
-        if (!custom) {
-            alert("Vui lòng nhập lý do báo cáo!");
-            return;
-        }
-        reason = custom;
-    }
-
-    fetch("report.php", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: "id=" + currentPromptId + "&reason=" + encodeURIComponent(reason)
-    })
-    .then(res => res.text())
-    .then(msg => {
-        alert(msg);
-        document.getElementById("report-modal").style.display = "none";
-    })
-    .catch(err => {
-        console.error(err);
-        alert("Lỗi khi báo cáo!");
-    });
-};
-
-document.addEventListener('DOMContentLoaded', function() {
-    // 1. Xử lý đóng mở Modal
-    const modal = document.getElementById('rulesModal');
-    const btnOpen = document.getElementById('btnOpenRules');
-    const btnClose = document.querySelector('.close-modal');
-
-    // Mở modal khi click icon info
-    btnOpen.addEventListener('click', function() {
-        modal.style.display = 'flex';
-    });
-
-    // Đóng modal khi click dấu X
-    btnClose.addEventListener('click', function() {
-        modal.style.display = 'none';
-    });
-
-    // Đóng modal khi click ra ngoài vùng nội dung
-    window.addEventListener('click', function(e) {
-        if (e.target == modal) {
-            modal.style.display = 'none';
-        }
-    });
-
-    // 2. Xử lý Accordion (Xổ nội dung)
-    const accordions = document.querySelectorAll('.accordion-header');
-
-    accordions.forEach(acc => {
-        acc.addEventListener('click', function() {
-            // Tìm thẻ cha (card)
-            const card = this.parentElement;
-            
-            // Toggle class 'active' để hiện/ẩn content
-            card.classList.toggle('active');
-            
-            // (Tuỳ chọn) Đóng các thẻ khác khi mở thẻ này (Accordian một chiều)
-            // document.querySelectorAll('.accordion-card').forEach(c => {
-            //     if (c !== card) c.classList.remove('active');
-            // });
+    /* CLICK CARD → MỞ CHI TIẾT */
+    document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            if (e.target.closest('button') || e.target.closest('.run-btn')) return;
+            const id = this.getAttribute('data-id');
+            window.location.href = `detail_post.php?id=${id}`;
         });
     });
-});
 
+
+    /* MỞ POPUP BÁO CÁO */
+    document.querySelectorAll(".report-btn").forEach(btn => {
+        btn.addEventListener("click", function(e) {
+            e.stopPropagation();
+
+            const card = this.closest(".card");
+            currentPromptId = card.getAttribute("data-id");
+
+            document.getElementById("report-modal").style.display = "flex";
+        });
+    });
+
+
+    /* SHOW/HIDE COMMENT WHEN SELECT "Khác" */
+    document.getElementById("report-reason").addEventListener("change", function() {
+        document.getElementById("report-custom").style.display =
+            (this.value === "Khác") ? "block" : "none";
+    });
+
+
+    /* HỦY POPUP */
+    document.getElementById("cancelReport").onclick = () => {
+        document.getElementById("report-modal").style.display = "none";
+    };
+
+
+    /* GỬI BÁO CÁO */
+    document.getElementById("submitReport").onclick = () => {
+        let reason = document.getElementById("report-reason").value;
+
+        if (reason === "Khác") {
+            let custom = document.getElementById("report-custom").value.trim();
+            if (!custom) {
+                alert("Vui lòng nhập lý do báo cáo!");
+                return;
+            }
+            reason = custom;
+        }
+
+        fetch("report.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "id=" + currentPromptId + "&reason=" + encodeURIComponent(reason)
+            })
+            .then(res => res.text())
+            .then(msg => {
+                alert(msg);
+                document.getElementById("report-modal").style.display = "none";
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Lỗi khi báo cáo!");
+            });
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. Xử lý đóng mở Modal
+        const modal = document.getElementById('rulesModal');
+        const btnOpen = document.getElementById('btnOpenRules');
+        const btnClose = document.querySelector('.close-modal');
+
+        // Mở modal khi click icon info
+        btnOpen.addEventListener('click', function() {
+            modal.style.display = 'flex';
+        });
+
+        // Đóng modal khi click dấu X
+        btnClose.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+
+        // Đóng modal khi click ra ngoài vùng nội dung
+        window.addEventListener('click', function(e) {
+            if (e.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // 2. Xử lý Accordion (Xổ nội dung)
+        const accordions = document.querySelectorAll('.accordion-header');
+
+        accordions.forEach(acc => {
+            acc.addEventListener('click', function() {
+                // Tìm thẻ cha (card)
+                const card = this.parentElement;
+
+                // Toggle class 'active' để hiện/ẩn content
+                card.classList.toggle('active');
+
+                // (Tuỳ chọn) Đóng các thẻ khác khi mở thẻ này (Accordian một chiều)
+                // document.querySelectorAll('.accordion-card').forEach(c => {
+                //     if (c !== card) c.classList.remove('active');
+                // });
+            });
+        });
+    });
 </script>
 
 

@@ -162,12 +162,10 @@ select {
 .left-sidebar i {
   font-size: 22px;
   cursor: pointer;
-  color: #fff;
   transition: 0.3s;
 }
 
 .left-sidebar i:hover {
-  color: #0d6efd;
   transform: scale(1.2);
 }
 

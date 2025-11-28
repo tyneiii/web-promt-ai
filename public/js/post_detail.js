@@ -2,9 +2,8 @@
       const runBtn = document.querySelector('.run-ai-btn'); 
 
 function handleAction(action, promptId, comment = null) {
-      const apiUrl = '../../Controller/user/prompt_detail1.php';
+      const apiUrl = '../../public/ajax/prompt_detail.php';
       const postData = { action, prompt_id: promptId };
- // Sửa selector nếu cần
       if (comment !== null) postData.comment = comment;
       fetch(apiUrl, {
         method: 'POST',
