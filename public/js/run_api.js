@@ -91,18 +91,18 @@ async function confirmRunPrompt() {
 }
 function showResultSuccess(text) {
   resultBox.innerHTML = `
-    <div class="result-success">
-      <h4>Kết quả:</h4>
+    <div class="result-content">
+      <button class="close-result" onclick="closeResultBox()">X</button>
+      <h4>Kết quả từ AI</h4>
       <pre>${escapeHtml(text)}</pre>
-      <button onclick="closeResultBox()" class="close-result">×</button>
     </div>`;
 }
 
 function showResultError(msg) {
   resultBox.innerHTML = `
-    <div class="result-error">
-      <h4>Lỗi:</h4>
+    <div class="error-content">
+      <button class="close-result" onclick="closeResultBox()">X</button>
+      <h4>Lỗi rồi</h4>
       <pre>${escapeHtml(msg)}</pre>
-      <button onclick="closeResultBox()" class="close-result">×</button>
     </div>`;
 }
