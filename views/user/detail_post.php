@@ -275,7 +275,7 @@ $comments = $cmt_result->fetch_all(MYSQLI_ASSOC);
     window.history.back();
   }
 </script>
-<script src="/web-promt-ai/public/js/run_api.js"></script>
+<script src="../../public/js/run_api.js"></script>
 
 <style>
   /* ===== COMMENT SECTION ===== */

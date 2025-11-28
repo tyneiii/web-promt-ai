@@ -44,7 +44,7 @@
               </div>
               <div class="button-group">
                 <button class="action-btn back-btn" onclick="window.history.back()">Back</button>
-                <button class="action-btn run-btn">Run Prompt với AI</button>
+                <button class="action-btn run-ai-btn">Run Prompt với AI</button>
               </div>
             </div>
             <label id="labelImg">Ảnh tham khảo</label>
@@ -109,12 +109,12 @@
     </div>
   </div>
 
-  <script>
-    const promptStatus = "<?= htmlspecialchars($prompt['status'] ?? 'waiting') ?>";
-    const currentPromptId = "<?= htmlspecialchars($id) ?>";
-    const fullPromptContent = <?= json_encode($prompt['content'] ?? '') ?>;
-  </script>
-  <script src="../../public/js/post_detail.js"></script>
+<script>
+  window.promptStatus = "<?= htmlspecialchars($prompt['status'] ?? 'waiting') ?>";
+  window.currentPromptId = "<?= htmlspecialchars($prompt_id ?? '') ?>";
+  window.fullPromptContent = atob("<?= base64_encode($prompt['content'] ?? '') ?>");  // Sử dụng window. để global
+</script>
+<script src="../../public/js/post_detail.js"></script>
 </body>
 
 </html>
