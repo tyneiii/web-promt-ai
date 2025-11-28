@@ -44,7 +44,7 @@
                 }
                 $_SESSION['id_user'] = $user['account_id'];
                 $_SESSION['name_user'] = $user['username'];
-                $_SESSION['role_id'] = $user['role_id'];
+                $_SESSION['role'] = $user['role_id'];
                 $_SESSION['avatar'] = $user['avatar'];
                 header("Location: ../../views/user/home.php");
                 exit;
@@ -74,7 +74,7 @@
                         $new_user_id = $conn->insert_id;
                         $_SESSION['id_user'] = $new_user_id;
                         $_SESSION['name_user'] = $username;
-                        $_SESSION['role_id'] = $role_id;
+                        $_SESSION['role'] = $role_id;
                         $_SESSION['avatar'] = $avatar;
                         //$_SESSION['register_success'] = "Chào mừng thành viên mới! Bạn đã đăng ký thành công qua Google.";
                         header("Location: ../../views/user/home.php");

@@ -51,9 +51,6 @@ unset($_POST);
 ?>
 
 <div class="left-sidebar">
-    <!-- <a href="profile.php?id=<?= $id_user ?>&tab=favorites" title="Danh sách yêu thích">
-        <i class="fa-regular fa-heart"></i>
-    </a> -->
     <?php if (isset($_SESSION['id_user'])): ?>
         <a href="profile.php?id=<?= $id_user ?>&tab=favorites" title="Danh sách yêu thích">
             <i class="fa-regular fa-heart"></i>
