@@ -656,3 +656,130 @@ select {
     border-color: #666;
 }
 
+/* Nền tối làm mờ phía sau khi mở modal */
+.modal-overlay {
+    display: none; /* Mặc định ẩn */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+}
+
+/* Hộp nội dung Modal */
+.modal-container {
+    background-color: #1e1e1e; /* Màu nền tối giống ảnh */
+    color: #e0e0e0;
+    width: 90%;
+    max-width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    overflow: hidden;
+    animation: fadeIn 0.3s;
+    border: 1px solid #333;
+}
+
+/* Header của Modal */
+.modal-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #252525;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 18px;
+    color: #ff4d4d; /* Màu đỏ nhấn giống trong ảnh của bạn */
+}
+
+.close-modal {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-modal:hover {
+    color: #fff;
+}
+
+.modal-body {
+    padding: 20px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+/* --- Accordion (Thẻ đóng mở) --- */
+.accordion-card {
+    background-color: #2d2d2d;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #3e3e3e;
+    overflow: hidden;
+}
+
+.accordion-header {
+    padding: 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s;
+}
+
+.accordion-header:hover {
+    background-color: #383838;
+}
+
+.accordion-header h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #fff;
+}
+
+/* Nội dung xổ xuống (Mặc định ẩn) */
+.accordion-content {
+    display: none; /* Ẩn */
+    padding: 15px;
+    border-top: 1px solid #3e3e3e;
+    background-color: #252525;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.accordion-content ul {
+    padding-left: 20px;
+    margin: 0;
+}
+
+.accordion-content li {
+    margin-bottom: 8px;
+}
+
+/* Class active để hiện nội dung */
+.accordion-card.active .accordion-content {
+    display: block;
+}
+
+.accordion-card.active .accordion-header i {
+    transform: rotate(180deg); /* Xoay mũi tên */
+}
+
+.example-box {
+    background: #333;
+    padding: 10px;
+    border-left: 3px solid #ff4d4d;
+    font-style: italic;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

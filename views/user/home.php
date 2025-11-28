@@ -76,6 +76,9 @@ unset($_POST);
     <a href="my_comments.php" title="Danh sách bình luận của bạn" class="sidebar-btn">
         <i class="fa-regular fa-comment"></i>
     </a>
+    <a href="javascript:void(0)" id="btnOpenRules" title="Quy định & Hướng dẫn" class="sidebar-btn">
+        <i class="fa-solid fa-circle-info"></i>
+    </a>
 </div>
 
 <div class="right-sidebar">
@@ -165,9 +168,85 @@ unset($_POST);
             </div>
         </div>
     </div>
-
 </div>
 
+    <div id="rulesModal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>Quy định & Hướng dẫn sử dụng</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            
+            <div class="modal-body">
+                <div class="accordion-card">
+                    <div class="accordion-header">
+                        <h3>I. Tiêu chuẩn cộng đồng & Quy tắc đăng bài</h3>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <ul>
+                            <span style="font-size: 1rem;">TUYỆT ĐỐI KHÔNG đăng tải các nội dung thuộc các nhóm sau:</span>
+                            <li>
+                                <strong>Vi phạm pháp luật và Thuần phong mỹ tục:</strong> 
+                                    <br> - <em> Nội dung chống phá Nhà nước, vi phạm Luật An ninh mạng.
+                                    <br> - <em> Nội dung khiêu dâm, đồi trụy, trái với đạo đức và truyền thống văn hóa.
+                                    <br> - <em> Cổ xúy tệ nạn xã hội, mê tín dị đoan.
+                            </li>
+                            <li>
+                                <strong>Ngôn từ gây thù ghét và Bạo lực:</strong> 
+                                    <br> - <em> Nội dung phân biệt chủng tộc, vùng miền, giới tính, tôn giáo.
+                                    <br> - <em> Xúc phạm danh dự, nhân phẩm của cá nhân hoặc tổ chức khác.
+                                    <br> - <em> Cổ xúy bạo lực, bắt nạt trực tuyến (cyberbullying).
+                            </li>
+                            <li>
+                                <strong>Spam & Lừa đảo:</strong> 
+                                    <br> - <em> Prompt nhằm mục đích tạo ra mã độc, lừa đảo (scam), hoặc tấn công mạng.</ol>
+                                    <br> - <em> Đăng tải nội dung rác, trùng lặp liên tục, hoặc quảng cáo trái phép.</ol>
+                            </li>
+                            <li>
+                                <strong>Bản quyền:</strong> 
+                                <br> - <em> Hãy tôn trọng quyền sở hữu trí tuệ.
+                                <br> - <em> Không chia sẻ các nội dung có bản quyền mà không được sự cho phép (ví dụ: prompt yêu cầu tạo ra tác phẩm y hệt phong cách độc quyền của nghệ sĩ cụ thể nhằm mục đích thương mại hóa trái phép).
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="accordion-card">
+                    <div class="accordion-header">
+                        <h3>II. Hướng dẫn soạn nội dung (Prompt)</h3>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Vì một Prompt chất lượng sẽ giúp AI hiểu và trả về kết quả chính xác, chúng tôi yêu cầu bài đăng cần đáp ứng các tiêu chuẩn sau:</p>
+                        <ul>
+                            <li><strong>Tiêu đề:</strong> Bao quát nội dung/mục đích của Prompt, không nên đặt tiêu đề chung chung. VD: [Hành động chính] + [Đối tượng/Lĩnh vực].</li>
+                            <li><strong>Mô tả:</strong> Ngắn gọn, nêu kết quả mong đợi, giúp người dùng hiểu nhanh Prompt này giải quyết vấn đề gì trước khi bấm vào xem chi tiết</li>
+                            <li><strong>Nội dung chính:</strong>bạn không nên viết một câu lệnh sơ sài. Hãy tư duy theo Cấu trúc thành phần (Component-based) Nên chia thành các phần:
+                                <br> - <em>Vai trò (Role)</em>
+                                <br> - <em>Bối cảnh/Dữ liệu đầu vào (Context/Input)</em>
+                                <br> - <em>Nhiệm vụ (Task)</em>
+                                <br> - <em>Ràng buộc & Định dạng (Constraints)/Định dạng đầu ra (Output Format)</em>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="accordion-card">
+                    <div class="accordion-header">
+                        <h3>III. Ví dụ bài đăng hợp lệ</h3>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="example-box">
+                            <strong>Tiêu đề:</strong> Tạo CV chuyên nghiệp<br>
+                            <strong>Prompt:</strong> "Bạn là chuyên gia tuyển dụng. Hãy viết CV dựa trên thông tin: Tên [A], Kinh nghiệm [B]... Yêu cầu CV dài tối đa 2 trang, văn phong trang trọng."
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 <script>
 
 let currentPromptId = 0;
@@ -238,6 +317,48 @@ document.getElementById("submitReport").onclick = () => {
         alert("Lỗi khi báo cáo!");
     });
 };
+
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Xử lý đóng mở Modal
+    const modal = document.getElementById('rulesModal');
+    const btnOpen = document.getElementById('btnOpenRules');
+    const btnClose = document.querySelector('.close-modal');
+
+    // Mở modal khi click icon info
+    btnOpen.addEventListener('click', function() {
+        modal.style.display = 'flex';
+    });
+
+    // Đóng modal khi click dấu X
+    btnClose.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+
+    // Đóng modal khi click ra ngoài vùng nội dung
+    window.addEventListener('click', function(e) {
+        if (e.target == modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    // 2. Xử lý Accordion (Xổ nội dung)
+    const accordions = document.querySelectorAll('.accordion-header');
+
+    accordions.forEach(acc => {
+        acc.addEventListener('click', function() {
+            // Tìm thẻ cha (card)
+            const card = this.parentElement;
+            
+            // Toggle class 'active' để hiện/ẩn content
+            card.classList.toggle('active');
+            
+            // (Tuỳ chọn) Đóng các thẻ khác khi mở thẻ này (Accordian một chiều)
+            // document.querySelectorAll('.accordion-card').forEach(c => {
+            //     if (c !== card) c.classList.remove('active');
+            // });
+        });
+    });
+});
 
 </script>
 
