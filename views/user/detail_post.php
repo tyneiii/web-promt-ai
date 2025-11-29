@@ -1,124 +1,100 @@
 <?php
+
 session_start();
-include_once __DIR__ . '/layout/header.php';
 include_once __DIR__ . '/../../config.php';
-include_once __DIR__ . '/../../Controller/user/prompt.php';  
+include_once __DIR__ . '/../../Controller/user/prompt.php';
 
-if (!isset($_GET['id'])) {
-  echo "<p>Bài viết không tồn tại.</p>";
-  exit;
-}
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+$id_user = $_SESSION['id_user'] ?? 0;
+$redirect_url = $_SERVER['REQUEST_URI'];
 
-$id = (int)$_GET['id'];
-$id_user = $_SESSION['id_user'] ?? 0;  
-
-if ($id_user > 0) {
-  if (isset($_POST['loveBtn'])) {
-    $mess = lovePrompt($id_user, $id, $conn);
-    header("Location: " . $_SERVER['PHP_SELF'] . "?id=" . $id);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  if ($id_user <= 0) {
+    $_SESSION['redirect_after_login'] = $redirect_url;
+    header("Location: ../../views/login/login.php");
     exit;
-  } elseif (isset($_POST['saveBtn'])) {
-    $mess = savePrompt($id_user, $id, $conn);
-    header("Location: " . $_SERVER['PHP_SELF'] . "?id=" . $id);
+  }
+
+  if (isset($_POST['loveBtn'])) {
+    lovePrompt($id_user, $id, $conn);
+    header("Location: " . $redirect_url);
+    exit;
+  }
+
+  if (isset($_POST['saveBtn'])) {
+    savePrompt($id_user, $id, $conn);
+    header("Location: " . $redirect_url);
+    exit;
+  }
+
+  if (isset($_POST['out-btn'])) {
+    $_SESSION = [];
+    session_destroy();
+    header("Location: home.php");
     exit;
   }
 }
 
-// Lấy thông tin bài viết
-$sql = "SELECT p.*, a.username, a.avatar 
-        FROM prompt p
-        JOIN account a ON p.account_id = a.account_id
-        WHERE p.prompt_id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$result = $stmt->get_result();
-$prompt = $result->fetch_assoc();
-
-if (!$prompt) {
-  echo "<p>Bài viết không tồn tại.</p>";
+if ($id <= 0) {
+  echo "<h3 style='text-align:center;padding:50px;color:#ff4d4d;'>Bài viết không tồn tại!</h3>";
   exit;
 }
 
-$is_loved = false;
-$is_saved = false;
-if ($id_user > 0) {
-  // is_loved
-  $love_sql = "SELECT love_id FROM love WHERE prompt_id = ? AND account_id = ? AND status = 'OPEN'";
-  $love_stmt = $conn->prepare($love_sql);
-  $love_stmt->bind_param("ii", $id, $id_user);
-  $love_stmt->execute();
-  $is_loved = $love_stmt->get_result()->num_rows > 0;
-
-  // is_saved
-  $save_sql = "SELECT save_id FROM save WHERE prompt_id = ? AND account_id = ?";
-  $save_stmt = $conn->prepare($save_sql);
-  $save_stmt->bind_param("ii", $id, $id_user);
-  $save_stmt->execute();
-  $is_saved = $save_stmt->get_result()->num_rows > 0;
-}
-
-// Lấy nội dung chi tiết bài viết
-$sql_details = "SELECT pd.content, p.short_description 
-                FROM promptdetail pd
-                JOIN prompt p ON pd.prompt_id = p.prompt_id
-                WHERE pd.prompt_id = ?
-                ORDER BY pd.component_order ASC";  
-$stmt2 = $conn->prepare($sql_details);
-$stmt2->bind_param("i", $id);
-$stmt2->execute();
-$details_result = $stmt2->get_result();
-$details = $details_result->fetch_all(MYSQLI_ASSOC);
-$tag_sql = "
-    SELECT t.tag_id, t.tag_name 
-    FROM prompttag pt
-    JOIN tag t ON t.tag_id = pt.tag_id
-    WHERE pt.prompt_id = ?
-";
-
-$tag_stmt = $conn->prepare($tag_sql);
-$tag_stmt->bind_param("i", $id);
-$tag_stmt->execute();
-$tag_result = $tag_stmt->get_result();
-
-$tags = [];
-while ($row = $tag_result->fetch_assoc()) {
-    $tags[] = [
-      'id' => $row['tag_id'],
-      'name' => $row['tag_name']
-    ];
-}
-
-
-// Xây dựng nội dung prompt đầy đủ cho data-prompt
-$full_prompt = $prompt['short_description'] ?? '';
-foreach ($details as $d) {
-  $full_prompt .= "\n" . $d['content'];
-}
-
-// Lấy danh sách bình luận
-$sql_cmt = "SELECT c.comment_id, c.prompt_id, c.account_id, c.content, c.created_at,
-                   a.username, a.avatar
-            FROM comment c
-            JOIN account a ON c.account_id = a.account_id
-            WHERE c.prompt_id = ?
-            ORDER BY c.created_at DESC";
-$stmt_cmt = $conn->prepare($sql_cmt);
-$stmt_cmt->bind_param("i", $id);
-$stmt_cmt->execute();
-$cmt_result = $stmt_cmt->get_result();
-$comments = $cmt_result->fetch_all(MYSQLI_ASSOC);
+include_once __DIR__ . '/layout/header.php';
 ?>
 
 <link rel="stylesheet" href="../../public/css/detail_post.css">
+<link rel="stylesheet" href="../../public/css/comment.css">
+
+<?php
+// Lấy dữ liệu bài viết
+$sql = "SELECT p.*, a.username, a.avatar FROM prompt p JOIN account a ON p.account_id = a.account_id WHERE p.prompt_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$prompt = $stmt->get_result()->fetch_assoc();
+
+if (!$prompt) {
+  echo "<h3 style='text-align:center;padding:50px;color:#ff4d4d;'>Bài viết không tồn tại!</h3>";
+  exit;
+}
+
+// Kiểm tra đã love/save chưa
+$is_loved = $is_saved = false;
+if ($id_user > 0) {
+  $is_loved = $conn->query("SELECT 1 FROM love WHERE prompt_id = $id AND account_id = $id_user AND status = 'OPEN'")->num_rows > 0;
+  $is_saved = $conn->query("SELECT 1 FROM save WHERE prompt_id = $id AND account_id = $id_user")->num_rows > 0;
+}
+
+// Chi tiết + tag + bình luận + full_prompt
+$sql_details = "SELECT content FROM promptdetail WHERE prompt_id = ? ORDER BY component_order ASC";
+$stmt2 = $conn->prepare($sql_details);
+$stmt2->bind_param("i", $id);
+$stmt2->execute();
+$details = $stmt2->get_result()->fetch_all(MYSQLI_ASSOC);
+
+$tag_sql = "SELECT t.tag_id, t.tag_name FROM prompttag pt JOIN tag t ON pt.tag_id = t.tag_id WHERE pt.prompt_id = ?";
+$tag_stmt = $conn->prepare($tag_sql);
+$tag_stmt->bind_param("i", $id);
+$tag_stmt->execute();
+$tags = $tag_stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+$full_prompt = ($prompt['short_description'] ?? '');
+foreach ($details as $d) $full_prompt .= "\n" . $d['content'];
+
+$sql_cmt = "SELECT c.*, a.username, a.avatar FROM comment c JOIN account a ON c.account_id = a.account_id WHERE c.prompt_id = ? ORDER BY c.created_at DESC";
+$stmt_cmt = $conn->prepare($sql_cmt);
+$stmt_cmt->bind_param("i", $id);
+$stmt_cmt->execute();
+$comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
+?>
 
 <div class="detail-container">
-  <button class="close-detail" onclick="closeDetailPage()">×</button>
+  <button class="close-detail" onclick="window.history.back()">×</button>
 
   <div class="detail-header">
     <div class="user-info">
-      <img src="../../public/img/<?= htmlspecialchars($prompt['avatar'] ?? 'default-avatar.png') ?>" 
-        alt="<?= htmlspecialchars($prompt['username']) ?>">
+      <img src="../../public/img/<?= htmlspecialchars($prompt['avatar'] ?? 'default_avatar.png') ?>" alt="<?= htmlspecialchars($prompt['username']) ?>">
       <div>
         <strong><?= htmlspecialchars($prompt['username']) ?></strong>
         <div class="date"><?= date('d/m/Y H:i', strtotime($prompt['create_at'])) ?></div>
@@ -126,31 +102,27 @@ $comments = $cmt_result->fetch_all(MYSQLI_ASSOC);
     </div>
   </div>
 
-  <h1 class="detail-title"><?= htmlspecialchars($prompt['short_description'] ?? $prompt['title'] ?? 'Untitled') ?></h1>
+  <h1 class="detail-title"><?= htmlspecialchars($prompt['short_description'] ?: 'Untitled') ?></h1>
+
   <?php if (!empty($tags)): ?>
     <div class="detail-tags">
-        <?php foreach ($tags as $t): ?>
-            <a class="tag-item" href="home.php?tag=<?= $t['id'] ?>">
-                #<?= htmlspecialchars($t['name']) ?>
-            </a>
-        <?php endforeach; ?>
+      <?php foreach ($tags as $t): ?>
+        <a class="tag-item" href="../user/home.php?tag=<?= $t['tag_id'] ?>">#<?= htmlspecialchars($t['tag_name']) ?></a>
+      <?php endforeach; ?>
     </div>
   <?php endif; ?>
 
   <?php if (!empty($prompt['image'])): ?>
-    <img class="post-image" src="../../<?= htmlspecialchars($prompt['image']) ?>" alt="Ảnh bài viết" style="max-width: 100%; border-radius: 8px; margin-bottom: 20px;">
+    <img class="post-image" src="../../<?= htmlspecialchars($prompt['image']) ?>" alt="Ảnh bài viết" style="max-width:100%;border-radius:8px;margin:20px 0;">
   <?php endif; ?>
 
   <div class="detail-content">
     <?php foreach ($details as $d): ?>
       <p><?= nl2br(htmlspecialchars($d['content'])) ?></p>
     <?php endforeach; ?>
-    <?php if (empty($details)): ?>
-      <p>Không có chi tiết thêm.</p>
-    <?php endif; ?>
   </div>
 
-  <?php if ($id_user > 0): ?>
+<?php if ($id_user > 0): ?>
     <form action="" method="post" style="display: inline;">
     <?php endif; ?>
     <div class="detail-actions">
@@ -177,307 +149,106 @@ $comments = $cmt_result->fetch_all(MYSQLI_ASSOC);
     </form>
   <?php endif; ?>
 
-  <!-- PHẦN BÌNH LUẬN -->
+  <!-- BÌNH LUẬN -->
   <div class="comment-section">
-    <h4>Bình luận</h4>
+    <h4>Bình luận (<?= count($comments) ?>)</h4>
 
-    <!-- Form thêm bình luận -->
-    <div class="comment-form">
-      <?php if (isset($_SESSION['id_user'])): ?>
+    <?php if ($id_user > 0): ?>
+      <div class="comment-form">
         <form method="post" action="../../Controller/user/process_comment.php">
           <input type="hidden" name="action" value="add">
           <input type="hidden" name="prompt_id" value="<?= $id ?>">
           <textarea name="comment_content" rows="3" placeholder="Viết bình luận..." required></textarea>
           <button type="submit">Gửi</button>
         </form>
-      <?php else: ?>
-        <p>Bạn cần <a href="../login/login.php">đăng nhập</a> để bình luận.</p>
-      <?php endif; ?>
-    </div>
+      </div>
+    <?php else: ?>
+      <p style="text-align:center;padding:15px;background:#222;border-radius:8px;">
+        Bạn cần <a href="../../views/login/login.php?redirect=<?= urlencode($redirect_url) ?>">đăng nhập</a> để bình luận.
+      </p>
+    <?php endif; ?>
 
-    <!-- Danh sách bình luận -->
     <div class="comments-list">
       <?php if (empty($comments)): ?>
-        <p>Chưa có bình luận nào.</p>
-      <?php else: ?>
-        <?php foreach ($comments as $c): ?>
+        <p style="text-align:center;color:#888;padding:30px;">Chưa có bình luận nào. Hãy là người đầu tiên!</p>
+        <?php else: foreach ($comments as $c): ?>
           <div class="comment-item">
             <div class="comment-avatar">
-              <img src="../../public/img/<?= htmlspecialchars($prompt['avatar'] ?? 'default-avatar.png') ?>" 
-                alt="<?= htmlspecialchars($c['username']) ?>">
+              <img src="../../public/img/<?= htmlspecialchars($c['avatar'] ?? 'default_avatar.png') ?>" alt="<?= htmlspecialchars($c['username']) ?>">
             </div>
             <div class="comment-body">
               <div class="comment-header">
                 <strong><?= htmlspecialchars($c['username']) ?></strong>
-                <span class="comment-date">
-                  <?= date('d/m/Y H:i', strtotime($c['created_at'])) ?>
-                </span>
+                <span class="comment-date"><?= date('d/m/Y H:i', strtotime($c['created_at'])) ?></span>
               </div>
+              <div class="comment-content"><?= nl2br(htmlspecialchars($c['content'])) ?></div>
 
-              <!-- Nội dung bình luận -->
-              <div class="comment-content">
-                <?= nl2br(htmlspecialchars($c['content'])) ?>
-              </div>
-
-              <!-- Nút sửa / xoá (chỉ hiện cho chủ comment) -->
-              <?php if (isset($_SESSION['id_user']) && $_SESSION['id_user'] == $c['account_id']): ?>
+              <?php if ($id_user == $c['account_id']): ?>
                 <div class="comment-actions">
-                  <!-- Form sửa bình luận -->
                   <details>
                     <summary>Sửa</summary>
                     <form method="post" action="../../Controller/user/process_comment.php" class="edit-comment-form">
                       <input type="hidden" name="action" value="edit">
                       <input type="hidden" name="prompt_id" value="<?= $id ?>">
-                      <input type="hidden" name="comment_id" value="<?= (int)$c['comment_id'] ?>">
-                      <textarea name="comment_content" rows="3" required><?= htmlspecialchars($c['content']) ?></textarea>
+                      <input type="hidden" name="comment_id" value="<?= $c['comment_id'] ?>">
+                      <textarea name="comment_content" required><?= htmlspecialchars($c['content']) ?></textarea>
                       <button type="submit">Lưu</button>
                     </form>
                   </details>
-
-                  <!-- Form xoá bình luận -->
-                  <form method="post" action="../../Controller/user/process_comment.php" onsubmit="return confirm('Bạn chắc chắn muốn xoá bình luận này?');" style="display:inline-block; margin-left:8px;">
+                  <form method="post" action="../../Controller/user/process_comment.php" onsubmit="return confirm('Xóa bình luận này?')">
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="prompt_id" value="<?= $id ?>">
-                    <input type="hidden" name="comment_id" value="<?= (int)$c['comment_id'] ?>">
+                    <input type="hidden" name="comment_id" value="<?= $c['comment_id'] ?>">
                     <button type="submit" class="btn-delete-comment">Xoá</button>
                   </form>
                 </div>
               <?php endif; ?>
             </div>
           </div>
-        <?php endforeach; ?>
-      <?php endif; ?>
+      <?php endforeach;
+      endif; ?>
     </div>
   </div>
 </div>
 
-<!-- Modal Xác nhận chạy Prompt -->
-<div id="prompt-modal" style="display: none;">
-  <div class="modal-overlay" onclick="closePromptModal(event)"></div>
+<!-- Modal Run Prompt -->
+<div id="prompt-modal" style="display:none;">
+  <div class="modal-overlay" onclick="closeRunModal()"></div>
   <div class="modal-content">
-    <h3>Xác nhận chạy prompt</h3>
-    <div id="prompt-display">
-      <label for="promptInput">Nội dung prompt (có thể chỉnh sửa):</label>
-      <textarea id="promptInput" rows="8" cols="50" placeholder="Prompt sẽ hiển thị ở đây..."></textarea>
-      <small>Bấm "Chạy ngay" để lấy kết quả.</small>
-    </div>
+    <h3>Xác nhận chạy Prompt</h3>
+    <textarea id="promptInput" rows="10"><?= htmlspecialchars($full_prompt) ?></textarea>
     <div class="modal-actions">
-      <button class="cancel" type="button" onclick="closePromptModal()">Hủy</button>
-      <button class="confirm" type="button" onclick="confirmRunPrompt()">Chạy ngay</button>
+      <button class="cancel" onclick="closeRunModal()">Hủy</button>
+      <button class="confirm" onclick="confirmRunPrompt()">Chạy ngay</button>
     </div>
   </div>
 </div>
 
-<div id="resultBox" style="display: none;"></div>
+<div id="resultBox" style="display:none;"></div>
 
 <script>
-  function closeDetailPage() {
-    window.history.back();
+  function requireLogin() {
+    if (confirm('Bạn cần đăng nhập để thực hiện hành động này!')) {
+      location.href = '../../views/login/login.php?redirect=<?= urlencode($redirect_url) ?>';
+    }
+  }
+
+  function openRunModal() {
+    document.getElementById('prompt-modal').style.display = 'flex';
+    document.getElementById('promptInput').focus();
+  }
+
+  function closeRunModal() {
+    document.getElementById('prompt-modal').style.display = 'none';
+  }
+
+  function confirmRunPrompt() {
+    const prompt = document.getElementById('promptInput').value;
+    runPrompt(prompt); // Hàm từ run_api.js
+    closeRunModal();
   }
 </script>
+
 <script src="../../public/js/run_api.js"></script>
-
-<style>
-  /* ===== COMMENT SECTION ===== */
-  .comment-section {
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #333;
-    color: #fff;
-    font-size: 14px;
-  }
-
-  .comment-section h4 {
-    margin-bottom: 15px;
-    font-size: 18px;
-    font-weight: 600;
-  }
-
-  /* Form bình luận */
-  .comment-form form {
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-    margin-bottom: 20px;
-  }
-
-  .comment-form textarea {
-    flex: 1;
-    border-radius: 8px;
-    border: 1px solid #444;
-    padding: 10px 12px;
-    background: #111;
-    color: #f1f1f1;
-    resize: vertical;
-    min-height: 60px;
-    font-size: 14px;
-  }
-
-  .comment-form textarea::placeholder {
-    color: #777;
-  }
-
-  .comment-form button {
-    padding: 8px 16px;
-    border-radius: 999px;
-    border: none;
-    cursor: pointer;
-    font-weight: 600;
-    background: linear-gradient(135deg, #ff6a3d, #ff944d);
-    color: #fff;
-    white-space: nowrap;
-    margin-top: 4px;
-  }
-
-  .comment-form button:hover {
-    opacity: 0.9;
-  }
-
-  /* Danh sách bình luận */
-  .comments-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  /* Mỗi comment */
-  .comment-item {
-    display: flex;
-    gap: 12px;
-    padding: 12px;
-    background: #111;
-    border-radius: 10px;
-    border: 1px solid #222;
-  }
-  .tag-item {
-    display: inline-block;
-    background: #222;
-    color: #fff;
-    border: 1px solid #444;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 13px;
-    letter-spacing: 0.3px;
-}
-  .comment-avatar img {
-    width: 48px;
-    height: 48px;
-    object-fit: cover;
-    border-radius: 50%;
-  }
-
-  /* Nội dung comment */
-  .comment-body {
-    flex: 1;
-  }
-
-  .comment-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 4px;
-  }
-
-  .comment-header strong {
-    font-size: 14px;
-  }
-
-  .comment-date {
-    font-size: 12px;
-    color: #888;
-  }
-
-  .comment-content {
-    margin-bottom: 6px;
-    white-space: pre-wrap;
-    line-height: 1.4;
-  }
-
-  /* Hành động Sửa / Xoá */
-  .comment-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 12px;
-  }
-
-  /* Nút "Sửa" dùng <details> */
-  .comment-actions details {
-    display: inline-block;
-  }
-
-  .comment-actions summary {
-    list-style: none;
-    cursor: pointer;
-    color: #ff8a4a;
-  }
-
-  .comment-actions summary::-webkit-details-marker {
-    display: none;
-  }
-
-  .comment-actions summary::before {
-    content: "";
-  }
-
-  /* Form sửa bên trong details */
-  .edit-comment-form {
-    margin-top: 6px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .edit-comment-form textarea {
-    width: 100%;
-    min-height: 60px;
-    border-radius: 6px;
-    border: 1px solid #444;
-    background: #0c0c0c;
-    color: #f1f1f1;
-    padding: 6px 8px;
-    font-size: 13px;
-  }
-
-  .edit-comment-form button {
-    align-self: flex-end;
-    padding: 5px 12px;
-    border-radius: 999px;
-    border: none;
-    cursor: pointer;
-    font-size: 12px;
-    background: #3b82f6;
-    color: #fff;
-  }
-
-  /* Nút xoá */
-  .btn-delete-comment {
-    background: transparent;
-    border: none;
-    color: #f97373;
-    cursor: pointer;
-    font-size: 12px;
-    padding: 0;
-  }
-
-  .btn-delete-comment:hover {
-    text-decoration: underline;
-  }
-
-  /* Disabled buttons for guests */
-  button.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  /* Icon colors */
-  .text-red {
-    color: #ff0000;
-  }
-
-  .text-blue {
-    color: #007bff;
-  }
-</style>
 
 <?php include_once __DIR__ . '/layout/footer.php'; ?>
