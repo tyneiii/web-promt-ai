@@ -353,6 +353,47 @@ unset($_POST);
                 alert("Lỗi khi báo cáo!");
             });
     };
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. Xử lý đóng mở Modal
+        const modal = document.getElementById('rulesModal');
+        const btnOpen = document.getElementById('btnOpenRules');
+        const btnClose = document.querySelector('.close-modal');
+
+        // Mở modal khi click icon info
+        btnOpen.addEventListener('click', function() {
+            modal.style.display = 'flex';
+        });
+
+        // Đóng modal khi click dấu X
+        btnClose.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+
+        // Đóng modal khi click ra ngoài vùng nội dung
+        window.addEventListener('click', function(e) {
+            if (e.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // 2. Xử lý Accordion (Xổ nội dung)
+        const accordions = document.querySelectorAll('.accordion-header');
+
+        accordions.forEach(acc => {
+            acc.addEventListener('click', function() {
+                // Tìm thẻ cha (card)
+                const card = this.parentElement;
+
+                // Toggle class 'active' để hiện/ẩn content
+                card.classList.toggle('active');
+
+                // (Tuỳ chọn) Đóng các thẻ khác khi mở thẻ này (Accordian một chiều)
+                // document.querySelectorAll('.accordion-card').forEach(c => {
+                //     if (c !== card) c.classList.remove('active');
+                // });
+            });
+        });
+    });
 </script>
 
 
