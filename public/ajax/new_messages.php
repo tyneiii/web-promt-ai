@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__ . '/../../config.php'; // Điều chỉnh đường dẫn nếu tên file là config.php
+include_once __DIR__ . '/../../config.php'; 
 
 header('Content-Type: application/json');
 if (!isset($conn) || $conn->connect_error) {
@@ -13,7 +13,7 @@ $account_id = $_SESSION['id_user'] ?? null;
 $new_messages = [];
 $sql = "SELECT chat_detail_id, sender_id, message, sent_at 
         FROM chat_detail 
-        WHERE chat_id = ? 
+        WHERE chat_id = ? and sender_id != $account_id
           AND chat_detail_id > ? 
         ORDER BY chat_detail_id ASC";
 if ($stmt = $conn->prepare($sql)) {

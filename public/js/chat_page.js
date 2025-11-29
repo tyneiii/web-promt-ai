@@ -279,6 +279,7 @@ function startPolling() {
         setTimeout(startPolling, 3000); 
         return;
     }
+    
     const lastId = getLastMessageId();
     fetch(`../../public/ajax/new_messages.php?chat_id=${currentChatId}&last_id=${lastId}`)
         .then(response => {
@@ -296,8 +297,8 @@ function startPolling() {
                             msg.message, 
                             msg.sender_id == accountId ? 'mine' : 'other', 
                             false, 
-                            msg.chat_detail_id, // Truyền ID tin nhắn
-                            msg.sent_at // Truyền timestamp
+                            msg.chat_detail_id, // data-id (QUAN TRỌNG)
+                            msg.sent_at // timestamp
                         );
                     }
                 });
@@ -325,8 +326,6 @@ window.addEventListener('load', () => {
     } else {
         updateLoadMoreButton(false);
     }
-    
-    // BẮT ĐẦU POLLING
     if (currentChatId) {
         startPolling();
     }
