@@ -69,7 +69,7 @@ async function confirmRunPrompt() {
   console.log("Đang gửi prompt:", prompt);  // ← THÊM DÒNG NÀY ĐỂ XEM CÓ GỬI ĐÚNG KHÔNG
 
   try {
-    const res = await fetch("http://localhost:8080/web-promt-ai/api/run_api.php",  {
+    const res = await fetch("/api/run_api.php",  {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt: prompt })  // ← Đảm bảo gửi đúng key "prompt"

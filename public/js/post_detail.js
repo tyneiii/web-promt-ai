@@ -1,4 +1,4 @@
-      const fullPromptContent = window.fullPromptContent || '';  // Default về '' nếu undefined
+
       const runBtn = document.querySelector('.run-ai-btn'); 
 
 function handleAction(action, promptId, comment = null) {
@@ -112,41 +112,42 @@ function handleAction(action, promptId, comment = null) {
       return buttons;
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      // Modal ảnh
-      const modal = document.getElementById("imageModal");
-      const modalImg = document.getElementById("img01");
-      const postImage = document.querySelector(".post-image");
-      const span = document.getElementsByClassName("close")[0];
-      if (postImage) {
-        postImage.onclick = () => {
-          modal.style.display = "flex";
-          modalImg.src = postImage.src;
-        };
-      }
-      if (span) span.onclick = () => modal.style.display = "none";
-      window.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
+document.addEventListener('DOMContentLoaded', () => {
+  // Modal ảnh (giữ nguyên)
+  const modal = document.getElementById("imageModal");
+  const modalImg = document.getElementById("img01");
+  const postImage = document.querySelector(".post-image");
+  const span = document.getElementsByClassName("close")[0];
+  if (postImage) {
+    postImage.onclick = () => {
+      modal.style.display = "flex";
+      modalImg.src = postImage.src;
+    };
+  }
+  if (span) span.onclick = () => modal.style.display = "none";
+  window.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
 
-      // Nút Run Prompt - Sửa selector thành .run-ai-btn
-      const runBtn = document.querySelector('.run-ai-btn');
-      if (runBtn) {
-        runBtn.addEventListener('click', () => {
-          if (!fullPromptContent || fullPromptContent.trim() === '') {
-            alert('Prompt trống, không thể chạy thử!');
-            return;
-          }
-          runPromptWithAI(fullPromptContent);
-        });
+  // CHỈ GIỮ LẠI ĐOẠN NÀY – ĐÃ HOÀN HẢO
+  const runBtn = document.querySelector('.run-ai-btn');
+  if (runBtn) {
+    runBtn.addEventListener('click', () => {
+      const promptContent = runBtn.dataset.prompt?.trim() || '';
+      console.log('Prompt length:', promptContent.length);
+      if (!promptContent) {
+        alert('Prompt trống! Mở F12 → Console để kiểm tra.');
+        return;
       }
-
-      // Auto resize textarea
-      document.querySelectorAll('.short-desc, .info-block textarea').forEach(textarea => {
-        const autoGrow = () => {
-          textarea.style.height = 'auto';
-          textarea.style.height = textarea.scrollHeight + 'px';
-        };
-        textarea.addEventListener('input', autoGrow);
-        autoGrow();
-      });
+      runPromptWithAI(promptContent);
     });
-  
+  }
+
+  // Auto resize textarea
+  document.querySelectorAll('.short-desc, .info-block textarea').forEach(textarea => {
+    const autoGrow = () => {
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
+    };
+    textarea.addEventListener('input', autoGrow);
+    autoGrow();
+  });
+});
