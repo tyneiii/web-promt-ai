@@ -149,24 +149,25 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
     </form>
   <?php endif; ?>
 
-  <!-- BÌNH LUẬN -->
-  <div class="comment-section">
-    <h4>Bình luận (<?= count($comments) ?>)</h4>
-
-    <?php if ($id_user > 0): ?>
-      <div class="comment-form">
-        <form method="post" action="../../Controller/user/process_comment.php">
-          <input type="hidden" name="action" value="add">
-          <input type="hidden" name="prompt_id" value="<?= $id ?>">
-          <textarea name="comment_content" rows="3" placeholder="Viết bình luận..." required></textarea>
-          <button type="submit">Gửi</button>
+<?php if ($id_user > 0): ?>
+    <div class="comment-form-new">
+        <form method="post" action="../../Controller/user/process_comment.php" class="comment-input-form">
+            <input type="hidden" name="action" value="add">
+            <input type="hidden" name="prompt_id" value="<?= $id ?>">
+            
+            <div class="input-wrapper">
+                <textarea name="comment_content" rows="1" placeholder="Viết bình luận..." required></textarea>
+                <button type="submit" class="send-btn">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
         </form>
-      </div>
-    <?php else: ?>
-      <p style="text-align:center;padding:15px;background:#222;border-radius:8px;">
+    </div>
+<?php else: ?>
+    <p style="text-align:center;padding:20px;background:#222;border-radius:12px;">
         Bạn cần <a href="../../views/login/login.php?redirect=<?= urlencode($redirect_url) ?>">đăng nhập</a> để bình luận.
-      </p>
-    <?php endif; ?>
+    </p>
+<?php endif; ?>
 
     <div class="comments-list">
       <?php if (empty($comments)): ?>

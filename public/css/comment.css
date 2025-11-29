@@ -1,0 +1,291 @@
+
+.comment-form-new {
+    margin-top: 25px;
+    padding: 12px 0;
+}
+
+.comment-input-form {
+    width: 100%;
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    background: #111;
+    border: 2px solid #333;
+    border-radius: 50px;
+    padding: 10px 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.input-wrapper:focus-within {
+    border-color: #ff4d4d;
+    box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.15);
+    background: #1a1a1a;
+}
+
+.input-wrapper textarea {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 15px;
+    resize: none;
+    min-height: 24px;
+    max-height: 120px;
+    overflow-y: auto;
+    padding: 8px 0;
+    font-family: inherit;
+}
+
+.input-wrapper textarea::placeholder {
+    color: #888;
+}
+
+.send-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff4d4d, #ff7f50);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(255, 77, 77, 0.4);
+}
+
+.send-btn:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(255, 77, 77, 0.5);
+}
+
+.send-btn:active {
+    transform: scale(0.95);
+}
+
+/* Khi textarea có nội dung → nút sáng lên */
+.input-wrapper textarea:not(:placeholder-shown) + .send-btn {
+    background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+}
+
+/* Mobile: vẫn đẹp */
+@media (max-width: 768px) {
+    .input-wrapper {
+        padding: 10px 12px;
+    }
+    .send-btn {
+        width: 42px;
+        height: 42px;
+        font-size: 17px;
+    }
+}
+
+.comment-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #333;
+    color: #fff;
+    font-size: 14px;
+  }
+
+  .comment-section h4 {
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  /* Form bình luận */
+  .comment-form form {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .comment-form textarea {
+    flex: 1;
+    border-radius: 8px;
+    border: 1px solid #444;
+    padding: 10px 12px;
+    background: #111;
+    color: #f1f1f1;
+    resize: vertical;
+    min-height: 60px;
+    font-size: 14px;
+  }
+
+  .comment-form textarea::placeholder {
+    color: #777;
+  }
+
+  .comment-form button {
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    background: linear-gradient(135deg, #ff6a3d, #ff944d);
+    color: #fff;
+    white-space: nowrap;
+    margin-top: 4px;
+  }
+
+  .comment-form button:hover {
+    opacity: 0.9;
+  }
+
+  /* Danh sách bình luận */
+  .comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Mỗi comment */
+  .comment-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    background: #111;
+    border-radius: 10px;
+    border: 1px solid #222;
+  }
+
+  .tag-item {
+    display: inline-block;
+    background: #222;
+    color: #fff;
+    border: 1px solid #444;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+  }
+
+  .comment-avatar img {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  /* Nội dung comment */
+  .comment-body {
+    flex: 1;
+  }
+
+  .comment-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+
+  .comment-header strong {
+    font-size: 14px;
+  }
+
+  .comment-date {
+    font-size: 12px;
+    color: #888;
+  }
+
+  .comment-content {
+    margin-bottom: 6px;
+    white-space: pre-wrap;
+    line-height: 1.4;
+  }
+
+  /* Hành động Sửa / Xoá */
+  .comment-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+  }
+
+  /* Nút "Sửa" dùng <details> */
+  .comment-actions details {
+    display: inline-block;
+  }
+
+  .comment-actions summary {
+    list-style: none;
+    cursor: pointer;
+    color: #ff8a4a;
+  }
+
+  .comment-actions summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .comment-actions summary::before {
+    content: "";
+  }
+
+  /* Form sửa bên trong details */
+  .edit-comment-form {
+    margin-top: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .edit-comment-form textarea {
+    width: 100%;
+    min-height: 60px;
+    border-radius: 6px;
+    border: 1px solid #444;
+    background: #0c0c0c;
+    color: #f1f1f1;
+    padding: 6px 8px;
+    font-size: 13px;
+  }
+
+  .edit-comment-form button {
+    align-self: flex-end;
+    padding: 5px 12px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    background: #3b82f6;
+    color: #fff;
+  }
+
+  /* Nút xoá */
+  .btn-delete-comment {
+    background: transparent;
+    border: none;
+    color: #f97373;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 0;
+  }
+
+  .btn-delete-comment:hover {
+    text-decoration: underline;
+  }
+
+  /* Disabled buttons for guests */
+  button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Icon colors */
+  .text-red {
+    color: #ff0000;
+  }
+
+  .text-blue {
+    color: #007bff;
+  }
