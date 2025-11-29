@@ -79,6 +79,7 @@
                 <button class="btn-send" id="sendBtn" aria-label="Gửi">Gửi</button>
                 <input type="hidden" id="csrfToken" value="<?php echo htmlspecialchars($csrf_token); ?>">
                 <input type="hidden" id="accountId" value="<?php echo htmlspecialchars($account_id); ?>">
+                <input type="hidden" id="activeChatId" value="<?= htmlspecialchars($chat_id ?? '') ?>">
             </form>
             <?php else: ?>
                 <div style="text-align:center; color: #8e8e8e; padding-top: 50px;">Không có tin nhắn!</div>

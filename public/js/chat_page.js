@@ -5,38 +5,37 @@ const csrfToken = document.getElementById('csrfToken').value;
 const loadMoreContainer = document.getElementById('loadMoreContainer');
 let isLoading = false;
 const accountId = document.getElementById('accountId').value;
+const activeChatIdEl = document.getElementById('activeChatId'); 
+let currentChatId = activeChatIdEl ? activeChatIdEl.value : null; 
 
-function getDisplayDate(date) {
+function getDisplayDate(timestamp) {
+    const messageDate = new Date(timestamp);
     const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(today.getDate() - 1);
-
-    const formatDate = (d) => d.toISOString().split('T')[0];
-
-    const dateStr = formatDate(date);
-    const todayStr = formatDate(today);
-    const yesterdayStr = formatDate(yesterday);
-
-    if (dateStr === todayStr) {
+    const todayNormalized = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+    const messageDateNormalized = new Date(messageDate.getFullYear(), messageDate.getMonth(), messageDate.getDate()).getTime();
+    const oneDay = 24 * 60 * 60 * 1000; 
+    const yesterdayNormalized = todayNormalized - oneDay;
+    if (messageDateNormalized === todayNormalized) {
         return 'Hôm nay';
-    } else if (dateStr === yesterdayStr) {
+    } else if (messageDateNormalized === yesterdayNormalized) {
         return 'Hôm qua';
     } else {
-        return date.toLocaleDateString('vi-VN');
+        const day = messageDate.getDate().toString().padStart(2, '0');
+        const month = (messageDate.getMonth() + 1).toString().padStart(2, '0');
+        const year = messageDate.getFullYear();
+        return `${day}/${month}/${year}`;
     }
 }
 
 function appendMessage(text, who = 'mine', prepend = false) {
     const el = document.createElement('div');
     el.className = 'bubble ' + (who === 'mine' ? 'mine' : 'other');
-
     el.innerHTML = text.replace(/\n/g, '<br>') +
         '<span class="meta" data-sent-at="' + new Date().toISOString() + '">' +
         new Date().toLocaleTimeString([], {
             hour: '2-digit',
             minute: '2-digit'
         }) + '</span>';
-
     if (prepend) {
         messagesEl.insertBefore(el, loadMoreContainer.nextSibling);
     } else {
@@ -61,8 +60,8 @@ sendBtn.addEventListener('click', () => {
     const v = input.value.trim();
     if (!v) return;
     const activeChatEl = document.querySelector('.convo-item.active');
-    const chatId = activeChatEl ? activeChatEl.dataset.chatId : null;
-    if (!chatId) {
+    const chatIdToSend = activeChatEl ? activeChatEl.dataset.chatId : currentChatId;
+    if (!chatIdToSend) {
         alert("Vui lòng chọn một đoạn chat trước khi gửi tin nhắn.");
         return;
     }
@@ -71,7 +70,7 @@ sendBtn.addEventListener('click', () => {
     input.value = '';
     const payload = {
         message: escapedV,
-        chat_id: chatId, // Thêm chat_id vào payload
+        chat_id: chatIdToSend, // GỬI CHAT ID
         csrf_token: csrfToken
     };
     fetch('../../public/ajax/send_message.php', {
@@ -83,8 +82,7 @@ sendBtn.addEventListener('click', () => {
     })
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
-            } else {
+            if (!data.success) {
                 console.error("Lỗi khi lưu tin nhắn:", data.error, data.details);
                 alert("Lỗi: Không thể gửi tin nhắn. Vui lòng thử lại. Chi tiết: " + (data.details || data.error));
             }
@@ -108,7 +106,7 @@ function updateLoadMoreButton(hasMore) {
         const button = document.createElement('button');
         button.id = 'loadMoreBtn';
         button.textContent = 'Tải thêm tin nhắn cũ';
-        button.style.cssText = 'padding: 8px 15px; border: none; border-radius: 20px; background-color: #333; color: #fff; cursor: pointer;'; // Style tối ưu cho dark mode
+        button.style.cssText = 'padding: 8px 15px; border: none; border-radius: 20px; background-color: #333; color: #fff; cursor: pointer;';
         button.addEventListener('click', loadMoreMessages);
         loadMoreContainer.appendChild(button);
     } else {
@@ -132,18 +130,20 @@ function loadMoreMessages() {
     isLoading = true;
 
     const oldestId = getOldestId();
-    if (!oldestId) {
+    if (!currentChatId || !oldestId) {
         updateLoadMoreButton(false);
         isLoading = false;
         return;
     }
-
+    const firstBubbleBeforeLoad = messagesEl.querySelector('.bubble');
+    const existingDateSep = firstBubbleBeforeLoad ? firstBubbleBeforeLoad.previousElementSibling : null;
+    const oldestTimestampOnScreen = firstBubbleBeforeLoad ? firstBubbleBeforeLoad.querySelector('.meta').dataset.sentAt : null;
     const currentScrollTop = messagesEl.scrollTop;
-
     loadMoreContainer.innerHTML = '<span style="color: #b71c1c;">Đang tải...</span>';
-
+    
     const payload = {
         oldest_id: oldestId,
+        chat_id: currentChatId, 
         csrf_token: csrfToken
     };
 
@@ -162,29 +162,19 @@ function loadMoreMessages() {
         })
         .then(data => {
             if (data.success && data.messages.length > 0) {
-
                 const oldHeight = messagesEl.scrollHeight;
+                data.messages.reverse();
+                let previousMessageDate = oldestTimestampOnScreen ? 
+                    new Date(oldestTimestampOnScreen) : new Date(0); 
+                
+                let lastLoadedMessageDate = null;
 
-                // Lấy ngày của tin nhắn CŨ NHẤT hiện đang có trên màn hình
-                const firstBubble = messagesEl.querySelector('.bubble');
-                let oldestTimestampOnScreen = firstBubble ?
-                    firstBubble.querySelector('.meta').dataset.sentAt : '1970-01-01T00:00:00Z';
-
-                let previousMessageDate = new Date(oldestTimestampOnScreen);
-
-                // Duyệt qua các tin nhắn được tải về
                 data.messages.forEach((msg, index) => {
                     const currentMessageDate = new Date(msg.sent_at);
-
                     let shouldInsertDateSep = false;
 
-                    if (index === 0) {
-                        // Trường hợp 1: Tin nhắn tải về đầu tiên (cũ nhất)
-                        if (getDisplayDate(currentMessageDate) !== getDisplayDate(previousMessageDate)) {
-                            shouldInsertDateSep = true;
-                        }
-                    } else {
-                        // Trường hợp 2: Các tin nhắn tải về tiếp theo (index > 0)
+                    // Chỉ kiểm tra dấu ngày giữa các tin nhắn trong LÔ MỚI TẢI
+                    if (index > 0) {
                         const dateOfPreviousLoadedMessage = new Date(data.messages[index - 1].sent_at);
                         if (getDisplayDate(currentMessageDate) !== getDisplayDate(dateOfPreviousLoadedMessage)) {
                             shouldInsertDateSep = true;
@@ -198,33 +188,52 @@ function loadMoreMessages() {
                         messagesEl.insertBefore(dateSep, loadMoreContainer.nextSibling);
                     }
 
-                    // --- CHÈN BUBBLE TIN NHẮN ---
+                    // Chèn bubble
                     const el = document.createElement('div');
                     el.className = 'bubble ' + (msg.sender_id == accountId ? 'mine' : 'other');
                     el.dataset.id = msg.chat_detail_id;
-
                     const sentTime = currentMessageDate.toLocaleTimeString([], {
                         hour: '2-digit',
                         minute: '2-digit'
                     });
-
-                    el.innerHTML = msg.message +
+                    el.innerHTML = msg.message.replace(/\n/g, '<br>') + // Đảm bảo nl2br được áp dụng
                         '<span class="meta" data-sent-at="' + msg.sent_at + '">' +
                         sentTime +
                         '</span>';
-
                     messagesEl.insertBefore(el, loadMoreContainer.nextSibling);
+                    
+                    if (index === data.messages.length - 1) {
+                         lastLoadedMessageDate = currentMessageDate;
+                    }
                 });
 
+                // 2. XỬ LÝ MỐC NỐI & DỌN DẸP DẤU NGÀY THỪA
+
+                // Kiểm tra nếu tin nhắn mới nhất vừa được chèn (lastLoadedMessageDate) 
+                // và tin nhắn cũ nhất đang có (previousMessageDate) CÙNG MỘT NGÀY.
+                if (lastLoadedMessageDate && oldestTimestampOnScreen) {
+                    if (getDisplayDate(lastLoadedMessageDate) === getDisplayDate(previousMessageDate)) {
+                        // Nếu cùng ngày VÀ có dấu ngày đang nằm sai vị trí (trước firstBubbleBeforeLoad)
+                        // thì xóa dấu ngày đó đi.
+                        if (existingDateSep && existingDateSep.classList.contains('date-sep')) {
+                             existingDateSep.remove();
+                        }
+                    } else if (existingDateSep && existingDateSep.classList.contains('date-sep')) {
+                        // Nếu KHÁC NGÀY, thì dấu ngày cũ phải được giữ lại 
+                        // nhưng phải đảm bảo rằng nó không có nội dung trùng với tin nhắn vừa load.
+                        // (Trong trường hợp này, chúng ta giả định logic PHP ban đầu đã render đúng dấu ngày).
+                    }
+                }
+                
+                // 3. Điều chỉnh cuộn và nút tải thêm
                 const newHeight = messagesEl.scrollHeight;
                 messagesEl.scrollTop = newHeight - oldHeight + currentScrollTop;
 
-                if (data.messages.length < 2) {
+                if (data.messages.length < 2) { 
                     updateLoadMoreButton(false);
                 } else {
                     updateLoadMoreButton(true);
                 }
-
             } else {
                 updateLoadMoreButton(false);
             }
@@ -234,16 +243,15 @@ function loadMoreMessages() {
             console.error('Lỗi tải tin nhắn cũ:', error);
             alert('Lỗi tải tin nhắn cũ: ' + error.message);
             isLoading = false;
-            updateLoadMoreButton(true);
+            // Đặt lại nút tải để người dùng có thể thử lại
+            updateLoadMoreButton(true); 
         });
 }
 
-
 window.addEventListener('load', () => {
     messagesEl.scrollTop = messagesEl.scrollHeight;
-
     const totalMessages = messagesEl.querySelectorAll('.bubble').length;
-    if (totalMessages >= 2) { // MESSAGE_LIMIT là 2
+    if (totalMessages >= 2) {
         updateLoadMoreButton(true);
     } else {
         updateLoadMoreButton(false);

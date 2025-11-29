@@ -11,6 +11,7 @@ $chatList = getChatList($conn, $account_id, $role);
 $chat_id=null;
 if ($role === 2) {
     $chat_id = (int)getIDChat($conn, $account_id);
+    $chatList = getChatList($conn, $account_id, $role);
 } else {
     if (isset($_GET['chat_id']) && is_numeric($_GET['chat_id'])) {
         $chat_id = (int)$_GET['chat_id'];

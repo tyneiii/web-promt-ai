@@ -29,12 +29,12 @@ function getIDChat($conn, $account_id) {
 function getMessages($conn, $chat_id, $Limit, $oldest_id = null) {
     $where = "chat_id = ?";
     if ($oldest_id !== null) {
-        $where .= " AND chat_detail_id > ?";
+        $where .= " AND chat_detail_id < ?";
     }
     $sql = "SELECT chat_detail_id, sender_id, message, sent_at 
             FROM chat_detail
             WHERE $where 
-            ORDER BY sent_at DESC
+            ORDER BY chat_detail_id DESC
             LIMIT $Limit";
     $stmt = $conn->prepare($sql);
     if ($oldest_id !== null){

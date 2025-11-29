@@ -9,22 +9,19 @@ if (!function_exists('checkCsrfToken')) {
         return !empty($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
     }
 }
-
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($data['message']) || !isset($data['csrf_token'])) {
     http_response_code(400);
     echo json_encode(['success' => false, 'error' => 'Invalid request method or missing data (message/token).']);
     exit;
 }
-
 if (!checkCsrfToken($data['csrf_token'])) {
     http_response_code(403); 
     echo json_encode(['success' => false, 'error' => 'CSRF Token mismatch or missing.', 'step' => 'CSRF_CHECK']);
     exit;
 }
-
 $account_id = (int)($_SESSION['id_user'] ?? 0);
 $message = trim($data['message']);
-
+$chat_id = (int)($data['chat_id'] ?? 0);
 if ($account_id === 0) {
     http_response_code(401);
     echo json_encode(['success' => false, 'error' => 'User ID is missing or 0. Did you forget session_start()?', 'step' => 'AUTH_CHECK']);
@@ -41,7 +38,6 @@ if (!$conn || $conn->connect_error) {
     exit;
 }
 
-$chat_id = getIDChat($conn, $account_id);
 if (!is_int($chat_id) || $chat_id <= 0) { 
     http_response_code(500);
     echo json_encode([
