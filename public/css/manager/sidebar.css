@@ -17,6 +17,38 @@ body {
 .main {
     width: 100%;
 }
+.notification-item {
+    padding: 14px 18px;
+    background: #1e1e1e;
+    border-bottom: 1px solid #333;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    transition: 0.2s;
+}
+
+.notification-item:hover {
+    background: #292929;
+}
+
+.notification-item a {
+    color: #e0e0e0;
+    text-decoration: none;
+    font-size: 15px;
+    display: block;
+}
+
+.notification-item a:hover {
+    color: #fff;
+}
+
+.notification-item.unread {
+    background: #2c2c2c;
+    border-left: 4px solid #ff4d4d;
+}
+
+.notification-item.read {
+    opacity: 0.75;
+}
 
 .sidebar {
     width: 240px;
@@ -102,6 +134,15 @@ input.add-btn:hover {
     text-decoration: none;
     border-left: 3px solid transparent;
     transition: 0.2s;
+}
+.badge-notif {
+    background: red;
+    color: #fff;
+    padding: 2px 7px;
+    font-size: 12px;
+    border-radius: 12px;
+    margin-left: 6px;
+    font-weight: bold;
 }
 
 .sidebar ul li a.menu-link:hover {

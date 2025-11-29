@@ -26,6 +26,11 @@
     $update = $conn->prepare("UPDATE prompt SET status = 'report' WHERE prompt_id = ?");
     $update->bind_param("i", $prompt_id);
     $update->execute();
+    $conn->query("
+        INSERT INTO admin_notifications (type, prompt_id, message)
+        VALUES ('report', $prompt_id, 'Có bài viết bị báo cáo (#$prompt_id)')
+    ");
+
 
     echo "Đã gửi báo cáo!";
 ?>

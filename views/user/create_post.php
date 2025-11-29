@@ -40,6 +40,11 @@
     $stmt->execute();
 
     $prompt_id = $stmt->insert_id;
+    $conn->query("
+      INSERT INTO admin_notifications (type, prompt_id, message)
+      VALUES ('waiting', $prompt_id, 'Có bài viết mới chờ duyệt (#$prompt_id)')
+    ");
+
 
     // INSERT promptdetail
     $order = 1;

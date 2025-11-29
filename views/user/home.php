@@ -285,6 +285,7 @@ unset($_POST);
     </div>
 </div>
 <script>
+    const isLoggedIn = <?= isset($_SESSION['id_user']) ? 'true' : 'false' ?>;
     let currentPromptId = 0;
 
     /* CLICK CARD → MỞ CHI TIẾT */
@@ -297,13 +298,25 @@ unset($_POST);
     });
 
 
-    /* MỞ POPUP BÁO CÁO */
+    /* MỞ POPUP BÁO CÁO (CÓ KIỂM TRA ĐĂNG NHẬP + RESET FORM) */
     document.querySelectorAll(".report-btn").forEach(btn => {
         btn.addEventListener("click", function(e) {
             e.stopPropagation();
 
+            // KIỂM TRA ĐĂNG NHẬP
+            if (!isLoggedIn) {
+                alert("Bạn phải đăng nhập để báo cáo!");
+                window.location.href = "../login/login.php?require_login=report";
+                return;
+            }
+
             const card = this.closest(".card");
             currentPromptId = card.getAttribute("data-id");
+
+            // RESET LÝ DO MỖI LẦN MỞ POPUP
+            document.getElementById("report-reason").value = "Nội dung không phù hợp";
+            document.getElementById("report-custom").value = "";
+            document.getElementById("report-custom").style.display = "none";
 
             document.getElementById("report-modal").style.display = "flex";
         });

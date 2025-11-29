@@ -512,6 +512,7 @@ function updateStatus($conn, $prompt_id, $action, $comment) {
     $target_status = null;
     $is_delete_action = false;
     $is_reject = false;
+
     if ($action == "approve" || $action == "unreport") {
         $target_status = "public";
         $sql = "UPDATE prompt SET status = ? WHERE prompt_id = ?";
@@ -520,7 +521,7 @@ function updateStatus($conn, $prompt_id, $action, $comment) {
         $is_delete_action = true;
         $sql = "DELETE FROM prompt WHERE prompt_id = ?";
     } 
-    else if($action == "reject"){
+    else if ($action == "reject") {
         $is_reject = true;
         $target_status = "reject";
         $sql = "UPDATE prompt SET status = ?, reason = ? WHERE prompt_id = ?";
@@ -532,34 +533,64 @@ function updateStatus($conn, $prompt_id, $action, $comment) {
         ];
     }
 
+
+    /* ======= EXECUTE SQL ======== */
     $stmt = $conn->prepare($sql);
     if ($stmt === false) {
-        error_log("SQL Prepare Failed (handlePromptAction): " . $conn->error . " | Query: " . $sql);
-        return [
-            'success' => false,
-            'message' => "Lỗi hệ thống (Mã 501). Không thể chuẩn bị truy vấn."
-        ];
+        return ['success' => false, 'message' => "Lỗi hệ thống (501)"];
     }
+
     if ($is_delete_action) {
         $stmt->bind_param("i", $prompt_id);
-    } else if($is_reject) {
+    } 
+    else if ($is_reject) {
         $stmt->bind_param("ssi", $target_status, $comment, $prompt_id);
     }
-     else {
+    else {
         $stmt->bind_param("si", $target_status, $prompt_id);
     }
-    
+
     $execute_success = $stmt->execute();
     $rows_affected = $stmt->affected_rows;
     $stmt->close();
+
     if (!$execute_success) {
-        error_log("SQL Execute Failed (handlePromptAction): " . $stmt->error . " | Prompt ID: " . $prompt_id);
-        return [
-            'success' => false,
-            'message' => "Có lỗi nghiêm trọng xảy ra trong quá trình thực thi truy vấn."
-        ];
+        return ['success' => false, 'message' => "Lỗi khi thực thi truy vấn."];
     }
-    
+
+
+    /* ===============================
+       🎯 XOÁ THÔNG BÁO ADMIN TƯƠNG ỨNG
+    =============================== */
+
+    if ($action == "approve" || $action == "reject") {
+        // Xoá thông báo chờ duyệt
+        $conn->query("
+            DELETE FROM admin_notifications 
+            WHERE prompt_id = $prompt_id AND type = 'waiting'
+        ");
+    }
+
+    if ($action == "unreport") {
+        // Xóa thông báo báo cáo
+        $conn->query("
+            DELETE FROM admin_notifications 
+            WHERE prompt_id = $prompt_id AND type = 'report'
+        ");
+    }
+
+    if ($action == "delete") {
+        // Xóa toàn bộ thông báo
+        $conn->query("
+            DELETE FROM admin_notifications 
+            WHERE prompt_id = $prompt_id
+        ");
+    }
+
+
+    /* ===============================
+       TRẢ VỀ KẾT QUẢ
+    =============================== */
     if ($rows_affected > 0) {
         return [
             'success' => true,
@@ -572,6 +603,7 @@ function updateStatus($conn, $prompt_id, $action, $comment) {
         ];
     }
 }
+
 function getFollowingUsers($user_id, $conn) {
     $sql = "
         SELECT u.account_id, u.username, u.avatar

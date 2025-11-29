@@ -6,24 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý bài đăng</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../../public/css/manager/post.css">
+    <link rel="stylesheet" href="../../public/css/manager/sidebar.css">
+
 </head>
 
 <body>
     <div class="container">
         <?php 
-        include_once __DIR__ . '/layout/sidebar.php';
-        include_once __DIR__ . '/../../helpers/helper.php';
-        include_once __DIR__ . '/../../config.php';
-        include_once __DIR__ . '/../../Controller/user/report.php';
-        include_once __DIR__ . '/../../helpers/manager_prompt_logic.php'; 
-        function getReportCount($conn, $prompt_id, $status){
-            if(strtolower($status) == 'report'){
-                return getReportOfPrompt($conn, $prompt_id);
-            }
-            return "";
-        }
+            include_once __DIR__ . '/layout/sidebar.php';
         ?>
         <div class="main">
+            <?php 
+                include_once __DIR__ . '/../../helpers/helper.php';
+                include_once __DIR__ . '/../../config.php';
+                include_once __DIR__ . '/../../Controller/user/report.php';
+                include_once __DIR__ . '/../../helpers/manager_prompt_logic.php'; 
+
+                // Đếm bài viết đang chờ duyệt
+                $waiting_count = $conn->query(" SELECT COUNT(*) AS total FROM prompt WHERE status = 'waiting' ")->fetch_assoc()['total'];
+
+                // Đếm bài bị báo cáo
+                $report_count = $conn->query(" SELECT COUNT(*) AS total FROM prompt WHERE status = 'report' ")->fetch_assoc()['total'];
+
+                function getReportCount($conn, $prompt_id, $status){
+                    if(strtolower($status) === 'report'){
+                        return getReportOfPrompt($conn, $prompt_id);
+                    }
+                    return "";
+                }
+            ?>
             <fieldset class="account-fieldset">
                 <legend>Quản lý bài đăng</legend>
                 <div class="top-bar">
