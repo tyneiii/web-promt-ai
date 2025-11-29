@@ -8,6 +8,12 @@ const accountId = document.getElementById('accountId').value;
 const activeChatIdEl = document.getElementById('activeChatId'); 
 let currentChatId = activeChatIdEl ? activeChatIdEl.value : null; 
 
+// Biến trạng thái cuộn cho AJAX Polling
+let isScrolledToBottom = true; 
+
+// --- CÁC HÀM TIỆN ÍCH ---
+// ==============================================
+
 function getDisplayDate(timestamp) {
     const messageDate = new Date(timestamp);
     const today = new Date();
@@ -27,21 +33,29 @@ function getDisplayDate(timestamp) {
     }
 }
 
-function appendMessage(text, who = 'mine', prepend = false) {
+function appendMessage(text, who = 'mine', prepend = false, messageId = null, timestamp = new Date().toISOString()) {
     const el = document.createElement('div');
     el.className = 'bubble ' + (who === 'mine' ? 'mine' : 'other');
+    if (messageId !== null) {
+        el.dataset.id = messageId;
+    }
+    const sentTime = new Date(timestamp).toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit'
+    });
     el.innerHTML = text.replace(/\n/g, '<br>') +
-        '<span class="meta" data-sent-at="' + new Date().toISOString() + '">' +
-        new Date().toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit'
-        }) + '</span>';
+        '<span class="meta" data-sent-at="' + timestamp + '">' +
+        sentTime + '</span>';
+        
     if (prepend) {
-        messagesEl.insertBefore(el, loadMoreContainer.nextSibling);
+        // Chèn trước loadMoreContainer.nextSibling (tức là sau loadMoreContainer)
+        messagesEl.insertBefore(el, loadMoreContainer.nextSibling); 
     } else {
         messagesEl.appendChild(el);
         messagesEl.scrollTop = messagesEl.scrollHeight;
     }
+    // Trả về element mới được tạo
+    return el; 
 }
 
 function escapeHtml(str) {
@@ -56,6 +70,21 @@ function escapeHtml(str) {
     });
 }
 
+// Hàm để lấy ID tin nhắn cuối cùng đang hiển thị trên DOM
+function getLastMessageId() {
+    const messages = messagesEl.querySelectorAll('.bubble[data-id]');
+    if (messages.length === 0) {
+        return 0; // Trả về 0 nếu chưa có tin nhắn nào
+    }
+    // Lấy tin nhắn cuối cùng và trả về data-id
+    const lastMessage = messages[messages.length - 1];
+    return parseInt(lastMessage.dataset.id) || 0;
+}
+
+
+// --- XỬ LÝ SỰ KIỆN GỬI TIN NHẮN VÀ INPUT ---
+// ==============================================
+
 sendBtn.addEventListener('click', () => {
     const v = input.value.trim();
     if (!v) return;
@@ -66,11 +95,14 @@ sendBtn.addEventListener('click', () => {
         return;
     }
     const escapedV = escapeHtml(v);
+    
+    // Tạo tin nhắn tạm thời trên UI
     appendMessage(escapedV, 'mine');
     input.value = '';
+    
     const payload = {
         message: escapedV,
-        chat_id: chatIdToSend, // GỬI CHAT ID
+        chat_id: chatIdToSend,
         csrf_token: csrfToken
     };
     fetch('../../public/ajax/send_message.php', {
@@ -85,6 +117,7 @@ sendBtn.addEventListener('click', () => {
             if (!data.success) {
                 console.error("Lỗi khi lưu tin nhắn:", data.error, data.details);
                 alert("Lỗi: Không thể gửi tin nhắn. Vui lòng thử lại. Chi tiết: " + (data.details || data.error));
+                // Nếu gửi thất bại, bạn có thể cân nhắc xóa tin nhắn tạm khỏi UI
             }
         })
         .catch(error => {
@@ -99,6 +132,10 @@ input.addEventListener('keydown', (e) => {
         sendBtn.click();
     }
 });
+
+
+// --- XỬ LÝ TẢI THÊM TIN NHẮN CŨ (LOAD MORE) ---
+// ==============================================
 
 function updateLoadMoreButton(hasMore) {
     loadMoreContainer.innerHTML = '';
@@ -115,7 +152,7 @@ function updateLoadMoreButton(hasMore) {
 }
 
 function getOldestId() {
-    const firstBubble = messagesEl.querySelector('.bubble');
+    const firstBubble = messagesEl.querySelector('.bubble[data-id]');
     if (firstBubble) {
         const oldestId = firstBubble.dataset.id;
         if (oldestId && !isNaN(parseInt(oldestId))) {
@@ -173,22 +210,18 @@ function loadMoreMessages() {
                     const currentMessageDate = new Date(msg.sent_at);
                     let shouldInsertDateSep = false;
 
-                    // Chỉ kiểm tra dấu ngày giữa các tin nhắn trong LÔ MỚI TẢI
                     if (index > 0) {
                         const dateOfPreviousLoadedMessage = new Date(data.messages[index - 1].sent_at);
                         if (getDisplayDate(currentMessageDate) !== getDisplayDate(dateOfPreviousLoadedMessage)) {
                             shouldInsertDateSep = true;
                         }
                     }
-
                     if (shouldInsertDateSep) {
                         const dateSep = document.createElement('div');
                         dateSep.className = 'date-sep';
                         dateSep.textContent = getDisplayDate(currentMessageDate);
                         messagesEl.insertBefore(dateSep, loadMoreContainer.nextSibling);
                     }
-
-                    // Chèn bubble
                     const el = document.createElement('div');
                     el.className = 'bubble ' + (msg.sender_id == accountId ? 'mine' : 'other');
                     el.dataset.id = msg.chat_detail_id;
@@ -206,29 +239,16 @@ function loadMoreMessages() {
                          lastLoadedMessageDate = currentMessageDate;
                     }
                 });
-
-                // 2. XỬ LÝ MỐC NỐI & DỌN DẸP DẤU NGÀY THỪA
-
-                // Kiểm tra nếu tin nhắn mới nhất vừa được chèn (lastLoadedMessageDate) 
-                // và tin nhắn cũ nhất đang có (previousMessageDate) CÙNG MỘT NGÀY.
                 if (lastLoadedMessageDate && oldestTimestampOnScreen) {
                     if (getDisplayDate(lastLoadedMessageDate) === getDisplayDate(previousMessageDate)) {
-                        // Nếu cùng ngày VÀ có dấu ngày đang nằm sai vị trí (trước firstBubbleBeforeLoad)
-                        // thì xóa dấu ngày đó đi.
                         if (existingDateSep && existingDateSep.classList.contains('date-sep')) {
                              existingDateSep.remove();
                         }
                     } else if (existingDateSep && existingDateSep.classList.contains('date-sep')) {
-                        // Nếu KHÁC NGÀY, thì dấu ngày cũ phải được giữ lại 
-                        // nhưng phải đảm bảo rằng nó không có nội dung trùng với tin nhắn vừa load.
-                        // (Trong trường hợp này, chúng ta giả định logic PHP ban đầu đã render đúng dấu ngày).
                     }
                 }
-                
-                // 3. Điều chỉnh cuộn và nút tải thêm
                 const newHeight = messagesEl.scrollHeight;
                 messagesEl.scrollTop = newHeight - oldHeight + currentScrollTop;
-
                 if (data.messages.length < 2) { 
                     updateLoadMoreButton(false);
                 } else {
@@ -243,17 +263,71 @@ function loadMoreMessages() {
             console.error('Lỗi tải tin nhắn cũ:', error);
             alert('Lỗi tải tin nhắn cũ: ' + error.message);
             isLoading = false;
-            // Đặt lại nút tải để người dùng có thể thử lại
             updateLoadMoreButton(true); 
         });
 }
 
-window.addEventListener('load', () => {
+if (messagesEl) {
     messagesEl.scrollTop = messagesEl.scrollHeight;
+    messagesEl.addEventListener('scroll', () => {
+        isScrolledToBottom = messagesEl.scrollHeight - messagesEl.clientHeight <= messagesEl.scrollTop + 1;
+    });
+}
+
+function startPolling() {
+    if (!currentChatId) {
+        setTimeout(startPolling, 3000); 
+        return;
+    }
+    const lastId = getLastMessageId();
+    fetch(`../../public/ajax/new_messages.php?chat_id=${currentChatId}&last_id=${lastId}`)
+        .then(response => {
+             if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success && data.messages.length > 0) {
+                const wasScrolledToBottom = isScrolledToBottom; 
+                data.messages.forEach(msg => {
+                    if (!document.querySelector(`.bubble[data-id="${msg.chat_detail_id}"]`)) {
+                        appendMessage(
+                            msg.message, 
+                            msg.sender_id == accountId ? 'mine' : 'other', 
+                            false, 
+                            msg.chat_detail_id, // Truyền ID tin nhắn
+                            msg.sent_at // Truyền timestamp
+                        );
+                    }
+                });
+                if (wasScrolledToBottom) {
+                    messagesEl.scrollTop = messagesEl.scrollHeight;
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Lỗi khi fetch tin nhắn mới:', error);
+        })
+        .finally(() => {
+            setTimeout(startPolling, 3000);
+        });
+}
+
+window.addEventListener('load', () => {
+    if (messagesEl) {
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+    
     const totalMessages = messagesEl.querySelectorAll('.bubble').length;
-    if (totalMessages >= 2) {
+    if (totalMessages >= 2) { 
         updateLoadMoreButton(true);
     } else {
         updateLoadMoreButton(false);
+    }
+    
+    // BẮT ĐẦU POLLING
+    if (currentChatId) {
+        startPolling();
     }
 });

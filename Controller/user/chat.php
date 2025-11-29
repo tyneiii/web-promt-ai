@@ -72,20 +72,22 @@ function saveMessage($conn, $chat_id, $sender_id, $message): bool|string {
         return $error; 
     }
 }
-function getChatList($conn, $account_id, $role): array
+function getChatList($conn, $account_id, $role, $username)
 {
     $sql = "";
     $params = [];
     $types = "";
+    $like_username ="%" . $username . "%";
     if ($role === 1) {
         $sql = "SELECT c.chat_id, a.account_id AS partner_id,a.fullname AS partner_fullname, a.username AS username, a.avatar AS partner_avatar,
                 (SELECT message FROM chat_detail cd WHERE cd.chat_id = c.chat_id ORDER BY sent_at DESC LIMIT 1) AS last_message,
                 (SELECT sent_at FROM chat_detail cd WHERE cd.chat_id = c.chat_id ORDER BY sent_at DESC LIMIT 1) AS last_time
             FROM chat c
             JOIN account a ON a.account_id = c.account_id 
+            WHERE a.username LIKE ?
             ORDER BY last_time DESC ";
-        $params = [];
-        $types = ""; 
+        $params = [$like_username];
+        $types = "s"; 
     } else {
         $sql = "SELECT c.chat_id, a.account_id AS partner_id,a.fullname AS partner_fullname, a.username AS username, a.avatar AS partner_avatar,
                 (SELECT message FROM chat_detail cd WHERE cd.chat_id = c.chat_id ORDER BY sent_at DESC LIMIT 1) AS last_message,

@@ -1,17 +1,17 @@
 <?php
-include_once __DIR__ . "/../../Controller/user/chat.php";
-include_once __DIR__ . "/../../config.php";
-if (!isset($_SESSION['id_user']) || (int)$_SESSION['id_user'] === 0) {
-    die("Lỗi: Người dùng chưa đăng nhập.");
-}
-define('MESSAGE_LIMIT', 2);
+include_once __DIR__ . "/../Controller/user/chat.php";
+include_once __DIR__ . "/../config.php";
+define('MESSAGE_LIMIT', 5);
 $role = (int)$_SESSION['role'];
 $account_id = (int)$_SESSION['id_user'];
-$chatList = getChatList($conn, $account_id, $role);
+$username = $_SESSION['name_user'];
+$user_avatar= $_SESSION['avatar'];
+$searchName= $_GET['username'] ?? '';
+$chatList = getChatList($conn, $account_id, $role, $searchName);
 $chat_id=null;
 if ($role === 2) {
     $chat_id = (int)getIDChat($conn, $account_id);
-    $chatList = getChatList($conn, $account_id, $role);
+    $chatList = getChatList($conn, $account_id, $role, $searchName);
 } else {
     if (isset($_GET['chat_id']) && is_numeric($_GET['chat_id'])) {
         $chat_id = (int)$_GET['chat_id'];
@@ -77,4 +77,22 @@ function renderMessages(array $messages, string $current_user_id): void
         $bubble_class = $is_mine ? 'mine' : 'other';
         printBubble($message, $bubble_class);
     }
+}
+function formatLastTime($timestamp) {
+    if (empty($timestamp)) {
+        return '';
+    }
+
+    $now = new DateTime();
+    $lastTime = new DateTime($timestamp);
+    $diff = $now->diff($lastTime);
+    
+    if ($lastTime->format('Y-m-d') === $now->format('Y-m-d')) {
+        return $lastTime->format('H:i'); 
+    }
+    $yesterday = new DateTime('yesterday');
+    if ($lastTime->format('Y-m-d') === $yesterday->format('Y-m-d')) {
+        return 'Hôm qua ' . $lastTime->format('H:i');
+    }
+    return $lastTime->format('d/m/Y'); 
 }

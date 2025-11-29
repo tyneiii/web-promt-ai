@@ -5,7 +5,7 @@ header('Content-Type: application/json');
 
 $json_data = file_get_contents('php://input');
 $data = json_decode($json_data, true);
-define('MESSAGE_LIMIT', 2); 
+define('MESSAGE_LIMIT', 5); 
 $account_id = (int)($_SESSION['id_user'] ?? 0);
 $oldest_id = filter_var($data['oldest_id'] ?? null, FILTER_VALIDATE_INT); 
 $csrf_token = trim($data['csrf_token'] ?? '');
