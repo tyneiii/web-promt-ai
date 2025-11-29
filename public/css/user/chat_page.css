@@ -10,6 +10,7 @@
     --input-bg: #111111;
     --text-color: #ffffff;
 }
+
 * {
     box-sizing: border-box
 }
@@ -62,6 +63,10 @@ body {
     outline: none;
 }
 
+.search-bar input:focus {
+    border: 1px solid red;
+}
+
 .search-bar input::placeholder {
     color: var(--muted);
 }
@@ -79,11 +84,13 @@ body {
 
 .convo-item {
     display: flex;
-    padding: 12px 15px;
+    padding: 12px 11px; 
     gap: 12px;
     align-items: center;
     cursor: pointer;
     border-bottom: 1px solid #222;
+    border-left: 4px solid transparent; 
+    transition: background 0.2s, border-left-color 0.2s;
 }
 
 .convo-item:hover {
@@ -93,7 +100,6 @@ body {
 .convo-item.active {
     background: rgba(183, 28, 28, 0.2);
     border-left: 4px solid var(--mine);
-    padding-left: 11px;
 }
 
 .convo-item .avatar {
@@ -105,6 +111,7 @@ body {
 .convo-details {
     flex: 1;
     min-width: 0;
+    max-width: calc(100% - 70px);
 }
 
 .convo-details .title {
@@ -132,7 +139,7 @@ body {
 }
 
 .chat-header {
-    padding: 14px 16px;
+    padding: 10px 16px;
     border-bottom: 1px solid var(--border-color);
     display: flex;
     align-items: center;
@@ -305,9 +312,10 @@ body {
 .back-button:hover {
     color: var(--mine, #b71c1c);
 }
+
 .convo-link {
     text-decoration: none;
-    color: var(--text-color); 
+    color: var(--text-color);
 }
 
 .convo-item .avatar {
@@ -333,8 +341,9 @@ body {
 }
 
 .convo-item .avatar img {
-    display: block; 
+    display: block;
 }
+
 .chat-header .avatar {
     width: 44px;
     height: 44px;
@@ -346,4 +355,104 @@ body {
     font-weight: 600;
     color: #2b6a8a;
     flex-shrink: 0;
+}
+
+.chat-sidebar .profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #444;
+    background-color: black;
+}
+
+.profile-header .user-detail-link {
+    width: 60%; 
+    display: block; 
+    text-decoration: none; 
+    color: inherit;
+    flex-shrink: 0;
+    padding-right: 10px; 
+}
+.profile-header .user-info-section {
+    display: flex;
+    align-items: center;
+    width: 100%; 
+    min-width: 0;
+    overflow: hidden;
+}
+.profile-header .user-info-section .avatar {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    margin-right: 10px;
+    border-radius: 50%;
+    background-color: #0084ff;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 18px; 
+    flex-shrink: 0; 
+}
+
+.profile-header .user-info-section .user-name {
+    font-weight: bold;
+    font-size: 16px;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profile-header .user-detail-link:hover .user-name {
+    text-decoration: underline; 
+    opacity: 0.9;
+}
+
+.profile-header .homepage-link {
+    width: 40%;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    color: #a60303; 
+    background-color: #000000;
+    padding: 10px 0; 
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.profile-header .homepage-link:hover {
+    color: #ff0000;
+}
+
+.chat-sidebar .conversation-list {
+    height: calc(100% - 130px);
+    overflow-y: auto;
+}
+
+.convo-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+}
+.convo-info-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex: 1; 
+    min-width: 0;
+}
+.convo-info-wrapper .last-time {
+    flex-shrink: 0; 
+    font-size: 11px;
+    color: var(--muted);
+    margin-left: 10px;
+    margin-top: 2px; 
+    text-align: right;
 }
