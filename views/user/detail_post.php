@@ -90,7 +90,14 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <div class="detail-container">
-  <button class="close-detail" onclick="smartGoBack()">×</button>
+  <button class="close-detail" onclick="goBack()">×</button>
+
+<script>
+function goBack() {
+    const previousUrl = <?= json_encode($redirect_url) ?>;
+    window.location.href = previousUrl;
+}
+</script>
 
   <div class="detail-header">
     <div class="user-info">
@@ -128,34 +135,44 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
 <div class="detail-actions">
   <?php if ($account_id > 0): ?>
-    <button type="submit" name="loveBtn" class="love" title="Thích bài viết" value="<?= $id ?>">
-      <i class="fa-heart <?= $is_loved ? 'fa-solid text-red' : 'fa-regular' ?>"></i> <?= (int)$prompt['love_count'] ?>
+    <!-- Nút Thích -->
+    <button class="action-btn love-btn <?= $is_loved ? 'loved' : '' ?>" 
+            data-prompt-id="<?= $id ?>" 
+            data-action="love">
+      <i class="fa-heart <?= $is_loved ? 'fa-solid text-red' : 'fa-regular' ?>"></i>
+      <span class="count"><?= (int)$prompt['love_count'] ?></span>
     </button>
 
-    <button><i class="fa-regular fa-comment"></i> <?= (int)$prompt['comment_count'] ?></button>
-    
-    <button type="submit" name="saveBtn" class="save" title="Lưu bài viết" value="<?= $id ?>">
-      <i class="fa-bookmark <?= $is_saved ? 'fa-solid text-blue' : 'fa-regular' ?>"></i> <?= (int)$prompt['save_count'] ?>
+    <button class="action-btn">
+      <i class="fa-regular fa-comment"></i> 
+      <span><?= (int)$prompt['comment_count'] ?></span>
     </button>
 
-    <button type="button" class="run-btn" title="Xem kết quả" onclick="openRunModal()" 
+    <!-- Nút Lưu -->
+    <button class="action-btn save-btn <?= $is_saved ? 'saved' : '' ?>" 
+            data-prompt-id="<?= $id ?>" 
+            data-action="save">
+      <i class="fa-bookmark <?= $is_saved ? 'fa-solid text-blue' : 'fa-regular' ?>"></i>
+      <span class="count"><?= (int)$prompt['save_count'] ?></span>
+    </button>
+
+    <button type="button" class="run-btn" onclick="openRunModal()" 
             data-prompt="<?= htmlspecialchars($full_prompt, ENT_QUOTES) ?>">
-      ⚡ Run Prompt
+      Run Prompt
     </button>
 
   <?php else: ?>
-    <button class="love disabled" title="Đăng nhập để thích"><i class="fa-regular fa-heart"></i> <?= (int)$prompt['love_count'] ?></button>
-    <button class="save disabled" title="Đăng nhập để lưu"><i class="fa-regular fa-bookmark"></i> <?= (int)$prompt['save_count'] ?></button>
-
+    <!-- Chưa đăng nhập -->
+    <button class="action-btn" onclick="requireLogin()">
+      <i class="fa-regular fa-heart"></i> <?= $prompt['love_count'] ?>
+    </button>
+    <button class="action-btn" onclick="requireLogin()">
+      <i class="fa-regular fa-bookmark"></i> <?= $prompt['save_count'] ?>
+    </button>
     <a href="../../views/login/login.php?redirect=<?= urlencode($_SERVER['REQUEST_URI']) ?>" 
-       class="run-btn" 
-       title="Đăng nhập để chạy prompt"
-       style="text-decoration:none;color:inherit;">
-       Run Prompt
-    </a>
+       class="run-btn">Run Prompt</a>
   <?php endif; ?>
 </div>
-
 <?php if ($account_id > 0): ?>
     <div class="comment-form-new">
         <form method="post" action="../../Controller/user/process_comment.php" class="comment-input-form">
@@ -233,35 +250,7 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
 </div>
 
 <div id="resultBox" style="display:none;"></div>
-
-<script>
-
-    const redirectUrl = "<?php echo htmlspecialchars($redirect_url); ?>";
-    function smartGoBack() {
-        window.location.href = redirectUrl;
-    }
-  function requireLogin() {
-    if (confirm('Bạn cần đăng nhập để thực hiện hành động này!')) {
-      location.href = '../../views/login/login.php?redirect=<?= urlencode($redirect_url) ?>';
-    }
-  }
-
-  function openRunModal() {
-    document.getElementById('prompt-modal').style.display = 'flex';
-    document.getElementById('promptInput').focus();
-  }
-
-  function closeRunModal() {
-    document.getElementById('prompt-modal').style.display = 'none';
-  }
-
-  function confirmRunPrompt() {
-    const prompt = document.getElementById('promptInput').value;
-    runPrompt(prompt); // Hàm từ run_api.js
-    closeRunModal();
-  }
-</script>
-
+<script src="../../public/js/action_prompt.js"></script>
 <script src="../../public/js/run_api.js"></script>
 
 <?php include_once __DIR__ . '/layout/footer.php'; ?>
