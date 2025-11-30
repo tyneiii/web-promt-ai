@@ -78,7 +78,7 @@ function getChatList($conn, $account_id, $role, $username)
     $params = [];
     $types = "";
     $like_username ="%" . $username . "%";
-    if ($role === 1) {
+    if ($role === 3) {
         $sql = "SELECT c.chat_id, a.account_id AS partner_id,a.fullname AS partner_fullname, a.username AS username, a.avatar AS partner_avatar,
                 (SELECT message FROM chat_detail cd WHERE cd.chat_id = c.chat_id ORDER BY sent_at DESC LIMIT 1) AS last_message,
                 (SELECT sent_at FROM chat_detail cd WHERE cd.chat_id = c.chat_id ORDER BY sent_at DESC LIMIT 1) AS last_time

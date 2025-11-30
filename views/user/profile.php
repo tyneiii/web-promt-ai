@@ -96,25 +96,9 @@ $payoutQuery->close();
 if (!$earnedMoney) {
     $earnedMoney = 0;
 }
-// Tab
-$tab = isset($_GET['tab']) ? $_GET['tab'] : 'public';
 
-// Lấy bài viết
-// if ($tab === 'favorites') {
-//     $sql = "SELECT p.* 
-//                 FROM love l 
-//                 JOIN prompt p ON l.prompt_id = p.prompt_id 
-//                 WHERE l.account_id = $profile_id AND l.status = 'OPEN'
-//                 ORDER BY l.love_at DESC ";
-// } else if ($tab === 'posts') {
-//     $sql = "SELECT * FROM prompt WHERE account_id = $profile_id ORDER BY prompt_id DESC";
-// } else {
-//     $sql = "SELECT p.* 
-//                 FROM save s 
-//                 JOIN prompt p ON s.prompt_id = p.prompt_id 
-//                 WHERE s.account_id = $profile_id 
-//                 ORDER BY s.save_id DESC ";
-// }
+$tab = isset($_GET['tab']) ? $_GET['tab'] : '';
+
 if ($tab === 'favorites') {
     $sql = "SELECT p.*, a.username, a.avatar 
                 FROM love l 
@@ -196,11 +180,9 @@ $result = mysqli_query($conn, $sql);
         <div class="stats" style="margin-top: 10px; font-size: 18px;">
 
             <?php if ($bankInfo): ?>
-                <!-- ĐÃ CÓ THÔNG TIN NGÂN HÀNG -->
                 <span>💰 <strong><?= number_format($earnedMoney, 2) ?> USD</strong> / tháng này</span>
 
             <?php else: ?>
-                <!-- CHƯA CÓ BANK INFO → ĐIỀN NGAY -->
                 <a href="edit_bank_info.php" style="text-decoration:none; color: #2e2c2c" class="item-link">
                     <div class="item">
                         🔔 Bạn chưa cập nhật thông tin ngân hàng – Nhấn để điền
@@ -220,6 +202,7 @@ $result = mysqli_query($conn, $sql);
                 <?php
                 if ($tab === 'public') echo 'Công khai';
                 else if ($tab === 'waiting') echo 'Chờ duyệt';
+                else if ($tab === '') echo 'Bài viết';
                 else if ($tab === 'reject') echo 'Bị từ chối';
                 else if ($tab === 'report') echo 'Bị báo cáo';
                 else echo 'Bài viết';

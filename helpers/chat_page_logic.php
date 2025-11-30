@@ -3,6 +3,10 @@ include_once __DIR__ . "/../Controller/user/chat.php";
 include_once __DIR__ . "/../config.php";
 define('MESSAGE_LIMIT', 5);
 $role = (int)$_SESSION['role'];
+if ($role == 1) {
+    header("Location: home.php");
+    exit();
+}
 $account_id = (int)$_SESSION['account_id'];
 $username = $_SESSION['name_user'];
 $user_avatar= $_SESSION['avatar'];
@@ -12,7 +16,7 @@ $chat_id=null;
 if ($role === 2) {
     $chat_id = (int)getIDChat($conn, $account_id);
     $chatList = getChatList($conn, $account_id, $role, $searchName);
-} else {
+} elseif( $role === 3) {
     if (isset($_GET['chat_id']) && is_numeric($_GET['chat_id'])) {
         $chat_id = (int)$_GET['chat_id'];
     } elseif (!empty($chatList)) {
