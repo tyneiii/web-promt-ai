@@ -90,7 +90,7 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <div class="detail-container">
-  <button class="close-detail" onclick="window.history.back()">×</button>
+  <button class="close-detail" onclick="smartGoBack()">×</button>
 
   <div class="detail-header">
     <div class="user-info">
@@ -113,7 +113,7 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
   <?php endif; ?>
 
   <?php if (!empty($prompt['image'])): ?>
-    <img class="post-image" src="../../<?= htmlspecialchars($prompt['image']) ?>" alt="Ảnh bài viết" style="max-width:100%;border-radius:8px;margin:20px 0;">
+    <img class="post-image" src="<?= htmlspecialchars($prompt['image']) ?>" alt="Ảnh bài viết" style="max-width:100%;border-radius:8px;margin:20px 0;">
   <?php endif; ?>
 
   <div class="detail-content">
@@ -249,6 +249,29 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
     runPrompt(prompt); // Hàm từ run_api.js
     closeRunModal();
   }
+</script>
+<script>
+function smartGoBack() {
+    // Ưu tiên 1: Dùng sessionStorage (chính xác tuyệt đối - lưu từ trang danh sách)
+    const cameFrom = sessionStorage.getItem('lastListPage');
+    if (cameFrom) {
+        sessionStorage.removeItem('lastListPage'); // dọn rác
+        window.location.href = cameFrom;
+        return;
+    }
+
+    // Ưu tiên 2: Dùng referrer (nếu có và cùng domain)
+    if (document.referrer && 
+        (document.referrer.includes(location.hostname) || 
+         document.referrer.includes('localhost') || 
+         document.referrer.includes('127.0.0.1'))) {
+        window.location.href = document.referrer;
+        return;
+    }
+
+    // Ưu tiên 3: Về trang chủ
+    window.location.href = '../user/home.php';
+}
 </script>
 
 <script src="../../public/js/run_api.js"></script>

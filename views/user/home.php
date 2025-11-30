@@ -370,7 +370,7 @@ unset($_POST);
         // 1. Xử lý đóng mở Modal
         const modal = document.getElementById('rulesModal');
         const btnOpen = document.getElementById('btnOpenRules');
-        const btnClose = document.querySelector('.close-modal');
+        const btnClose = rulesModal.querySelector('.close-modal');
 
         // Mở modal khi click icon info
         btnOpen.addEventListener('click', function() {
@@ -407,6 +407,16 @@ unset($_POST);
             });
         });
     });
+</script>
+
+<script>
+// Lưu lại trang hiện tại mỗi khi người dùng ở trang danh sách
+// (chỉ chạy trên trang home, search, tag...)
+if (window.location.pathname.includes('home.php') || 
+    window.location.search.includes('search=') || 
+    window.location.search.includes('tag=')) {
+    sessionStorage.setItem('lastListPage', location.href);
+}
 </script>
 
 

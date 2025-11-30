@@ -61,7 +61,7 @@ foreach ($details as $d) $full_prompt .= "\n" . $d['content'];
           <label id="labelImg">Ảnh tham khảo</label>
           <div class="bottom-side">
             <?php if (!empty($prompt['image'])): ?>
-              <img class="post-image" src="../../public/<?= htmlspecialchars($prompt['image']) ?>" alt="Ảnh bài viết" style="cursor:pointer;">
+              <img class="post-image" src="<?= htmlspecialchars($prompt['image']) ?>" alt="Ảnh bài viết" style="cursor:pointer;">
             <?php else: ?>
               <span>Bài viết không có ảnh</span>
             <?php endif; ?>
@@ -92,7 +92,7 @@ foreach ($details as $d) $full_prompt .= "\n" . $d['content'];
       </div>
 
       <!-- NÚT DUYỆT / TỪ CHỐI / XÓA – CHỈ HIỆN SAU KHI CHẠY THÀNH CÔNG -->
-      <div id="actionButtons" style="margin-top:20px; text-align:center; display:none;">
+      <div id="actionButtons" style="margin-top:20px; text-align:center; display:block;">
         <?php if ($prompt['status'] === 'waiting'): ?>
           <button class="action-btn approve-btn" onclick="handleAction('approve', <?= $prompt_id ?>)">Duyệt bài đăng</button>
           <button class="action-btn reject-btn" onclick="rejectWithReason(<?= $prompt_id ?>)">Từ chối bài đăng</button>
@@ -128,7 +128,7 @@ function handleAction(action, promptId, comment = null) {
   const payload = { action, prompt_id: promptId };
   if (comment !== null) payload.comment = comment;
 
-  fetch('../../Controller/admin/process_prompt.php', {
+  fetch('../../public/ajax/prompt_detail.php', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
@@ -174,9 +174,6 @@ document.getElementById('runBtn')?.addEventListener('click', async () => {
           ${data.result.replace(/\n/g, '<br>')}
         </div>
       </div>`;
-
-    // HIỆN NÚT DUYỆT SAU KHI CHẠY THÀNH CÔNG
-    actionButtons.style.display = 'block';
 
   } catch (err) {
     resultBox.innerHTML = `
