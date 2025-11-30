@@ -113,7 +113,7 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
   <?php endif; ?>
 
   <?php if (!empty($prompt['image'])): ?>
-    <img class="post-image" src="../../<?= htmlspecialchars($prompt['image']) ?>" alt="Ảnh bài viết" style="max-width:100%;border-radius:8px;margin:20px 0;">
+    <img class="post-image" src="<?= htmlspecialchars($prompt['image']) ?>" alt="Ảnh bài viết" style="max-width:100%;border-radius:8px;margin:20px 0;">
   <?php endif; ?>
 
   <div class="detail-content">

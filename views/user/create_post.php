@@ -27,8 +27,8 @@
 
     // Upload image
     if (!empty($_FILES['image']['name'])) {
-        $imageName = time() . "_" . $_FILES['image']['name'];
-        move_uploaded_file($_FILES['image']['tmp_name'], "../../public/img/" . $imageName);
+        $imageName =  "../../public/img/" . time() . "_" . $_FILES['image']['name'];
+        move_uploaded_file($_FILES['image']['tmp_name'], $imageName);
     }
 
     // INSERT prompt
