@@ -127,7 +127,7 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
   </div>
 
 <div class="detail-actions">
-  <?php if ($id_user > 0): ?>
+  <?php if ($account_id > 0): ?>
     <button type="submit" name="loveBtn" class="love" title="Thích bài viết" value="<?= $id ?>">
       <i class="fa-heart <?= $is_loved ? 'fa-solid text-red' : 'fa-regular' ?>"></i> <?= (int)$prompt['love_count'] ?>
     </button>

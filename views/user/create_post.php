@@ -62,9 +62,15 @@
         $conn->query("INSERT INTO prompttag (prompt_id, tag_id) VALUES ($prompt_id, $tag_id)");
       }
     }
-    // Chuyển về trang chủ
-    header("Location: home.php?msg=submitted");
-    exit;
+
+// === SAU KHI INSERT XONG TẤT CẢ ===
+$_SESSION['create_post_success'] = true;
+$_SESSION['success_message'] = "Bài viết của bạn đã được gửi thành công và đang chờ duyệt bởi quản trị viên!";
+
+// ĐÚNG: phải dùng show_success_modal=1
+header("Location: create_post.php?show_success_modal=1");
+exit;
+
 }
 
     $acc_id = $_SESSION['account_id'] ;
@@ -98,6 +104,128 @@
         <?= $_SESSION['create_post_error']; unset($_SESSION['create_post_error']); ?>
       </div>
     <?php endif; ?>
+
+
+<?php if (isset($_GET['show_success_modal']) && isset($_SESSION['create_post_success'])): ?>
+<div id="successModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-icon">✓</div>
+    <h2>Đăng bài thành công!</h2>
+    <p>
+      <?= $_SESSION['success_message'] ?? 'Bài viết của bạn đã được gửi và đang chờ duyệt.' ?>
+    </p>
+    <div class="modal-buttons">
+      <button type="button" class="btn-primary" onclick="closeModalAndRedirect()">
+        Xem danh sách bài viết
+      </button>
+      <button type="button" class="btn-secondary" onclick="closeModalAndStay()">
+        Tạo bài viết mới
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Fix cứng giữa màn hình - hoạt động mọi trường hợp */
+  .modal-overlay {
+    position: fixed !important;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999 !important;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  .modal-content {
+    background: white;
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 25px 70px rgba(0,0,0,0.35);
+    animation: modalPop 0.4s ease-out;
+    transform: translateY(0);
+  }
+  @keyframes modalPop {
+    from { transform: scale(0.8) translateY(-50px); opacity: 0; }
+    to   { transform: scale(1) translateY(0); opacity: 1; }
+  }
+  .modal-icon {
+    font-size: 70px;
+    color: #ea1710ff;
+    margin-bottom: 10px;
+  }
+  .modal-content h2 {
+    margin: 10px 0 16px;
+    color: #f60404ff;
+    font-size: 26px;
+  }
+  .modal-content p {
+    color: #555;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 28px;
+  }
+  .modal-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-primary, .btn-secondary {
+    padding: 14px 28px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    min-width: 180px;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: #f00a0aff;
+    color: white;
+  }
+  .btn-primary:hover { background: #f40808ff; transform: translateY(-2px); }
+  .btn-secondary {
+    background: #f3f4f6;
+    color: #374151;
+  }
+  .btn-secondary:hover { background: #e5e7eb; transform: translateY(-2px); }
+</style>
+
+<script>
+  function closeModalAndRedirect() {
+    document.body.style.overflow = 'auto';
+    window.location.href = 'home.php';
+  }
+  function closeModalAndStay() {
+    document.getElementById('successModal').remove();
+    document.body.style.overflow = 'auto';
+    
+    // Reset form sạch sẽ
+    document.querySelector('.form-card').reset();
+    document.getElementById('image-preview').innerHTML = '';
+    chosen = [];
+    renderSelected();
+    updateTagsHidden();
+    
+    // Đóng hết collapsible
+    document.querySelectorAll('.collapsible-group').forEach(g => g.classList.remove('active'));
+  }
+
+  // Fix lỗi cuộn trang khi modal mở
+  document.body.style.overflow = 'hidden';
+</script>
+
+<?php 
+  unset($_SESSION['create_post_success']);
+  unset($_SESSION['success_message']);
+?>
+<?php endif; ?>
   
   <form class="form-card" action="create_post.php" method="POST" enctype="multipart/form-data">
     <div class="user-info">
@@ -163,6 +291,125 @@
       </div>
     </div>
   </form>
+
+  <!-- ===================== MODAL THÀNH CÔNG ===================== -->
+<?php if (isset($_GET['show_success_modal']) && $_GET['show_success_modal'] == '1' && isset($_SESSION['create_post_success'])): ?>
+<div id="successModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-icon">✓</div>
+    <h2>Đăng bài thành công!</h2>
+    <p id="modal-message">
+      <?= $_SESSION['success_message'] ?? 'Bài viết của bạn đã được gửi và đang chờ duyệt.' ?>
+    </p>
+    <div class="modal-buttons">
+      <button type="button" class="btn-primary" onclick="closeModalAndRedirect()">
+        Xem danh sách bài viết
+      </button>
+      <button type="button" class="btn-secondary" onclick="closeModalAndStay()">
+        Tạo bài viết mới
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeIn 0.3s ease-out;
+  }
+  .modal-content {
+    background: white;
+    border-radius: 16px;
+    padding: 30px 40px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: zoomIn 0.4s ease-out;
+  }
+  .modal-icon {
+    font-size: 64px;
+    color: #22c55e;
+    margin-bottom: 16px;
+  }
+  .modal-content h2 {
+    margin: 0 0 16px;
+    color: #22c55e;
+    font-size: 28px;
+  }
+  .modal-content p {
+    color: #444;
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 24px;
+  }
+  .modal-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-primary, .btn-secondary {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    min-width: 160px;
+  }
+  .btn-primary {
+    background: #22c55e;
+    color: white;
+  }
+  .btn-primary:hover { background: #16a34a; }
+  .btn-secondary {
+    background: #e5e7eb;
+    color: #374151;
+  }
+  .btn-secondary:hover { background: #d1d5db; }
+
+  @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+  @keyframes zoomIn {
+    from {transform: scale(0.7); opacity:0;}
+    to {transform: scale(1); opacity:1;}
+  }
+</style>
+
+<script>
+  // Đóng modal và chuyển về trang chủ / danh sách bài viết
+  function closeModalAndRedirect() {
+    document.getElementById('successModal').remove();
+    window.location.href = 'home.php';  // hoặc trang danh sách bài viết của user
+  }
+
+  // Đóng modal và ở lại để tạo bài mới (xóa form)
+  function closeModalAndStay() {
+    document.getElementById('successModal').remove();
+    // Reset form để tạo bài mới
+    document.querySelector('.form-card').reset();
+    document.querySelectorAll('.collapsible-content').forEach(el => el.innerHTML = el.innerHTML.split('<textarea')[0] + '<textarea name="content[]" placeholder="Nhập nội dung chính của bài viết..." required></textarea>');
+    document.getElementById('image-preview').innerHTML = '';
+    chosen = [];
+    renderSelected();
+    updateTagsHidden();
+  }
+
+  // Tự động focus vào modal (cho đẹp)
+  document.getElementById('successModal')?.focus();
+</script>
+
+<?php 
+  // Xóa session để không hiện lại khi bấm F5
+  unset($_SESSION['create_post_success']);
+  unset($_SESSION['success_message']);
+?>
+<?php endif; ?>
 </body>
 
 </html>
