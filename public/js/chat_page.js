@@ -10,10 +10,47 @@ let currentChatId = activeChatIdEl ? activeChatIdEl.value : null;
 
 // Biến trạng thái cuộn cho AJAX Polling
 let isScrolledToBottom = true; 
-
+ document.addEventListener('DOMContentLoaded', () => {
+            initEmojiPicker('emoji-btn', 'messageInput');
+        });
 // --- CÁC HÀM TIỆN ÍCH ---
 // ==============================================
+function initEmojiPicker(triggerId, inputId, pickerSelector = 'emoji-picker') {
+    const trigger = document.getElementById(triggerId);
+    const input = document.getElementById(inputId);
+    const picker = document.querySelector(pickerSelector);
 
+    // Kiểm tra nếu thiếu phần tử nào thì dừng lại để tránh lỗi console
+    if (!trigger || !input || !picker) {
+        console.warn('Emoji Picker: Không tìm thấy trigger, input hoặc thẻ picker.');
+        return;
+    }
+
+    // 1. Bật/Tắt bảng chọn khi nhấn nút
+    trigger.addEventListener('click', (event) => {
+        event.stopPropagation(); // Ngăn sự kiện lan ra ngoài
+        picker.classList.toggle('show');
+    });
+
+    // 2. Xử lý sự kiện chọn Icon
+    picker.addEventListener('emoji-click', (event) => {
+        const emoji = event.detail.unicode;
+        const start = input.selectionStart;
+        const end = input.selectionEnd;
+        const text = input.value;
+        input.value = text.substring(0, start) + emoji + text.substring(end);
+        input.selectionStart = input.selectionEnd = start + emoji.length;
+        input.focus();
+    });
+
+    // 3. Đóng bảng khi click ra ngoài vùng chọn
+    document.addEventListener('click', (event) => {
+        // Nếu click KHÔNG nằm trong picker VÀ KHÔNG phải là nút trigger
+        if (!picker.contains(event.target) && event.target !== trigger) {
+            picker.classList.remove('show');
+        }
+    });
+}
 function getDisplayDate(timestamp) {
     const messageDate = new Date(timestamp);
     const today = new Date();

@@ -237,6 +237,7 @@ body {
     align-items: center;
     background: var(--input-bg);
     color: var(--text-color);
+    position: relative
 }
 
 .input input {
@@ -455,4 +456,52 @@ body {
     margin-left: 10px;
     margin-top: 2px; 
     text-align: right;
+}
+emoji-picker {
+    position: absolute;
+    bottom: 120%; /* Đẩy lên trên ô input */
+    left: 0;
+    z-index: 1000;
+    
+    /* Kích thước */
+    width: 100%;
+    max-width: 350px;
+    height: 400px;
+    
+    /* Trạng thái mặc định: Ẩn */
+    display: none; 
+    
+    /* Giao diện Dark Mode */
+    --background: var(--sidebar-bg); /* Khớp với màu sidebar (#1a1a1a) */
+    --border-color: #333;
+    --input-border-color: #444;
+    --input-font-color: #fff;
+    --category-font-color: #aaa;
+    
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5); /* Bóng đổ đậm hơn cho nền tối */
+    border: 1px solid var(--border-color);
+}
+
+/* Class này được JS thêm vào để hiện bảng icon */
+emoji-picker.show {
+    display: block !important; /* Thêm !important để chắc chắn nó hiện */
+}
+
+/* Nút kích hoạt Emoji */
+#emoji-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1.3rem; /* Tăng kích thước icon lên một chút */
+    padding: 0 5px;
+    transition: transform 0.2s ease, opacity 0.2s;
+    opacity: 0.7; /* Làm mờ nhẹ khi chưa hover */
+    position: relative; /* Để z-index có tác dụng */
+    z-index: 10;
+}
+
+#emoji-btn:hover {
+    transform: scale(1.1);
+    opacity: 1;
 }
