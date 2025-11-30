@@ -18,9 +18,7 @@ $acc_id = $_SESSION['id_user'];
 $sql_user = "SELECT * FROM account WHERE account_id = $acc_id";
 $user_result = mysqli_query($conn, $sql_user);
 $user = mysqli_fetch_assoc($user_result);
-// ===============================================
-// AJAX CHECK USERNAME LIVE
-// ===============================================
+
 if (isset($_GET['check_username'])) {
     if (session_status() === PHP_SESSION_NONE) session_start();
 
