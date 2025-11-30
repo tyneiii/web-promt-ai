@@ -77,15 +77,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $bgFile = $targetDir . $bgName;
 
         if (move_uploaded_file($_FILES['background']['tmp_name'], $bgFile)) {
-            $backgroundPath = $bgName; // lưu DB chỉ tên file
-            // lưu đường dẫn đầy đủ vào session (giống avatar)
+            $backgroundPath = $bgName; 
             $_SESSION['background'] = $bgFile;
         }
     }
 
-
-
-    // Không trùng -> tiếp tục update
     $updateSql = "UPDATE account 
         SET username = '$username',
             fullname = '$fullname',
@@ -173,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script>
-        // ✅ Preview ảnh khi chọn (avatar)
+        
         document.getElementById('avatar').addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
