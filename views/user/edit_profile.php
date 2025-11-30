@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $bgFile = $targetDir . $bgName;
         if (move_uploaded_file($_FILES['background']['tmp_name'], $bgFile)) {
-            $backgroundPath = $bgName; 
+            $backgroundPath = $bgName;
             $_SESSION['background'] = $bgFile;
         }
     }
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="modal">
             <div class="modal-header">
                 <h2>Sửa hồ sơ</h2>
-                <button class="close-btn" onclick="confirmCancel()">✕</button>
+                <button class="close-btn" onclick="smartGoBack()">✕</button>
             </div>
             <form method="POST" enctype="multipart/form-data">
                 <div class="modal-body">
@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="cancel" onclick="confirmCancel()">Hủy</button>
+                    <button type="button" class="cancel" onclick="smartGoBack()">Hủy</button>
                     <button type="submit" class="save" id="saveBtn">Lưu</button>
                 </div>
             </form>
@@ -144,7 +144,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script>
-        
+        const redirectUrl = "<?php echo htmlspecialchars($redirect_url); ?>";
+        function smartGoBack() {
+            window.location.href = redirectUrl;
+        }
         document.getElementById('avatar').addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
@@ -168,16 +171,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             small.textContent = `${bio.value.length}/80`;
         });
 
-        // Xác nhận khi hủy
-        function confirmCancel() {
-            const confirmExit = confirm("Bạn có chắc muốn hủy chỉnh sửa và quay lại trang hồ sơ?");
-            if (confirmExit) {
-                window.history.back();
-            }
-        };
-        // ================================
-        // LIVE CHECK USERNAME
-        // ================================
         const saveBtn = document.getElementById("saveBtn");
 
         function setButtonState(enabled) {
