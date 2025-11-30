@@ -1,24 +1,24 @@
 <?php
-    session_start();
+session_start();
 
-    // Lấy lỗi (nếu có)
-    $errors = isset($_SESSION['register_errors']) ? $_SESSION['register_errors'] : [];
-    $inputs = isset($_SESSION['register_inputs']) ? $_SESSION['register_inputs'] : [];
+// Lấy lỗi (nếu có)
+$errors = isset($_SESSION['register_errors']) ? $_SESSION['register_errors'] : [];
+$inputs = isset($_SESSION['register_inputs']) ? $_SESSION['register_inputs'] : [];
 
-    // Lấy giá trị cũ, nếu không có thì rỗng
-    $username_attempt = isset($inputs['username']) ? htmlspecialchars($inputs['username']) : '';
-    $email_attempt = isset($inputs['email']) ? htmlspecialchars($inputs['email']) : '';
+// Lấy giá trị cũ, nếu không có thì rỗng
+$username_attempt = isset($inputs['username']) ? htmlspecialchars($inputs['username']) : '';
+$email_attempt = isset($inputs['email']) ? htmlspecialchars($inputs['email']) : '';
 
-    // Lấy lỗi cho từng trường
-    $username_error = isset($errors['username']) ? $errors['username'] : null;
-    $email_error = isset($errors['email']) ? $errors['email'] : null;
-    $password_error = isset($errors['password']) ? $errors['password'] : null;
-    $repeat_password_error = isset($errors['repeat_password']) ? $errors['repeat_password'] : null;
-    $general_error = isset($errors['general']) ? $errors['general'] : null;
+// Lấy lỗi cho từng trường
+$username_error = isset($errors['username']) ? $errors['username'] : null;
+$email_error = isset($errors['email']) ? $errors['email'] : null;
+$password_error = isset($errors['password']) ? $errors['password'] : null;
+$repeat_password_error = isset($errors['repeat_password']) ? $errors['repeat_password'] : null;
+$general_error = isset($errors['general']) ? $errors['general'] : null;
 
-    // Xóa session lỗi sau khi dùng
-    unset($_SESSION['register_errors']);
-    unset($_SESSION['register_inputs']);
+// Xóa session lỗi sau khi dùng
+unset($_SESSION['register_errors']);
+unset($_SESSION['register_inputs']);
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -40,12 +40,12 @@
             <h2>Tạo tài khoản</h2>
             <p class="subtitle">Bắt đầu hành trình của bạn bằng cách tạo tài khoản.</p>
             <?php
-                if ($general_error) {
-                    echo '<div class="error-message">' . htmlspecialchars($general_error) . '</div>';
-                }
-                ?>
+            if ($general_error) {
+                echo '<div class="error-message">' . htmlspecialchars($general_error) . '</div>';
+            }
+            ?>
             <form action="../../controller/authentification/AuthController.php?action=register" method="post">
-                
+
                 <div class="input-group">
                     <input type="text" id="username" name="username" placeholder="Username" value="<?php echo $username_attempt; ?>" class="<?php echo $username_error ? 'input-error' : ''; ?>" required>
                     <?php
@@ -59,30 +59,30 @@
                 <div class="input-group">
                     <input type="email" id="email" name="email" placeholder="Email" value="<?php echo $email_attempt; ?>" class="<?php echo $email_error ? 'input-error' : ''; ?>" required>
                     <?php
-                        // Hiển thị lỗi email
-                        if ($email_error) {
-                            echo '<div class="input-error-message">' . htmlspecialchars($email_error) . '</div>';
-                        }
+                    // Hiển thị lỗi email
+                    if ($email_error) {
+                        echo '<div class="input-error-message">' . htmlspecialchars($email_error) . '</div>';
+                    }
                     ?>
                 </div>
 
                 <div class="input-group">
                     <input type="password" id="password" name="password" placeholder="Password" class="<?php echo $password_error ? 'input-error' : ''; ?>" required required minlength="6">
                     <?php
-                        // Hiển thị lỗi password
-                        if ($password_error) {
-                            echo '<div class="input-error-message">' . htmlspecialchars($password_error) . '</div>';
-                        }
+                    // Hiển thị lỗi password
+                    if ($password_error) {
+                        echo '<div class="input-error-message">' . htmlspecialchars($password_error) . '</div>';
+                    }
                     ?>
                 </div>
 
                 <div class="input-group">
                     <input type="password" id="repeat_password" name="repeat_password" placeholder="Repeat password" class="<?php echo $repeat_password_error ? 'input-error' : ''; ?>" required required minlength="6">
-                     <?php
-                        // Hiển thị lỗi repeat_password
-                        if ($repeat_password_error) {
-                            echo '<div class="input-error-message">' . htmlspecialchars($repeat_password_error) . '</div>';
-                        }
+                    <?php
+                    // Hiển thị lỗi repeat_password
+                    if ($repeat_password_error) {
+                        echo '<div class="input-error-message">' . htmlspecialchars($repeat_password_error) . '</div>';
+                    }
                     ?>
                 </div>
 

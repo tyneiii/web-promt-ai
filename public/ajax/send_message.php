@@ -1,11 +1,12 @@
 <?php
 include_once __DIR__ . "/../../Controller/user/chat.php";
-include_once __DIR__ . "/../../config.php"; 
+include_once __DIR__ . "/../../config.php";
 header('Content-Type: application/json');
 $json_data = file_get_contents('php://input');
 $data = json_decode($json_data, true);
 if (!function_exists('checkCsrfToken')) {
-    function checkCsrfToken(string $token): bool {
+    function checkCsrfToken(string $token): bool
+    {
         return !empty($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
     }
 }
@@ -15,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($data['message']) || !isset(
     exit;
 }
 if (!checkCsrfToken($data['csrf_token'])) {
-    http_response_code(403); 
+    http_response_code(403);
     echo json_encode(['success' => false, 'error' => 'CSRF Token mismatch or missing.', 'step' => 'CSRF_CHECK']);
     exit;
 }
@@ -38,10 +39,10 @@ if (!$conn || $conn->connect_error) {
     exit;
 }
 
-if (!is_int($chat_id) || $chat_id <= 0) { 
+if (!is_int($chat_id) || $chat_id <= 0) {
     http_response_code(500);
     echo json_encode([
-        'success' => false, 
+        'success' => false,
         'step' => 'GET_CHAT_ID',
         'error' => 'Failed to retrieve or create chat ID. Chat ID returned: ' . $chat_id
     ]);
@@ -53,18 +54,17 @@ $result = saveMessage($conn, $chat_id, $account_id, $message);
 if ($result === true) {
     $conn->close();
     echo json_encode([
-        'success' => true, 
+        'success' => true,
         'chat_id' => $chat_id,
-        'message_sent' => htmlspecialchars($message) 
+        'message_sent' => htmlspecialchars($message)
     ]);
 } else {
     http_response_code(500);
     echo json_encode([
-        'success' => false, 
+        'success' => false,
         'step' => 'SAVE_MESSAGE',
         'error' => 'Failed to save message to database.',
-        'details' => $result 
+        'details' => $result
     ]);
     $conn->close();
 }
-?>
