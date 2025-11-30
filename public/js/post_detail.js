@@ -31,7 +31,7 @@ function handleAction(action, promptId, comment = null) {
         </div>
       `;
       try {
-        const response = await fetch("http://localhost:8080/web-promt-ai/api/run_api.php", { 
+        const response = await fetch("/api/run_api.php", { 
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ prompt: promptContent })
