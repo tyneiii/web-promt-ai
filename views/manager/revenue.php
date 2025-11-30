@@ -1,20 +1,13 @@
     <?php
-<<<<<<< HEAD
         include_once __DIR__ . '/../../config.php';
         include_once __DIR__ . '/../../helpers/helper.php';
         /* ==========================
    XỬ LÝ NÚT CHIA TIỀN THÁNG NÀY
     ========================== */
-=======
-    include_once __DIR__ . '/../../config.php';
-    include_once __DIR__ . '/../../helpers/helper.php';
-    // XỬ LÝ NÚT CHIA TIỀN THÁNG NÀY
->>>>>>> 8664f4e65a2988078fb8de6e68f9661c2b5321a6
     $payoutMessage = null;
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'run_payout') {
         $current_month = date("Y-m");
-<<<<<<< HEAD
         /* ====== AUTO TÍNH LOVE THÁNG HIỆN TẠI TỪ TIM THẬT ====== */
 
     /* 1. Kiểm tra xem tháng hiện tại đã có dữ liệu chưa */
@@ -48,11 +41,6 @@
     
     // 1. Kiểm tra đã chia tiền tháng này chưa
     $check = $conn->prepare("
-=======
-
-        // 1. Kiểm tra đã chia tiền tháng này chưa
-        $check = $conn->prepare("
->>>>>>> 8664f4e65a2988078fb8de6e68f9661c2b5321a6
         SELECT COUNT(*) 
         FROM user_payout 
         WHERE month_year = ?
@@ -78,7 +66,6 @@
             $userPool  = $totalRevenue * 0.6;
             $adminKeep = $totalRevenue * 0.4;
 
-<<<<<<< HEAD
         // 3. Lấy love của user cho tháng hiện tại (love_monthly)
         $sqlUsers = $conn->prepare("
             SELECT lm.account_id, a.username, lm.love_count
@@ -90,36 +77,15 @@
         $sqlUsers->bind_param("s", $current_month);
         $sqlUsers->execute();
         $rs = $sqlUsers->get_result();
-=======
-            // 3. Lấy danh sách user đủ điều kiện (tổng love >= 5)
-            $sqlUsers = "
-            SELECT 
-                a.account_id,
-                SUM(p.love_count) AS total_love
-            FROM account a
-            JOIN prompt p ON p.account_id = a.account_id
-            GROUP BY a.account_id
-            HAVING total_love >= 5
-        ";
-            $rs = $conn->query($sqlUsers);
->>>>>>> 8664f4e65a2988078fb8de6e68f9661c2b5321a6
 
             $users = [];
             $totalLove = 0;
 
-<<<<<<< HEAD
         while ($row = $rs->fetch_assoc()) {
             $row['love_count'] = (int)$row['love_count'];
             $totalLove += $row['love_count'];
             $users[] = $row;
         }
-=======
-            while ($row = $rs->fetch_assoc()) {
-                $row['total_love'] = (int)$row['total_love'];
-                $totalLove += $row['total_love'];
-                $users[] = $row;
-            }
->>>>>>> 8664f4e65a2988078fb8de6e68f9661c2b5321a6
 
             if ($totalLove == 0 || count($users) == 0) {
                 $payoutMessage = "Không có user nào đủ điều kiện (tổng love >= 5), không thể chia tiền.";
@@ -132,7 +98,6 @@
                 VALUES (?, ?, ?, ?, 'pending')
             ");
 
-<<<<<<< HEAD
             foreach ($users as $u) {
                 $money = $u['love_count'] * $moneyPerLove;
 
@@ -145,24 +110,9 @@
                 );
                 $insert->execute();
             }
-=======
-                foreach ($users as $u) {
-                    $money = $u['total_love'] * $moneyPerLove;
-
-                    $insert->bind_param(
-                        "isid",
-                        $u['account_id'],
-                        $current_month,
-                        $u['total_love'],
-                        $money
-                    );
-                    $insert->execute();
-                }
->>>>>>> 8664f4e65a2988078fb8de6e68f9661c2b5321a6
 
                 $insert->close();
 
-<<<<<<< HEAD
             // 5. Lưu vào revenue_history
             $saveRev = $conn->prepare("
                 INSERT INTO revenue_history (
@@ -205,16 +155,6 @@
             $resetClick->execute();
             $resetClick->close();
             /* ====== HẾT RESET ====== */
-=======
-                // 5. Lưu vào revenue_history
-                $saveRev = $conn->prepare("
-                INSERT INTO revenue_history (month_year, click_revenue, user_pool, total_revenue)
-                VALUES (?, ?, ?, ?)
-            ");
-                $saveRev->bind_param("sddd", $current_month, $clickRevenue, $userPool, $totalRevenue);
-                $saveRev->execute();
-                $saveRev->close();
->>>>>>> 8664f4e65a2988078fb8de6e68f9661c2b5321a6
 
                 $payoutMessage = "Đã chia tiền thành công cho tháng $current_month. Tổng user nhận tiền: "
                     . count($users)
@@ -223,8 +163,7 @@
             }
         }
     }
-<<<<<<< HEAD
-}
+
         /* ===== XUẤT CSV THEO NĂM ĐƯỢC CHỌN ===== */
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['export_csv_year'])) {
 
@@ -298,8 +237,6 @@
 
         /* Tháng đang chọn (mặc định là tháng mới nhất) */
         $selectedMonth = $_GET['payout_month'] ?? (count($months) ? $months[0] : date('Y-m'));
-=======
->>>>>>> 8664f4e65a2988078fb8de6e68f9661c2b5321a6
 
 
     /*  LẤY DANH SÁCH NĂM CÓ TRONG revenue_history  */
@@ -309,13 +246,8 @@
         $years[] = $row['y'];
     }
 
-<<<<<<< HEAD
         /* Năm đang chọn (mặc định là năm mới nhất trong DB) */
         $chartYear = $_GET['chart_year'] ?? (count($years) ? end($years) : date('Y'));
-=======
-    /* Năm đang chọn (mặc định là năm mới nhất trong DB) */
-    $selectedYear = $_GET['year'] ?? (count($years) ? end($years) : date('Y'));
->>>>>>> 8664f4e65a2988078fb8de6e68f9661c2b5321a6
 
     /*  LẤY DỮ LIỆU BIỂU ĐỒ THEO NĂM  */
     $stmtChart = $conn->prepare("
@@ -324,15 +256,9 @@
             WHERE LEFT(month_year,4) = ?
             ORDER BY month_year ASC
         ");
-<<<<<<< HEAD
         $stmtChart->bind_param("s", $chartYear);
         $stmtChart->execute();
         $chartResult = $stmtChart->get_result();
-=======
-    $stmtChart->bind_param("s", $selectedYear);
-    $stmtChart->execute();
-    $chartResult = $stmtChart->get_result();
->>>>>>> 8664f4e65a2988078fb8de6e68f9661c2b5321a6
 
     $labels = [];
     $clickRevenueData = [];
@@ -609,13 +535,8 @@
                             <div class="stat-box chart-box">
                                 <div class="chart-header">
                                     <h3>
-<<<<<<< HEAD
                                         <i class="fa-solid fa-chart-column"></i> 
                                         Biểu đồ doanh thu theo năm <?= htmlspecialchars($chartYear) ?>
-=======
-                                        <i class="fa-solid fa-chart-column"></i>
-                                        Biểu đồ doanh thu theo năm <?= htmlspecialchars($selectedYear) ?>
->>>>>>> 8664f4e65a2988078fb8de6e68f9661c2b5321a6
                                     </h3>
 
                                     <form method="get" class="year-filter">
@@ -691,7 +612,6 @@
 
                                     <table style="width:100%; border-collapse: collapse; margin-top:15px;">
                                         <thead>
-<<<<<<< HEAD
                                         <tr style="background:#333; color:white;">
                                             <th style="padding:10px; border:1px solid #444;">User ID</th>
                                             <th style="padding:10px; border:1px solid #444;">Username</th>
@@ -717,31 +637,12 @@
                                                     </tr>
                                                 <?php endwhile; ?>
                                             <?php else: ?>
-=======
-                                            <tr style="background:#333; color:white;">
-                                                <th style="padding:10px; border:1px solid #444;">User ID</th>
-                                                <th style="padding:10px; border:1px solid #444;">Username</th>
-                                                <th style="padding:10px; border:1px solid #444;">Email</th>
-                                                <th style="padding:10px; border:1px solid #444;">Love</th>
-                                                <th style="padding:10px; border:1px solid #444;">Tiền nhận (USD)</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-                                            <?php foreach ($userStats as $row):
-                                                $moneyForUser = $row['total_love'] * $moneyPerLove;
-                                            ?>
->>>>>>> 8664f4e65a2988078fb8de6e68f9661c2b5321a6
                                                 <tr>
                                                     <td colspan="5" style="text-align:center; padding:12px; color:#ccc;">
                                                         Không có user nào nhận tiền trong tháng này.
                                                     </td>
                                                 </tr>
-<<<<<<< HEAD
                                             <?php endif; ?>
-=======
-                                            <?php endforeach; ?>
->>>>>>> 8664f4e65a2988078fb8de6e68f9661c2b5321a6
                                         </tbody>
 
                                     </table>
