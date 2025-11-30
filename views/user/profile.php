@@ -158,7 +158,7 @@ $result = mysqli_query($conn, $sql);
 </button>
 
 <div class="profile-container">
-    <div class="header" style="background-image: url('../../public/img/<?= $user['bg_avatar'] ?? 'bg.png' ?>');">
+    <div class="header" style="background-image: url('<?= $user['bg_avatar'] ?? 'bg.png' ?>');">
         <img src="<?= $avatar ?>" class="avatar">
     </div>
 
