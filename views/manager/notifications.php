@@ -13,38 +13,39 @@ include_once __DIR__ . '/../../config.php';
 </head>
 
 <body>
-<div class="container">
+    <div class="container">
 
-    <?php include_once __DIR__ . '/layout/sidebar.php'; ?>
+        <?php include_once __DIR__ . '/layout/sidebar.php'; ?>
 
-    <div class="main">
+        <div class="main">
 
-        <h2>Thông báo quản trị</h2>
+            <h2>Thông báo quản trị</h2>
 
-        <?php
-        $notifs = $conn->query("
+            <?php
+            $notifs = $conn->query("
             SELECT * FROM admin_notifications
             ORDER BY created_at DESC
         ")->fetch_all(MYSQLI_ASSOC);
 
-        $conn->query("UPDATE admin_notifications SET is_read = 1 WHERE is_read = 0");
-        ?>
+            $conn->query("UPDATE admin_notifications SET is_read = 1 WHERE is_read = 0");
+            ?>
 
-        <?php if(empty($notifs)): ?>
-            <p>Không có thông báo nào.</p>
-        <?php else: ?>
-            <?php foreach($notifs as $n): ?>
-                <div class="notification-item" style="padding:12px; border-bottom:1px solid #555;">
-                    <a href="prompt_detail.php?id=<?= $n['prompt_id'] ?>" style="color:white;">
-                        <?= htmlspecialchars($n['message']) ?> • 
-                        <?= date("H:i d/m/Y", strtotime($n['created_at'])) ?>
-                    </a>
-                </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
+            <?php if (empty($notifs)): ?>
+                <p>Không có thông báo nào.</p>
+            <?php else: ?>
+                <?php foreach ($notifs as $n): ?>
+                    <div class="notification-item" style="padding:12px; border-bottom:1px solid #555;">
+                        <a href="prompt_detail.php?id=<?= $n['prompt_id'] ?>" style="color:white;">
+                            <?= htmlspecialchars($n['message']) ?> •
+                            <?= date("H:i d/m/Y", strtotime($n['created_at'])) ?>
+                        </a>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+
+        </div>
 
     </div>
-
-</div>
 </body>
+
 </html>

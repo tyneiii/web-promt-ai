@@ -92,12 +92,12 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
 <div class="detail-container">
   <button class="close-detail" onclick="goBack()">×</button>
 
-<script>
-function goBack() {
-    const previousUrl = <?= json_encode($redirect_url) ?>;
-    window.location.href = previousUrl;
-}
-</script>
+  <script>
+    function goBack() {
+      const previousUrl = <?= json_encode($redirect_url) ?>;
+      window.location.href = previousUrl;
+    }
+  </script>
 
   <div class="detail-header">
     <div class="user-info">
@@ -133,107 +133,107 @@ function goBack() {
     <?php endforeach; ?>
   </div>
 
-<div class="detail-actions">
+  <div class="detail-actions">
+    <?php if ($account_id > 0): ?>
+      <!-- Nút Thích -->
+      <button class="action-btn love-btn <?= $is_loved ? 'loved' : '' ?>"
+        data-prompt-id="<?= $id ?>"
+        data-action="love">
+        <i class="fa-heart <?= $is_loved ? 'fa-solid text-red' : 'fa-regular' ?>"></i>
+        <span class="count"><?= (int)$prompt['love_count'] ?></span>
+      </button>
+
+      <button class="action-btn">
+        <i class="fa-regular fa-comment"></i>
+        <span><?= (int)$prompt['comment_count'] ?></span>
+      </button>
+
+      <!-- Nút Lưu -->
+      <button class="action-btn save-btn <?= $is_saved ? 'saved' : '' ?>"
+        data-prompt-id="<?= $id ?>"
+        data-action="save">
+        <i class="fa-bookmark <?= $is_saved ? 'fa-solid text-blue' : 'fa-regular' ?>"></i>
+        <span class="count"><?= (int)$prompt['save_count'] ?></span>
+      </button>
+
+      <button type="button" class="run-btn" onclick="openRunModal()"
+        data-prompt="<?= htmlspecialchars($full_prompt, ENT_QUOTES) ?>">
+        Run Prompt
+      </button>
+
+    <?php else: ?>
+      <!-- Chưa đăng nhập -->
+      <button class="action-btn" onclick="requireLogin()">
+        <i class="fa-regular fa-heart"></i> <?= $prompt['love_count'] ?>
+      </button>
+      <button class="action-btn" onclick="requireLogin()">
+        <i class="fa-regular fa-bookmark"></i> <?= $prompt['save_count'] ?>
+      </button>
+      <a href="../../views/login/login.php?redirect=<?= urlencode($_SERVER['REQUEST_URI']) ?>"
+        class="run-btn">Run Prompt</a>
+    <?php endif; ?>
+  </div>
   <?php if ($account_id > 0): ?>
-    <!-- Nút Thích -->
-    <button class="action-btn love-btn <?= $is_loved ? 'loved' : '' ?>" 
-            data-prompt-id="<?= $id ?>" 
-            data-action="love">
-      <i class="fa-heart <?= $is_loved ? 'fa-solid text-red' : 'fa-regular' ?>"></i>
-      <span class="count"><?= (int)$prompt['love_count'] ?></span>
-    </button>
-
-    <button class="action-btn">
-      <i class="fa-regular fa-comment"></i> 
-      <span><?= (int)$prompt['comment_count'] ?></span>
-    </button>
-
-    <!-- Nút Lưu -->
-    <button class="action-btn save-btn <?= $is_saved ? 'saved' : '' ?>" 
-            data-prompt-id="<?= $id ?>" 
-            data-action="save">
-      <i class="fa-bookmark <?= $is_saved ? 'fa-solid text-blue' : 'fa-regular' ?>"></i>
-      <span class="count"><?= (int)$prompt['save_count'] ?></span>
-    </button>
-
-    <button type="button" class="run-btn" onclick="openRunModal()" 
-            data-prompt="<?= htmlspecialchars($full_prompt, ENT_QUOTES) ?>">
-      Run Prompt
-    </button>
-
-  <?php else: ?>
-    <!-- Chưa đăng nhập -->
-    <button class="action-btn" onclick="requireLogin()">
-      <i class="fa-regular fa-heart"></i> <?= $prompt['love_count'] ?>
-    </button>
-    <button class="action-btn" onclick="requireLogin()">
-      <i class="fa-regular fa-bookmark"></i> <?= $prompt['save_count'] ?>
-    </button>
-    <a href="../../views/login/login.php?redirect=<?= urlencode($_SERVER['REQUEST_URI']) ?>" 
-       class="run-btn">Run Prompt</a>
-  <?php endif; ?>
-</div>
-<?php if ($account_id > 0): ?>
     <div class="comment-form-new">
-        <form method="post" action="../../Controller/user/process_comment.php" class="comment-input-form">
-            <input type="hidden" name="action" value="add">
-            <input type="hidden" name="prompt_id" value="<?= $id ?>">
-            
-            <div class="input-wrapper">
-                <textarea name="comment_content" rows="1" placeholder="Viết bình luận..." required></textarea>
-                <button type="submit" class="send-btn">
-                    <i class="fa-solid fa-paper-plane"></i>
-                </button>
-            </div>
-        </form>
+      <form method="post" action="../../Controller/user/process_comment.php" class="comment-input-form">
+        <input type="hidden" name="action" value="add">
+        <input type="hidden" name="prompt_id" value="<?= $id ?>">
+
+        <div class="input-wrapper">
+          <textarea name="comment_content" rows="1" placeholder="Viết bình luận..." required></textarea>
+          <button type="submit" class="send-btn">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </div>
+      </form>
     </div>
-<?php else: ?>
+  <?php else: ?>
     <p style="text-align:center;padding:20px;background:#222;border-radius:12px;">
-        Bạn cần <a href="../../views/login/login.php?redirect=<?= urlencode($redirect_url) ?>">đăng nhập</a> để bình luận.
+      Bạn cần <a href="../../views/login/login.php?redirect=<?= urlencode($redirect_url) ?>">đăng nhập</a> để bình luận.
     </p>
-<?php endif; ?>
+  <?php endif; ?>
 
-    <div class="comments-list">
-      <?php if (empty($comments)): ?>
-        <p style="text-align:center;color:#888;padding:30px;">Chưa có bình luận nào. Hãy là người đầu tiên!</p>
-        <?php else: foreach ($comments as $c): ?>
-          <div class="comment-item">
-            <div class="comment-avatar">
-              <img src="<?= htmlspecialchars($c['avatar'] ?? 'default_avatar.png') ?>" alt="<?= htmlspecialchars($c['username']) ?>">
+  <div class="comments-list">
+    <?php if (empty($comments)): ?>
+      <p style="text-align:center;color:#888;padding:30px;">Chưa có bình luận nào. Hãy là người đầu tiên!</p>
+      <?php else: foreach ($comments as $c): ?>
+        <div class="comment-item">
+          <div class="comment-avatar">
+            <img src="<?= htmlspecialchars($c['avatar'] ?? 'default_avatar.png') ?>" alt="<?= htmlspecialchars($c['username']) ?>">
+          </div>
+          <div class="comment-body">
+            <div class="comment-header">
+              <strong><?= htmlspecialchars($c['username']) ?></strong>
+              <span class="comment-date"><?= date('d/m/Y H:i', strtotime($c['created_at'])) ?></span>
             </div>
-            <div class="comment-body">
-              <div class="comment-header">
-                <strong><?= htmlspecialchars($c['username']) ?></strong>
-                <span class="comment-date"><?= date('d/m/Y H:i', strtotime($c['created_at'])) ?></span>
-              </div>
-              <div class="comment-content"><?= nl2br(htmlspecialchars($c['content'])) ?></div>
+            <div class="comment-content"><?= nl2br(htmlspecialchars($c['content'])) ?></div>
 
-              <?php if ($account_id == $c['account_id']): ?>
-                <div class="comment-actions">
-                  <details>
-                    <summary>Sửa</summary>
-                    <form method="post" action="../../Controller/user/process_comment.php" class="edit-comment-form">
-                      <input type="hidden" name="action" value="edit">
-                      <input type="hidden" name="prompt_id" value="<?= $id ?>">
-                      <input type="hidden" name="comment_id" value="<?= $c['comment_id'] ?>">
-                      <textarea name="comment_content" required><?= htmlspecialchars($c['content']) ?></textarea>
-                      <button type="submit">Lưu</button>
-                    </form>
-                  </details>
-                  <form method="post" action="../../Controller/user/process_comment.php" onsubmit="return confirm('Xóa bình luận này?')">
-                    <input type="hidden" name="action" value="delete">
+            <?php if ($account_id == $c['account_id']): ?>
+              <div class="comment-actions">
+                <details>
+                  <summary>Sửa</summary>
+                  <form method="post" action="../../Controller/user/process_comment.php" class="edit-comment-form">
+                    <input type="hidden" name="action" value="edit">
                     <input type="hidden" name="prompt_id" value="<?= $id ?>">
                     <input type="hidden" name="comment_id" value="<?= $c['comment_id'] ?>">
-                    <button type="submit" class="btn-delete-comment">Xoá</button>
+                    <textarea name="comment_content" required><?= htmlspecialchars($c['content']) ?></textarea>
+                    <button type="submit">Lưu</button>
                   </form>
-                </div>
-              <?php endif; ?>
-            </div>
+                </details>
+                <form method="post" action="../../Controller/user/process_comment.php" onsubmit="return confirm('Xóa bình luận này?')">
+                  <input type="hidden" name="action" value="delete">
+                  <input type="hidden" name="prompt_id" value="<?= $id ?>">
+                  <input type="hidden" name="comment_id" value="<?= $c['comment_id'] ?>">
+                  <button type="submit" class="btn-delete-comment">Xoá</button>
+                </form>
+              </div>
+            <?php endif; ?>
           </div>
-      <?php endforeach;
-      endif; ?>
-    </div>
+        </div>
+    <?php endforeach;
+    endif; ?>
   </div>
+</div>
 </div>
 
 <!-- Modal Run Prompt -->

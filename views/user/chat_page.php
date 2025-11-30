@@ -117,7 +117,6 @@
                         <button type="button" id="emoji-btn" title="Chọn biểu tượng cảm xúc">
                             <i class="fa-regular fa-face-grin-squint-tears" style="color:orange;"></i>
                         </button>
-                        <!-- <span style="opacity:.6;margin-left:4px">😊</span> -->
                         <input id="messageInput" placeholder="Nhập tin nhắn ..." autocomplete="off" />
                     </div>
                     <button class="btn-send" id="sendBtn" aria-label="Gửi">Gửi</button>

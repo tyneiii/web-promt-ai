@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__ . '/../../config.php'; 
+include_once __DIR__ . '/../../config.php';
 
 header('Content-Type: application/json');
 if (!isset($conn) || $conn->connect_error) {
@@ -26,12 +26,10 @@ if ($stmt = $conn->prepare($sql)) {
     $stmt->close();
     echo json_encode([
         'success' => true,
-        'messages' => $new_messages, 
+        'messages' => $new_messages,
         'account_id' => $account_id
     ]);
-
 } else {
     http_response_code(500);
     echo json_encode(['success' => false, 'error' => 'Failed to prepare statement: ' . $conn->error]);
 }
-?>

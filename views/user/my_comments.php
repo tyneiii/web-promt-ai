@@ -13,7 +13,7 @@ $account_id = $_SESSION['account_id'];
 $comments = getUserComments($account_id, $conn);  // Lấy list comments (có author info)
 ?>
 
-<link rel="stylesheet" href="../../public/css/my_comment.css"> 
+<link rel="stylesheet" href="../../public/css/my_comment.css">
 
 <div class="my-comments-container">
     <div class="page-header">
@@ -34,14 +34,14 @@ $comments = getUserComments($account_id, $conn);  // Lấy list comments (có au
             <?php foreach ($comments as $cmt): ?>
                 <div class="comment-item-full">
                     <div class="comment-header">
-                        <!-- Avatar của người bình luận (bạn) -->
-                        <img src="../../public/img/<?= htmlspecialchars($cmt['avatar']) ?>" 
-                             alt="<?= htmlspecialchars($cmt['username']) ?>" class="comment-avatar">
+                        <!-- Avatar của người bình luận -->
+                        <img src="../../public/img/<?= htmlspecialchars($cmt['avatar']) ?>"
+                            alt="<?= htmlspecialchars($cmt['username']) ?>" class="comment-avatar">
                         <div class="user-info">
                             <strong>Bình luận của bạn: <?= htmlspecialchars($cmt['username']) ?></strong>
                             <span class="comment-date"><?= date('d/m/Y H:i', strtotime($cmt['created_at'])) ?></span>
                             <br>
-                            <em>Dưới bài viết của: <?= htmlspecialchars($cmt['author_username']) ?></em>  <!-- THÊM TÊN AUTHOR -->
+                            <em>Dưới bài viết của: <?= htmlspecialchars($cmt['author_username']) ?></em> <!-- THÊM TÊN AUTHOR -->
                         </div>
                     </div>
 
@@ -56,7 +56,6 @@ $comments = getUserComments($account_id, $conn);  // Lấy list comments (có au
                         <?= nl2br(htmlspecialchars($cmt['content'])) ?>
                     </div>
 
-                    <!-- DẤU 3 CHẤM VÀ 2 OPTIONS -->
                     <details class="comment-menu">
                         <summary title="Tùy chọn">
                             <i class="fa-solid fa-ellipsis-vertical"></i>
@@ -80,6 +79,6 @@ $comments = getUserComments($account_id, $conn);  // Lấy list comments (có au
     <?php endif; ?>
 </div>
 
-<script src="../../public/js/user_comments.js"></script>  <!-- Giữ JS cho delete và viewDetail -->
+<script src="../../public/js/user_comments.js"></script>
 
 <?php include_once __DIR__ . '/layout/footer.php'; ?>

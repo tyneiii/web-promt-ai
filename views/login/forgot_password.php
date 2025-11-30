@@ -21,11 +21,11 @@ session_start();
             <h2>Quên Mật Khẩu</h2>
             <form action="../../controller/authentification/AuthController.php?action=forgot_password" method="post">
                 <div class="input-group">
-                    <input type="email" id="email" name="email" placeholder="Email"  class="<?php echo $email_error ? 'input-error' : ''; ?>" required>
+                    <input type="email" id="email" name="email" placeholder="Email" class="<?php echo $email_error ? 'input-error' : ''; ?>" required>
                 </div>
                 <button type="submit" class="auth-btn" name="forgot">Lấy lại mật khẩu</button>
-            </form>      
-    </div>
+            </form>
+        </div>
 </body>
 
 </html>

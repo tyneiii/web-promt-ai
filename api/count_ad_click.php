@@ -10,23 +10,19 @@ if (!isset($conn) || $conn->connect_error) {
 $metric_id = isset($_GET['ad']) ? (int)$_GET['ad'] : 1;
 $landing_url = "https://www.thegioididong.com/";
 
-// số tiền mỗi click (bạn thay theo ý)
-$revenue_per_click = 1; // vì last_month_revenue là DECIMAL(10,0), bạn dùng số nguyên
+// số tiền mỗi click 
+$revenue_per_click = 1; // vì last_month_revenue là DECIMAL(10,0), dùng số nguyên
 
 
-/* =====================================================
-   1. KIỂM TRA metric_id ĐÃ TỒN TẠI CHƯA
-===================================================== */
+//1. KIỂM TRA metric_id ĐÃ TỒN TẠI CHƯA
+
 
 $check = $conn->prepare("SELECT metric_id FROM revenuemetrics WHERE metric_id = ?");
 $check->bind_param("i", $metric_id);
 $check->execute();
 $result = $check->get_result();
 
-
-/* =====================================================
-   2. NẾU KHÔNG TỒN TẠI → TẠO MỚI
-===================================================== */
+   //2. NẾU KHÔNG TỒN TẠI -> TẠO MỚI
 
 if ($result->num_rows === 0) {
 
@@ -46,10 +42,7 @@ if ($result->num_rows === 0) {
 
 $check->close();
 
-
-/* =====================================================
-   3. NẾU ĐÃ TỒN TẠI → UPDATE
-===================================================== */
+   // 3. NẾU ĐÃ TỒN TẠI -> UPDATE
 
 $update = $conn->prepare("
     UPDATE revenuemetrics

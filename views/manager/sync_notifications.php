@@ -1,7 +1,7 @@
 <?php
 include_once __DIR__ . '/../../config.php';
 
-// Đồng bộ bài waiting → Thông báo admin
+// Đồng bộ bài waiting -> Thông báo admin
 $conn->query("
     INSERT INTO admin_notifications (type, prompt_id, message, is_read, created_at)
     SELECT 
@@ -14,7 +14,7 @@ $conn->query("
     WHERE status = 'waiting'
 ");
 
-// Đồng bộ bài report → Thông báo admin
+// Đồng bộ bài report -> Thông báo admin
 $conn->query("
     INSERT INTO admin_notifications (type, prompt_id, message, is_read, created_at)
     SELECT 
@@ -28,4 +28,3 @@ $conn->query("
 ");
 
 echo "Đã đồng bộ toàn bộ thông báo từ bài viết waiting + report!";
-?>

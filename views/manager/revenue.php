@@ -1,43 +1,41 @@
     <?php
-        include_once __DIR__ . '/../../config.php';
-        include_once __DIR__ . '/../../helpers/helper.php';
-        /* ==========================
-   XỬ LÝ NÚT CHIA TIỀN THÁNG NÀY
-========================== */
-$payoutMessage = null;
+    include_once __DIR__ . '/../../config.php';
+    include_once __DIR__ . '/../../helpers/helper.php';
+    // XỬ LÝ NÚT CHIA TIỀN THÁNG NÀY
+    $payoutMessage = null;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'run_payout') {
-    $current_month = date("Y-m");
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'run_payout') {
+        $current_month = date("Y-m");
 
-    // 1. Kiểm tra đã chia tiền tháng này chưa
-    $check = $conn->prepare("
+        // 1. Kiểm tra đã chia tiền tháng này chưa
+        $check = $conn->prepare("
         SELECT COUNT(*) 
         FROM user_payout 
         WHERE month_year = ?
     ");
-    $check->bind_param("s", $current_month);
-    $check->execute();
-    $check->bind_result($exists);
-    $check->fetch();
-    $check->close();
+        $check->bind_param("s", $current_month);
+        $check->execute();
+        $check->bind_result($exists);
+        $check->fetch();
+        $check->close();
 
-    if ($exists > 0) {
-        $payoutMessage = "❌ Tháng $current_month đã chia tiền trước đó, không thể chia lại.";
-    } else {
-        // 2. Lấy doanh thu tháng hiện tại từ revenuemetrics
-        $res = $conn->query("SELECT current_month_clicks FROM revenuemetrics WHERE metric_id = 1");
-        $data = $res->fetch_assoc();
+        if ($exists > 0) {
+            $payoutMessage = "Tháng $current_month đã chia tiền trước đó, không thể chia lại.";
+        } else {
+            // 2. Lấy doanh thu tháng hiện tại từ revenuemetrics
+            $res = $conn->query("SELECT current_month_clicks FROM revenuemetrics WHERE metric_id = 1");
+            $data = $res->fetch_assoc();
 
-        $clicks = $data['current_month_clicks'] ?? 0;
-        $clickRevenue = $clicks * 0.1;
-        $fixedRevenue = 200;
-        $totalRevenue = $clickRevenue + $fixedRevenue;
+            $clicks = $data['current_month_clicks'] ?? 0;
+            $clickRevenue = $clicks * 0.1;
+            $fixedRevenue = 200;
+            $totalRevenue = $clickRevenue + $fixedRevenue;
 
-        $userPool  = $totalRevenue * 0.6;
-        $adminKeep = $totalRevenue * 0.4;
+            $userPool  = $totalRevenue * 0.6;
+            $adminKeep = $totalRevenue * 0.4;
 
-        // 3. Lấy danh sách user đủ điều kiện (tổng love >= 5)
-        $sqlUsers = "
+            // 3. Lấy danh sách user đủ điều kiện (tổng love >= 5)
+            $sqlUsers = "
             SELECT 
                 a.account_id,
                 SUM(p.love_count) AS total_love
@@ -46,98 +44,98 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             GROUP BY a.account_id
             HAVING total_love >= 5
         ";
-        $rs = $conn->query($sqlUsers);
+            $rs = $conn->query($sqlUsers);
 
-        $users = [];
-        $totalLove = 0;
+            $users = [];
+            $totalLove = 0;
 
-        while ($row = $rs->fetch_assoc()) {
-            $row['total_love'] = (int)$row['total_love'];
-            $totalLove += $row['total_love'];
-            $users[] = $row;
-        }
+            while ($row = $rs->fetch_assoc()) {
+                $row['total_love'] = (int)$row['total_love'];
+                $totalLove += $row['total_love'];
+                $users[] = $row;
+            }
 
-        if ($totalLove == 0 || count($users) == 0) {
-            $payoutMessage = "❌ Không có user nào đủ điều kiện (tổng love >= 5), không thể chia tiền.";
-        } else {
-            $moneyPerLove = $userPool / $totalLove;
+            if ($totalLove == 0 || count($users) == 0) {
+                $payoutMessage = "Không có user nào đủ điều kiện (tổng love >= 5), không thể chia tiền.";
+            } else {
+                $moneyPerLove = $userPool / $totalLove;
 
-            // 4. Insert vào user_payout
-            $insert = $conn->prepare("
+                // 4. Insert vào user_payout
+                $insert = $conn->prepare("
                 INSERT INTO user_payout (account_id, month_year, love_in_month, money_received, status)
                 VALUES (?, ?, ?, ?, 'pending')
             ");
 
-            foreach ($users as $u) {
-                $money = $u['total_love'] * $moneyPerLove;
+                foreach ($users as $u) {
+                    $money = $u['total_love'] * $moneyPerLove;
 
-                $insert->bind_param(
-                    "isid",
-                    $u['account_id'],
-                    $current_month,
-                    $u['total_love'],
-                    $money
-                );
-                $insert->execute();
-            }
+                    $insert->bind_param(
+                        "isid",
+                        $u['account_id'],
+                        $current_month,
+                        $u['total_love'],
+                        $money
+                    );
+                    $insert->execute();
+                }
 
-            $insert->close();
+                $insert->close();
 
-            // 5. Lưu vào revenue_history
-            $saveRev = $conn->prepare("
+                // 5. Lưu vào revenue_history
+                $saveRev = $conn->prepare("
                 INSERT INTO revenue_history (month_year, click_revenue, user_pool, total_revenue)
                 VALUES (?, ?, ?, ?)
             ");
-            $saveRev->bind_param("sddd", $current_month, $clickRevenue, $userPool, $totalRevenue);
-            $saveRev->execute();
-            $saveRev->close();
+                $saveRev->bind_param("sddd", $current_month, $clickRevenue, $userPool, $totalRevenue);
+                $saveRev->execute();
+                $saveRev->close();
 
-            $payoutMessage = "✅ Đã chia tiền thành công cho tháng $current_month. Tổng user nhận tiền: " 
-                           . count($users) 
-                           . " | Money per love: " 
-                           . number_format($moneyPerLove, 4) . " USD";
+                $payoutMessage = "Đã chia tiền thành công cho tháng $current_month. Tổng user nhận tiền: "
+                    . count($users)
+                    . " | Money per love: "
+                    . number_format($moneyPerLove, 4) . " USD";
+            }
         }
     }
-}
 
 
-        /* ====== LẤY DANH SÁCH NĂM CÓ TRONG revenue_history ====== */
-        $years = [];
-        $yearRes = $conn->query("SELECT DISTINCT LEFT(month_year,4) AS y FROM revenue_history ORDER BY y ASC");
-        while ($row = $yearRes->fetch_assoc()) {
-            $years[] = $row['y'];
-        }
+    /*  LẤY DANH SÁCH NĂM CÓ TRONG revenue_history  */
+    $years = [];
+    $yearRes = $conn->query("SELECT DISTINCT LEFT(month_year,4) AS y FROM revenue_history ORDER BY y ASC");
+    while ($row = $yearRes->fetch_assoc()) {
+        $years[] = $row['y'];
+    }
 
-        /* Năm đang chọn (mặc định là năm mới nhất trong DB) */
-        $selectedYear = $_GET['year'] ?? (count($years) ? end($years) : date('Y'));
+    /* Năm đang chọn (mặc định là năm mới nhất trong DB) */
+    $selectedYear = $_GET['year'] ?? (count($years) ? end($years) : date('Y'));
 
-        /* ====== LẤY DỮ LIỆU BIỂU ĐỒ THEO NĂM ====== */
-        $stmtChart = $conn->prepare("
+    /*  LẤY DỮ LIỆU BIỂU ĐỒ THEO NĂM  */
+    $stmtChart = $conn->prepare("
             SELECT month_year, click_revenue, user_pool, total_revenue
             FROM revenue_history
             WHERE LEFT(month_year,4) = ?
             ORDER BY month_year ASC
         ");
-        $stmtChart->bind_param("s", $selectedYear);
-        $stmtChart->execute();
-        $chartResult = $stmtChart->get_result();
+    $stmtChart->bind_param("s", $selectedYear);
+    $stmtChart->execute();
+    $chartResult = $stmtChart->get_result();
 
-        $labels = [];
-        $clickRevenueData = [];
-        $userPoolData = [];
-        $totalRevenueData = [];
+    $labels = [];
+    $clickRevenueData = [];
+    $userPoolData = [];
+    $totalRevenueData = [];
 
-        while ($row = $chartResult->fetch_assoc()) {
-            // month_year dạng 2025-01 -> label chỉ hiển thị "01", "02", ...
-            $parts = explode('-', $row['month_year']);
-            $labels[] = $parts[1] . '/' . $parts[0];   // "01/2025"
-            $clickRevenueData[] = (float)$row['click_revenue'];
-            $userPoolData[] = (float)$row['user_pool'];
-            $totalRevenueData[] = (float)$row['total_revenue'];
-        }
-        $stmtChart->close();
+    while ($row = $chartResult->fetch_assoc()) {
+        // month_year dạng 2025-01 -> label chỉ hiển thị "01", "02", ...
+        $parts = explode('-', $row['month_year']);
+        $labels[] = $parts[1] . '/' . $parts[0];   // "01/2025"
+        $clickRevenueData[] = (float)$row['click_revenue'];
+        $userPoolData[] = (float)$row['user_pool'];
+        $totalRevenueData[] = (float)$row['total_revenue'];
+    }
+    $stmtChart->close();
 
-        /* ====== phần tính toán doanh thu hiện tại, chia tiền user... 
+    /* ====== phần tính toán doanh thu hiện tại, chia tiền user... 
         (giữ nguyên như bạn đã làm trước đó) 
         ===== */
     ?>
@@ -145,6 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     <!DOCTYPE html>
     <html lang="vi">
+
     <head>
         <meta charset="UTF-8">
         <title>Doanh thu</title>
@@ -170,8 +169,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 color: #ff4d4d;
                 font-weight: bold;
             }
+
             .chart-box {
-                height: 320px;                 /* bạn có thể chỉnh 280–340 tùy ý */
+                height: 320px;
                 display: flex;
                 flex-direction: column;
             }
@@ -199,9 +199,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             }
 
             .chart-scroll-wrapper canvas {
-                min-width: 900px;              /* đủ cho 12 tháng */
+                min-width: 900px;
                 height: 100% !important;
             }
+
             .stat-box {
                 background: #1c1c1c;
                 padding: 16px;
@@ -336,7 +337,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <?php endif; ?>
 
                 <div style="margin: 0 25px 10px 25px;">
-                    <form method="post" 
+                    <form method="post"
                         onsubmit="return confirm('Bạn chắc chắn muốn CHIA TIỀN cho tháng hiện tại? Hành động này không thể hoàn tác.');">
                         <input type="hidden" name="action" value="run_payout">
                         <button type="submit" style="
@@ -367,12 +368,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                 <p><strong>Doanh thu cố định:</strong> 200 USD</p>
                                 <p class="stat-highlight"><strong>Tổng doanh thu:</strong> <?= number_format($totalRevenue, 2) ?> USD</p>
                             </div>
-                            
+
 
                             <div class="stat-box chart-box">
                                 <div class="chart-header">
                                     <h3>
-                                        <i class="fa-solid fa-chart-column"></i> 
+                                        <i class="fa-solid fa-chart-column"></i>
                                         Biểu đồ doanh thu theo năm <?= htmlspecialchars($selectedYear) ?>
                                     </h3>
 
@@ -404,7 +405,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                 </p>
 
                             </div>
-                            
+
                             <div class="stat-box" style="margin-top:25px;">
                                 <h3><i class="fa-solid fa-users"></i> Danh sách user nhận tiền trong tháng</h3>
 
@@ -413,17 +414,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                 <?php else: ?>
                                     <table style="width:100%; border-collapse: collapse; margin-top:15px;">
                                         <thead>
-                                        <tr style="background:#333; color:white;">
-                                            <th style="padding:10px; border:1px solid #444;">User ID</th>
-                                            <th style="padding:10px; border:1px solid #444;">Username</th>
-                                            <th style="padding:10px; border:1px solid #444;">Email</th>
-                                            <th style="padding:10px; border:1px solid #444;">Love</th>
-                                            <th style="padding:10px; border:1px solid #444;">Tiền nhận (USD)</th>
-                                        </tr>
+                                            <tr style="background:#333; color:white;">
+                                                <th style="padding:10px; border:1px solid #444;">User ID</th>
+                                                <th style="padding:10px; border:1px solid #444;">Username</th>
+                                                <th style="padding:10px; border:1px solid #444;">Email</th>
+                                                <th style="padding:10px; border:1px solid #444;">Love</th>
+                                                <th style="padding:10px; border:1px solid #444;">Tiền nhận (USD)</th>
+                                            </tr>
                                         </thead>
 
                                         <tbody>
-                                            <?php foreach ($userStats as $row): 
+                                            <?php foreach ($userStats as $row):
                                                 $moneyForUser = $row['total_love'] * $moneyPerLove;
                                             ?>
                                                 <tr>
@@ -434,7 +435,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                                     <td style="color:#00e676;"><?= number_format($moneyForUser, 2) ?> USD</td>
                                                 </tr>
                                             <?php endforeach; ?>
-                                            </tbody>
+                                        </tbody>
 
                                     </table>
                                 <?php endif; ?>
@@ -447,106 +448,118 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             </div>
         </div>
         <script>
-        const ctx = document.getElementById('revenueChart').getContext('2d');
+            const ctx = document.getElementById('revenueChart').getContext('2d');
 
-        const labels = <?= json_encode($labels) ?>;
-        const clickRevenueData = <?= json_encode($clickRevenueData) ?>;
-        const userPoolData = <?= json_encode($userPoolData) ?>;
-        const totalRevenueData = <?= json_encode($totalRevenueData) ?>;
+            const labels = <?= json_encode($labels) ?>;
+            const clickRevenueData = <?= json_encode($clickRevenueData) ?>;
+            const userPoolData = <?= json_encode($userPoolData) ?>;
+            const totalRevenueData = <?= json_encode($totalRevenueData) ?>;
 
-        const revenueChart = new Chart(ctx, {
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        type: 'bar',
-                        label: 'Doanh thu click',
-                        data: clickRevenueData,
-                        backgroundColor: 'rgba(255, 0, 0, 0.7)',      // cột đỏ
-                        borderColor: 'rgba(180, 0, 0, 1)',
-                        borderWidth: 1,
-                        yAxisID: 'y'
-                    },
-                    {
-                        type: 'bar',
-                        label: 'User Pool (60%)',
-                        data: userPoolData,
-                        backgroundColor: 'rgba(200, 200, 200, 0.8)',  // cột xám
-                        borderColor: 'rgba(150, 150, 150, 1)',
-                        borderWidth: 1,
-                        yAxisID: 'y'
-                    },
-                    {
-                        type: 'line',
-                        label: 'Tổng doanh thu',
-                        data: totalRevenueData,
-                        borderColor: 'rgba(0, 122, 255, 1)',          // đường xanh
-                        backgroundColor: 'rgba(0, 122, 255, 0.2)',
-                        borderWidth: 3,
-                        tension: 0.3,
-                        pointRadius: 4,
-                        pointBackgroundColor: 'rgba(0, 122, 255, 1)',
-                        yAxisID: 'y1'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
+            const revenueChart = new Chart(ctx, {
+                data: {
+                    labels: labels,
+                    datasets: [{
+                            type: 'bar',
+                            label: 'Doanh thu click',
+                            data: clickRevenueData,
+                            backgroundColor: 'rgba(255, 0, 0, 0.7)', // cột đỏ
+                            borderColor: 'rgba(180, 0, 0, 1)',
+                            borderWidth: 1,
+                            yAxisID: 'y'
+                        },
+                        {
+                            type: 'bar',
+                            label: 'User Pool (60%)',
+                            data: userPoolData,
+                            backgroundColor: 'rgba(200, 200, 200, 0.8)', // cột xám
+                            borderColor: 'rgba(150, 150, 150, 1)',
+                            borderWidth: 1,
+                            yAxisID: 'y'
+                        },
+                        {
+                            type: 'line',
+                            label: 'Tổng doanh thu',
+                            data: totalRevenueData,
+                            borderColor: 'rgba(0, 122, 255, 1)', // đường xanh
+                            backgroundColor: 'rgba(0, 122, 255, 0.2)',
+                            borderWidth: 3,
+                            tension: 0.3,
+                            pointRadius: 4,
+                            pointBackgroundColor: 'rgba(0, 122, 255, 1)',
+                            yAxisID: 'y1'
+                        }
+                    ]
                 },
-                stacked: false,
-                scales: {
-                    y: {
-                        position: 'left',
-                        beginAtZero: true,
-                        grid: { color: "#444" },
-                        ticks: { color: "white" },
-                        title: {
-                            display: true,
-                            text: 'USD (Cột)',
-                            color: '#fff'
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    stacked: false,
+                    scales: {
+                        y: {
+                            position: 'left',
+                            beginAtZero: true,
+                            grid: {
+                                color: "#444"
+                            },
+                            ticks: {
+                                color: "white"
+                            },
+                            title: {
+                                display: true,
+                                text: 'USD (Cột)',
+                                color: '#fff'
+                            }
+                        },
+                        y1: {
+                            position: 'right',
+                            beginAtZero: true,
+                            grid: {
+                                drawOnChartArea: false
+                            },
+                            ticks: {
+                                color: "white"
+                            },
+                            title: {
+                                display: true,
+                                text: 'USD (Đường)',
+                                color: '#fff'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: "white",
+                                autoSkip: false,
+                                maxRotation: 60,
+                                minRotation: 60
+                            }
                         }
                     },
-                    y1: {
-                        position: 'right',
-                        beginAtZero: true,
-                        grid: { drawOnChartArea: false },
-                        ticks: { color: "white" },
-                        title: {
-                            display: true,
-                            text: 'USD (Đường)',
-                            color: '#fff'
-                        }
-                    },
-                    x: {
-                        grid: { display: false },
-                        ticks: {
-                            color: "white",
-                            autoSkip: false,
-                            maxRotation: 60,
-                            minRotation: 60
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        labels: { color: "white" }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(ctx) {
-                                return ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(2) + ' USD';
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: "white"
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    return ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(2) + ' USD';
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
-    </script>
+            });
+        </script>
 
 
     </body>
+
     </html>

@@ -17,7 +17,7 @@ if ($prompt_id <= 0 || $action === '') {
     exit;
 }
 
-// Kiểm tra đăng nhập: DÙNG account_id theo login của bạn
+// Kiểm tra đăng nhập: DÙNG account_id 
 if (!isset($_SESSION['account_id'])) {
     echo "<script>alert('Bạn cần đăng nhập để thực hiện thao tác này'); window.location.href='../login/login.php';</script>";
     exit;

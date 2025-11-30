@@ -73,9 +73,8 @@ $followingCountQuery->bind_result($followingCount);
 $followingCountQuery->fetch();
 $followingCountQuery->close();
 
-/* ==========================
-   LẤY THU NHẬP THÁNG HIỆN TẠI
-========================== */
+// LẤY THU NHẬP THÁNG HIỆN TẠI
+
 $sql_bank = "SELECT * FROM userpayoutinfo WHERE account_id = $acc_id";
 $bank_res = mysqli_query($conn, $sql_bank);
 $bankInfo = mysqli_fetch_assoc($bank_res);
@@ -292,7 +291,7 @@ $result = mysqli_query($conn, $sql);
         followBtn.addEventListener("click", function(e) {
             e.preventDefault();
 
-            // 🔥 Đổi UI ngay lập tức
+            // Đổi UI ngay lập tức
             isFollowing = !isFollowing;
             updateButton();
 
@@ -335,39 +334,38 @@ $result = mysqli_query($conn, $sql);
     function confirmCancel() {
         window.location.href = "home.php";
     }
-    /* =================================
-    XỬ LÝ CUSTOM DROPDOWN MENU
-================================= */
-document.addEventListener("DOMContentLoaded", () => {
-    const toggleButton = document.querySelector('.custom-menu-toggle');
-    const optionsList = toggleButton?.querySelector('.dropdown-options');
-    const profileId = <?= $profile_id ?>;
+    // XỬ LÝ CUSTOM DROPDOWN MENU
 
-    if (toggleButton && optionsList) {
-        // 1. Mở/Đóng Menu khi click vào tab
-        toggleButton.addEventListener('click', (e) => {
-            e.stopPropagation(); 
-            const isVisible = optionsList.style.display === 'block';
-            optionsList.style.display = isVisible ? 'none' : 'block';
-            const arrow = toggleButton.querySelector('.dropdown-arrow');
-            arrow.style.transform = isVisible ? 'rotate(0deg)' : 'rotate(180deg)';
-        });
+    document.addEventListener("DOMContentLoaded", () => {
+        const toggleButton = document.querySelector('.custom-menu-toggle');
+        const optionsList = toggleButton?.querySelector('.dropdown-options');
+        const profileId = <?= $profile_id ?>;
 
-        optionsList.addEventListener('click', (e) => {
-            if (e.target.tagName === 'LI' && e.target.dataset.value) {
-                const selectedValue = e.target.dataset.value;
-                window.location.href = `?id=${profileId}&tab=${selectedValue}`;
-                optionsList.style.display = 'none'; 
-            }
-        });
+        if (toggleButton && optionsList) {
+            // 1. Mở/Đóng Menu khi click vào tab
+            toggleButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isVisible = optionsList.style.display === 'block';
+                optionsList.style.display = isVisible ? 'none' : 'block';
+                const arrow = toggleButton.querySelector('.dropdown-arrow');
+                arrow.style.transform = isVisible ? 'rotate(0deg)' : 'rotate(180deg)';
+            });
 
-        document.addEventListener('click', () => {
-            optionsList.style.display = 'none';
-            const arrow = toggleButton.querySelector('.dropdown-arrow');
-            if (arrow) {
-                arrow.style.transform = 'rotate(0deg)';
-            }
-        });
-    }
-});
+            optionsList.addEventListener('click', (e) => {
+                if (e.target.tagName === 'LI' && e.target.dataset.value) {
+                    const selectedValue = e.target.dataset.value;
+                    window.location.href = `?id=${profileId}&tab=${selectedValue}`;
+                    optionsList.style.display = 'none';
+                }
+            });
+
+            document.addEventListener('click', () => {
+                optionsList.style.display = 'none';
+                const arrow = toggleButton.querySelector('.dropdown-arrow');
+                if (arrow) {
+                    arrow.style.transform = 'rotate(0deg)';
+                }
+            });
+        }
+    });
 </script>
