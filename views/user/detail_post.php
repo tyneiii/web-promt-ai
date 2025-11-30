@@ -6,33 +6,33 @@ include_once __DIR__ . '/../../Controller/user/prompt.php';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $account_id = $_SESSION['account_id'] ?? 0;
-$redirect_url = $_SERVER['REQUEST_URI'];
+$url = $_SERVER['REQUEST_URI'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($account_id <= 0) {
-    $_SESSION['redirect_after_login'] = $redirect_url;
+    $_SESSION['redirect_after_login'] = $url;
     header("Location: ../../views/login/login.php");
     exit;
   }
 
   if (isset($_POST['loveBtn'])) {
     lovePrompt($account_id, $id, $conn);
-    header("Location: " . $redirect_url);
+    header("Location: " . $url);
     exit;
   }
 
   if (isset($_POST['saveBtn'])) {
     savePrompt($account_id, $id, $conn);
-    header("Location: " . $redirect_url);
+    header("Location: " . $url);
     exit;
   }
 
-  if (isset($_POST['out-btn'])) {
-    $_SESSION = [];
-    session_destroy();
-    header("Location: home.php");
-    exit;
-  }
+  // if (isset($_POST['out-btn'])) {
+  //   $_SESSION = [];
+  //   session_destroy();
+  //   header("Location: home.php");
+  //   exit;
+  // }
 }
 
 if ($id <= 0) {
@@ -138,18 +138,15 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
       <i class="fa-bookmark <?= $is_saved ? 'fa-solid text-blue' : 'fa-regular' ?>"></i> <?= (int)$prompt['save_count'] ?>
     </button>
 
-    <!-- ĐÃ ĐĂNG NHẬP → cho phép mở modal chạy prompt -->
     <button type="button" class="run-btn" title="Xem kết quả" onclick="openRunModal()" 
             data-prompt="<?= htmlspecialchars($full_prompt, ENT_QUOTES) ?>">
       ⚡ Run Prompt
     </button>
 
   <?php else: ?>
-    <!-- CHƯA ĐĂNG NHẬP → các nút bị disable + Run Prompt chuyển hướng login -->
     <button class="love disabled" title="Đăng nhập để thích"><i class="fa-regular fa-heart"></i> <?= (int)$prompt['love_count'] ?></button>
     <button class="save disabled" title="Đăng nhập để lưu"><i class="fa-regular fa-bookmark"></i> <?= (int)$prompt['save_count'] ?></button>
 
-    <!-- Nút Run Prompt khi chưa đăng nhập → chuyển hướng login -->
     <a href="../../views/login/login.php?redirect=<?= urlencode($_SERVER['REQUEST_URI']) ?>" 
        class="run-btn" 
        title="Đăng nhập để chạy prompt"
