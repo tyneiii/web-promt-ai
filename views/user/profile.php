@@ -149,6 +149,7 @@ $result = mysqli_query($conn, $sql);
 ?>
 
 <link rel="stylesheet" href="../../public/css/user/profile.css">
+<link rel="stylesheet" href="../../public/css/user/home.css">
 
 <button id="back-btn" class="back-btn" onclick="confirmCancel()">
     <i class="fa-solid fa-arrow-left"></i>
@@ -173,11 +174,21 @@ $result = mysqli_query($conn, $sql);
 
             <?php else: ?>
                 <form action="edit_profile.php">
-                    <input type="submit" value="Sửa hồ sơ" class="edit-btn">
+                    <button type="submit" class="edit-btn">
+                        <i class="fa-solid fa-pencil"></i> Sửa hồ sơ
+                    </button>
                 </form>
                 <form action="create_post.php">
-                    <input type="submit" value="📝 Viết bài" class="add-btn">
+                    <button type="submit" class="add-btn">
+                        <i class="fa-solid fa-circle-plus"></i> Viết bài
+                    </button>
                 </form>
+                <?php if ($bankInfo): ?>
+                    <a href="edit_bank_info.php"
+                        class="bank-btn">
+                        <i class="fa-solid fa-sack-dollar"></i> Ngân hàng
+                    </a>
+                <?php endif; ?>
             <?php endif; ?>
         </div>
     </div>
@@ -188,32 +199,31 @@ $result = mysqli_query($conn, $sql);
     </div>
 
     <?php if ($acc_id === $profile_id): ?>
-    <div class="stats" style="margin-top: 10px; font-size: 18px;">
+        <div class="stats" style="margin-top: 10px; font-size: 18px;">
 
-        <?php if ($bankInfo): ?>
-            <!-- ĐÃ CÓ THÔNG TIN NGÂN HÀNG -->
-            <span>💰 <strong><?= number_format($earnedMoney, 2) ?> USD</strong> / tháng này</span>
-        <a href="edit_bank_info.php"
-               style="padding:6px 12px; background:#007bff; color:white; 
-                      border-radius:6px; text-decoration:none; font-size:12px;">
-                ✎
-            </a>
-        <?php else: ?>
-            <!-- CHƯA CÓ BANK INFO → ĐIỀN NGAY -->
-            <a href="edit_bank_info.php" style="color: blue; text-decoration: underline;">
-                🔔 Bạn chưa cập nhật thông tin ngân hàng – Nhấn để điền
-            </a>
-        <?php endif; ?>
+            <?php if ($bankInfo): ?>
+                <!-- ĐÃ CÓ THÔNG TIN NGÂN HÀNG -->
+                <span>💰 <strong><?= number_format($earnedMoney, 2) ?> USD</strong> / tháng này</span>
 
-    </div>
-<?php endif; ?>
+            <?php else: ?>
+                <!-- CHƯA CÓ BANK INFO → ĐIỀN NGAY -->
+                <a href="edit_bank_info.php" style="text-decoration:none; color: #2e2c2c" class="item-link">
+                    <div class="item">
+                        🔔 Bạn chưa cập nhật thông tin ngân hàng – Nhấn để điền
+                    </div>
+                </a>
+
+            <?php endif; ?>
+
+        </div>
+    <?php endif; ?>
 
     <p class="bio"><?= $user['description'] ?? 'Chưa có tiểu sử.' ?></p>
 
     <div class="tabs">
-        <a href="?id=<?= $profile_id ?>&tab=posts" class="tab <?= $tab === 'posts' ? 'active' : '' ?>">🔁 Bài viết</a>
-        <a href="?id=<?= $profile_id ?>&tab=favorites" class="tab <?= $tab === 'favorites' ? 'active' : '' ?>">❤️ Yêu thích</a>
-        <a href="?id=<?= $profile_id ?>&tab=saves" class="tab <?= $tab === 'saves' ? 'active' : '' ?>">🔖 Đã lưu</a>
+        <a href="?id=<?= $profile_id ?>&tab=posts" class="tab <?= $tab === 'posts' ? 'active' : '' ?>"><i class="fa-solid fa-file-lines"></i> Bài viết</a>
+        <a href="?id=<?= $profile_id ?>&tab=favorites" class="tab <?= $tab === 'favorites' ? 'active' : '' ?>"><i class="fa-solid fa-heart"></i> Yêu thích</a>
+        <a href="?id=<?= $profile_id ?>&tab=saves" class="tab <?= $tab === 'saves' ? 'active' : '' ?>"><i class="fa-solid fa-bookmark"></i> Đã lưu</a>
     </div>
 </div>
 
@@ -297,7 +307,7 @@ $result = mysqli_query($conn, $sql);
                     // Cập nhật số follower / following
                     document.getElementById("follower-count").textContent = data.followerCount;
                     document.getElementById("following-count").textContent = data.followingCount;
-                    
+
                 })
                 .catch(err => {
                     console.error(err);
@@ -305,12 +315,13 @@ $result = mysqli_query($conn, $sql);
                     isFollowing = !isFollowing;
                     updateButton();
                 });
-                setTimeout(() => {
-                        document.location.reload();
-                    }, 0);
+            setTimeout(() => {
+                document.location.reload();
+            }, 0);
         });
     });
+
     function confirmCancel() {
-            window.location.href = "home.php";
+        window.location.href = "home.php";
     }
 </script>
