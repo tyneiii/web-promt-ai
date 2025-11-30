@@ -87,6 +87,13 @@ $stmt_cmt = $conn->prepare($sql_cmt);
 $stmt_cmt->bind_param("i", $id);
 $stmt_cmt->execute();
 $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+$redirect_url ="";
+if (isset($_SESSION['previous_url']) && !empty($_SESSION['previous_url'])) {
+    $redirect_url = $_SESSION['previous_url'];
+} else {
+    $redirect_url = "home.php"; 
+}
 ?>
 
 <div class="detail-container">
@@ -229,6 +236,11 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
 <div id="resultBox" style="display:none;"></div>
 
 <script>
+
+    const redirectUrl = "<?php echo htmlspecialchars($redirect_url); ?>";
+    function smartGoBack() {
+        window.location.href = redirectUrl;
+    }
   function requireLogin() {
     if (confirm('Bạn cần đăng nhập để thực hiện hành động này!')) {
       location.href = '../../views/login/login.php?redirect=<?= urlencode($redirect_url) ?>';
@@ -249,29 +261,6 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
     runPrompt(prompt); // Hàm từ run_api.js
     closeRunModal();
   }
-</script>
-<script>
-function smartGoBack() {
-    // Ưu tiên 1: Dùng sessionStorage (chính xác tuyệt đối - lưu từ trang danh sách)
-    const cameFrom = sessionStorage.getItem('lastListPage');
-    if (cameFrom) {
-        sessionStorage.removeItem('lastListPage'); // dọn rác
-        window.location.href = cameFrom;
-        return;
-    }
-
-    // Ưu tiên 2: Dùng referrer (nếu có và cùng domain)
-    if (document.referrer && 
-        (document.referrer.includes(location.hostname) || 
-         document.referrer.includes('localhost') || 
-         document.referrer.includes('127.0.0.1'))) {
-        window.location.href = document.referrer;
-        return;
-    }
-
-    // Ưu tiên 3: Về trang chủ
-    window.location.href = '../user/home.php';
-}
 </script>
 
 <script src="../../public/js/run_api.js"></script>

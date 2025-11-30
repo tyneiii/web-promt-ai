@@ -88,6 +88,9 @@ $followingCountQuery->close();
 /* ==========================
    LẤY THU NHẬP THÁNG HIỆN TẠI
 ========================== */
+$sql_bank = "SELECT * FROM userpayoutinfo WHERE account_id = $acc_id";
+$bank_res = mysqli_query($conn, $sql_bank);
+$bankInfo = mysqli_fetch_assoc($bank_res);
 
 $currentMonth = date('Y-m');
 
@@ -153,12 +156,12 @@ $result = mysqli_query($conn, $sql);
 
 <link rel="stylesheet" href="../../public/css/user/profile.css">
 
-<button id="back-btn" class="back-btn" onclick="window.history.back()">
+<button id="back-btn" class="back-btn" onclick="confirmCancel()">
     <i class="fa-solid fa-arrow-left"></i>
 </button>
 
 <div class="profile-container">
-    <div class="header" style="background-image: url('../../public/img/<?= $user['bg_avatar'] ?? 'bg.png' ?>');">
+    <div class="header" style="background-image: url('<?= $user['bg_avatar'] ?? 'bg.png' ?>');">
         <img src="<?= $avatar ?>" class="avatar">
     </div>
 
@@ -191,10 +194,25 @@ $result = mysqli_query($conn, $sql);
     </div>
 
     <?php if ($acc_id === $profile_id): ?>
-        <div class="stats" style="margin-top: 10px; font-size: 18px;">
+    <div class="stats" style="margin-top: 10px; font-size: 18px;">
+
+        <?php if ($bankInfo): ?>
+            <!-- ĐÃ CÓ THÔNG TIN NGÂN HÀNG -->
             <span>💰 <strong><?= number_format($earnedMoney, 2) ?> USD</strong> / tháng này</span>
-        </div>
-    <?php endif; ?>
+        <a href="edit_bank_info.php"
+               style="padding:6px 12px; background:#007bff; color:white; 
+                      border-radius:6px; text-decoration:none; font-size:12px;">
+                ✎
+            </a>
+        <?php else: ?>
+            <!-- CHƯA CÓ BANK INFO → ĐIỀN NGAY -->
+            <a href="edit_bank_info.php" style="color: blue; text-decoration: underline;">
+                🔔 Bạn chưa cập nhật thông tin ngân hàng – Nhấn để điền
+            </a>
+        <?php endif; ?>
+
+    </div>
+<?php endif; ?>
 
     <p class="bio"><?= $user['description'] ?? 'Chưa có tiểu sử.' ?></p>
 
@@ -298,4 +316,7 @@ $result = mysqli_query($conn, $sql);
                     }, 0);
         });
     });
+    function confirmCancel() {
+            window.location.href = "home.php";
+    }
 </script>
