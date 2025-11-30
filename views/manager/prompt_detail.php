@@ -128,7 +128,7 @@ function handleAction(action, promptId, comment = null) {
   const payload = { action, prompt_id: promptId };
   if (comment !== null) payload.comment = comment;
 
-  fetch('../../Controller/admin/process_prompt.php', {
+  fetch('../../public/ajax/prompt_detail.php', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)

@@ -90,7 +90,7 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <div class="detail-container">
-  <button class="close-detail" onclick="window.history.back()">×</button>
+  <button class="close-detail" onclick="smartGoBack()">×</button>
 
   <div class="detail-header">
     <div class="user-info">
@@ -249,6 +249,18 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
     runPrompt(prompt); // Hàm từ run_api.js
     closeRunModal();
   }
+</script>
+<script>
+function smartGoBack() {
+    // Cách ưu tiên cao nhất: dùng referrer (luôn đúng với cách bạn đang mở link)
+    if (document.referrer && document.referrer.includes('localhost') || document.referrer.includes('127.0.0.1')) {
+        window.location.href = document.referrer;
+    } 
+    // Dự phòng: nếu referrer bị mất (rất hiếm), về trang chủ
+    else {
+        window.location.href = '../user/home.php';
+    }
+}
 </script>
 
 <script src="../../public/js/run_api.js"></script>
