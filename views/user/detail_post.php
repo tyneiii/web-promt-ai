@@ -101,7 +101,7 @@ if (isset($_SESSION['previous_url']) && !empty($_SESSION['previous_url'])) {
 
   <div class="detail-header">
     <div class="user-info">
-      <img src="../../public/img/<?= htmlspecialchars($prompt['avatar'] ?? 'default_avatar.png') ?>" alt="<?= htmlspecialchars($prompt['username']) ?>">
+      <img src="<?= htmlspecialchars($prompt['avatar'] ?? 'default_avatar.png') ?>" alt="<?= htmlspecialchars($prompt['username']) ?>">
       <div>
         <strong><?= htmlspecialchars($prompt['username']) ?></strong>
         <div class="date"><?= date('d/m/Y H:i', strtotime($prompt['create_at'])) ?></div>
@@ -109,7 +109,11 @@ if (isset($_SESSION['previous_url']) && !empty($_SESSION['previous_url'])) {
     </div>
   </div>
 
-  <h1 class="detail-title"><?= htmlspecialchars($prompt['short_description'] ?: 'Untitled') ?></h1>
+  <!-- Tiêu đề chính của bài viết -->
+  <h1 class="detail-title"><?= htmlspecialchars($prompt['title'] ?: 'Không có tiêu đề') ?></h1>
+
+  <!-- Mô tả ngắn (giữ nguyên như cũ, làm phần giới thiệu) -->
+  <p class="detail-short-desc"><?= htmlspecialchars($prompt['short_description'] ?: '') ?></p>
 
   <?php if (!empty($tags)): ?>
     <div class="detail-tags">
@@ -120,7 +124,7 @@ if (isset($_SESSION['previous_url']) && !empty($_SESSION['previous_url'])) {
   <?php endif; ?>
 
   <?php if (!empty($prompt['image'])): ?>
-    <img class="post-image" src="<?= htmlspecialchars($prompt['image']) ?>" alt="Ảnh bài viết" style="max-width:100%;border-radius:8px;margin:20px 0;">
+    <img class="post-image" src="<?htmlspecialchars($prompt['image']) ?>" alt="Ảnh bài viết" style="max-width:100%;border-radius:8px;margin:20px 0;">
   <?php endif; ?>
 
   <div class="detail-content">
@@ -129,33 +133,38 @@ if (isset($_SESSION['previous_url']) && !empty($_SESSION['previous_url'])) {
     <?php endforeach; ?>
   </div>
 
-<?php if ($id_user > 0): ?>
-    <form action="" method="post" style="display: inline;">
-    <?php endif; ?>
-    <div class="detail-actions">
-      <?php if ($id_user > 0): ?>
-        <button type="submit" name="loveBtn" class="love" title="Thích bài viết" value="<?= $id ?>">
-          <i class="fa-heart <?= $is_loved ? 'fa-solid text-red' : 'fa-regular' ?>"></i> <?= (int)$prompt['love_count'] ?>
-        </button>
+<div class="detail-actions">
+  <?php if ($id_user > 0): ?>
+    <button type="submit" name="loveBtn" class="love" title="Thích bài viết" value="<?= $id ?>">
+      <i class="fa-heart <?= $is_loved ? 'fa-solid text-red' : 'fa-regular' ?>"></i> <?= (int)$prompt['love_count'] ?>
+    </button>
 
-        <button><i class="fa-regular fa-comment"></i> <?= (int)$prompt['comment_count'] ?></button>
-        
-        <button type="submit" name="saveBtn" class="save" title="Lưu bài viết" value="<?= $id ?>">
-          <i class="fa-bookmark <?= $is_saved ? 'fa-solid text-blue' : 'fa-regular' ?>"></i> <?= (int)$prompt['save_count'] ?>
-        </button>
-      <?php else: ?>
-        <button class="love disabled" title="Đăng nhập để thích"><i class="fa-regular fa-heart"></i> <?= (int)$prompt['love_count'] ?></button>
-        <button class="save disabled" title="Đăng nhập để lưu"><i class="fa-regular fa-bookmark"></i> <?= (int)$prompt['save_count'] ?></button>
-      <?php endif; ?>
-      <button type="button" class="run-btn" title="Xem kết quả"
-        data-prompt="<?= htmlspecialchars($full_prompt, ENT_QUOTES) ?>">
-        ⚡ Run Prompt
-      </button>
+    <button><i class="fa-regular fa-comment"></i> <?= (int)$prompt['comment_count'] ?></button>
+    
+    <button type="submit" name="saveBtn" class="save" title="Lưu bài viết" value="<?= $id ?>">
+      <i class="fa-bookmark <?= $is_saved ? 'fa-solid text-blue' : 'fa-regular' ?>"></i> <?= (int)$prompt['save_count'] ?>
+    </button>
 
-    </div>
-    <?php if ($id_user > 0): ?>
-    </form>
+    <!-- ĐÃ ĐĂNG NHẬP → cho phép mở modal chạy prompt -->
+    <button type="button" class="run-btn" title="Xem kết quả" onclick="openRunModal()" 
+            data-prompt="<?= htmlspecialchars($full_prompt, ENT_QUOTES) ?>">
+      ⚡ Run Prompt
+    </button>
+
+  <?php else: ?>
+    <!-- CHƯA ĐĂNG NHẬP → các nút bị disable + Run Prompt chuyển hướng login -->
+    <button class="love disabled" title="Đăng nhập để thích"><i class="fa-regular fa-heart"></i> <?= (int)$prompt['love_count'] ?></button>
+    <button class="save disabled" title="Đăng nhập để lưu"><i class="fa-regular fa-bookmark"></i> <?= (int)$prompt['save_count'] ?></button>
+
+    <!-- Nút Run Prompt khi chưa đăng nhập → chuyển hướng login -->
+    <a href="../../views/login/login.php?redirect=<?= urlencode($_SERVER['REQUEST_URI']) ?>" 
+       class="run-btn" 
+       title="Đăng nhập để chạy prompt"
+       style="text-decoration:none;color:inherit;">
+       Run Prompt
+    </a>
   <?php endif; ?>
+</div>
 
 <?php if ($id_user > 0): ?>
     <div class="comment-form-new">
@@ -183,7 +192,7 @@ if (isset($_SESSION['previous_url']) && !empty($_SESSION['previous_url'])) {
         <?php else: foreach ($comments as $c): ?>
           <div class="comment-item">
             <div class="comment-avatar">
-              <img src="../../public/img/<?= htmlspecialchars($c['avatar'] ?? 'default_avatar.png') ?>" alt="<?= htmlspecialchars($c['username']) ?>">
+              <img src="<?= htmlspecialchars($c['avatar'] ?? 'default_avatar.png') ?>" alt="<?= htmlspecialchars($c['username']) ?>">
             </div>
             <div class="comment-body">
               <div class="comment-header">
