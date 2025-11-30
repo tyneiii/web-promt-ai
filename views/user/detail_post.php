@@ -6,33 +6,33 @@ include_once __DIR__ . '/../../Controller/user/prompt.php';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $account_id = $_SESSION['account_id'] ?? 0;
-$redirect_url = $_SERVER['REQUEST_URI'];
+$url = $_SERVER['REQUEST_URI'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($account_id <= 0) {
-    $_SESSION['redirect_after_login'] = $redirect_url;
+    $_SESSION['redirect_after_login'] = $url;
     header("Location: ../../views/login/login.php");
     exit;
   }
 
   if (isset($_POST['loveBtn'])) {
     lovePrompt($account_id, $id, $conn);
-    header("Location: " . $redirect_url);
+    header("Location: " . $url);
     exit;
   }
 
   if (isset($_POST['saveBtn'])) {
     savePrompt($account_id, $id, $conn);
-    header("Location: " . $redirect_url);
+    header("Location: " . $url);
     exit;
   }
 
-  if (isset($_POST['out-btn'])) {
-    $_SESSION = [];
-    session_destroy();
-    header("Location: home.php");
-    exit;
-  }
+  // if (isset($_POST['out-btn'])) {
+  //   $_SESSION = [];
+  //   session_destroy();
+  //   header("Location: home.php");
+  //   exit;
+  // }
 }
 
 if ($id <= 0) {
@@ -94,7 +94,7 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
   <div class="detail-header">
     <div class="user-info">
-      <img src="../../public/img/<?= htmlspecialchars($prompt['avatar'] ?? 'default_avatar.png') ?>" alt="<?= htmlspecialchars($prompt['username']) ?>">
+      <img src="<?= htmlspecialchars($prompt['avatar'] ?? 'default_avatar.png') ?>" alt="<?= htmlspecialchars($prompt['username']) ?>">
       <div>
         <strong><?= htmlspecialchars($prompt['username']) ?></strong>
         <div class="date"><?= date('d/m/Y H:i', strtotime($prompt['create_at'])) ?></div>
@@ -102,7 +102,11 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
     </div>
   </div>
 
-  <h1 class="detail-title"><?= htmlspecialchars($prompt['short_description'] ?: 'Untitled') ?></h1>
+  <!-- Tiêu đề chính của bài viết -->
+  <h1 class="detail-title"><?= htmlspecialchars($prompt['title'] ?: 'Không có tiêu đề') ?></h1>
+
+  <!-- Mô tả ngắn (giữ nguyên như cũ, làm phần giới thiệu) -->
+  <p class="detail-short-desc"><?= htmlspecialchars($prompt['short_description'] ?: '') ?></p>
 
   <?php if (!empty($tags)): ?>
     <div class="detail-tags">
@@ -122,33 +126,35 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
     <?php endforeach; ?>
   </div>
 
-<?php if ($account_id > 0): ?>
-    <form action="" method="post" style="display: inline;">
-    <?php endif; ?>
-    <div class="detail-actions">
-      <?php if ($account_id > 0): ?>
-        <button type="submit" name="loveBtn" class="love" title="Thích bài viết" value="<?= $id ?>">
-          <i class="fa-heart <?= $is_loved ? 'fa-solid text-red' : 'fa-regular' ?>"></i> <?= (int)$prompt['love_count'] ?>
-        </button>
+<div class="detail-actions">
+  <?php if ($id_user > 0): ?>
+    <button type="submit" name="loveBtn" class="love" title="Thích bài viết" value="<?= $id ?>">
+      <i class="fa-heart <?= $is_loved ? 'fa-solid text-red' : 'fa-regular' ?>"></i> <?= (int)$prompt['love_count'] ?>
+    </button>
 
-        <button><i class="fa-regular fa-comment"></i> <?= (int)$prompt['comment_count'] ?></button>
-        
-        <button type="submit" name="saveBtn" class="save" title="Lưu bài viết" value="<?= $id ?>">
-          <i class="fa-bookmark <?= $is_saved ? 'fa-solid text-blue' : 'fa-regular' ?>"></i> <?= (int)$prompt['save_count'] ?>
-        </button>
-      <?php else: ?>
-        <button class="love disabled" title="Đăng nhập để thích"><i class="fa-regular fa-heart"></i> <?= (int)$prompt['love_count'] ?></button>
-        <button class="save disabled" title="Đăng nhập để lưu"><i class="fa-regular fa-bookmark"></i> <?= (int)$prompt['save_count'] ?></button>
-      <?php endif; ?>
-      <button type="button" class="run-btn" title="Xem kết quả"
-        data-prompt="<?= htmlspecialchars($full_prompt, ENT_QUOTES) ?>">
-        ⚡ Run Prompt
-      </button>
+    <button><i class="fa-regular fa-comment"></i> <?= (int)$prompt['comment_count'] ?></button>
+    
+    <button type="submit" name="saveBtn" class="save" title="Lưu bài viết" value="<?= $id ?>">
+      <i class="fa-bookmark <?= $is_saved ? 'fa-solid text-blue' : 'fa-regular' ?>"></i> <?= (int)$prompt['save_count'] ?>
+    </button>
 
-    </div>
-    <?php if ($account_id > 0): ?>
-    </form>
+    <button type="button" class="run-btn" title="Xem kết quả" onclick="openRunModal()" 
+            data-prompt="<?= htmlspecialchars($full_prompt, ENT_QUOTES) ?>">
+      ⚡ Run Prompt
+    </button>
+
+  <?php else: ?>
+    <button class="love disabled" title="Đăng nhập để thích"><i class="fa-regular fa-heart"></i> <?= (int)$prompt['love_count'] ?></button>
+    <button class="save disabled" title="Đăng nhập để lưu"><i class="fa-regular fa-bookmark"></i> <?= (int)$prompt['save_count'] ?></button>
+
+    <a href="../../views/login/login.php?redirect=<?= urlencode($_SERVER['REQUEST_URI']) ?>" 
+       class="run-btn" 
+       title="Đăng nhập để chạy prompt"
+       style="text-decoration:none;color:inherit;">
+       Run Prompt
+    </a>
   <?php endif; ?>
+</div>
 
 <?php if ($account_id > 0): ?>
     <div class="comment-form-new">
@@ -176,7 +182,7 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
         <?php else: foreach ($comments as $c): ?>
           <div class="comment-item">
             <div class="comment-avatar">
-              <img src="../../public/img/<?= htmlspecialchars($c['avatar'] ?? 'default_avatar.png') ?>" alt="<?= htmlspecialchars($c['username']) ?>">
+              <img src="<?= htmlspecialchars($c['avatar'] ?? 'default_avatar.png') ?>" alt="<?= htmlspecialchars($c['username']) ?>">
             </div>
             <div class="comment-body">
               <div class="comment-header">

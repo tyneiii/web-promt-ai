@@ -121,7 +121,7 @@ unset($_POST);
             <?php foreach ($following_users as $user): ?>
                 <a href="profile.php?id=<?= $user['account_id'] ?>" class="item-link">
                     <div class="item">
-                        <img src="../../public/img/<?= htmlspecialchars($user['avatar'] ?? 'default-avatar.png') ?>"
+                        <img src="<?= htmlspecialchars($user['avatar'] ?? 'default-avatar.png') ?>"
                             style="width:28px; height:28px; border-radius:50%; margin-right:8px;">
                         <?= htmlspecialchars($user['username']) ?>
                     </div>
@@ -144,7 +144,7 @@ unset($_POST);
                 <div class="card" data-id="<?= $prompt['prompt_id'] ?>">
                     <div class="card-header">
                         <div class="user-info">
-                            <img src="../../public/img/<?= htmlspecialchars($prompt['avatar'] ?? 'default-avatar.png') ?>"
+                            <img src="<?= htmlspecialchars($prompt['avatar'] ?? 'default-avatar.png') ?>"
                                 alt="<?= htmlspecialchars($prompt['username']) ?>"
                                 style="width:35px; height:35px; border-radius:50%;">
                             <strong><?= htmlspecialchars($prompt['username']) ?></strong>
