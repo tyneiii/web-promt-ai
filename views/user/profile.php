@@ -2,10 +2,6 @@
 include_once __DIR__ . '/layout/header.php';
 include_once __DIR__ . '/../../config.php';
 
-
-/* ==========================
-        XỬ LÝ FOLLOW/UNFOLLOW AJAX (TRẢ JSON)
-    ========================== */
 if (isset($_POST['action']) && $_POST['action'] === "follow_toggle") {
     header("Content-Type: application/json");
 
@@ -17,7 +13,6 @@ if (isset($_POST['action']) && $_POST['action'] === "follow_toggle") {
         exit;
     }
 
-    // Kiểm tra đã follow
     $sql_check = "SELECT * FROM follow WHERE follower_id = $follower AND following_id = $following";
     $check = mysqli_query($conn, $sql_check);
 
@@ -29,7 +24,6 @@ if (isset($_POST['action']) && $_POST['action'] === "follow_toggle") {
         $action = "follow";
     }
 
-    // Lấy số follower mới
     $followerCount = mysqli_fetch_row(mysqli_query(
         $conn,
         "SELECT COUNT(*) FROM follow WHERE following_id = $following"
@@ -103,7 +97,7 @@ if (!$earnedMoney) {
     $earnedMoney = 0;
 }
 // Tab
-$tab = isset($_GET['tab']) ? $_GET['tab'] : 'posts';
+$tab = isset($_GET['tab']) ? $_GET['tab'] : 'public';
 
 // Lấy bài viết
 // if ($tab === 'favorites') {
@@ -128,19 +122,19 @@ if ($tab === 'favorites') {
                 JOIN account a ON p.account_id = a.account_id
                 WHERE l.account_id = $profile_id AND l.status = 'OPEN'
                 ORDER BY l.love_at DESC";
-} else if ($tab === 'posts') {
-    $sql = "SELECT p.*, a.username, a.avatar
-                FROM prompt p 
-                JOIN account a ON p.account_id = a.account_id
-                WHERE p.account_id = $profile_id 
-                ORDER BY prompt_id DESC";
-} else {
+} else if ($tab === 'saves') {
     $sql = "SELECT p.*, a.username, a.avatar 
                 FROM save s 
                 JOIN prompt p ON s.prompt_id = p.prompt_id 
                 JOIN account a ON p.account_id = a.account_id
                 WHERE s.account_id = $profile_id 
                 ORDER BY s.save_id DESC";
+} else {
+    $sql = "SELECT p.*, a.username, a.avatar
+        FROM prompt p 
+        JOIN account a ON p.account_id = a.account_id
+        WHERE p.account_id = $profile_id AND p.status LIKE '%$tab%' 
+        ORDER BY prompt_id DESC";
 }
 
 
@@ -217,11 +211,28 @@ $result = mysqli_query($conn, $sql);
 
         </div>
     <?php endif; ?>
-
     <p class="bio"><?= $user['description'] ?? 'Chưa có tiểu sử.' ?></p>
-
     <div class="tabs">
-        <a href="?id=<?= $profile_id ?>&tab=posts" class="tab <?= $tab === 'posts' ? 'active' : '' ?>"><i class="fa-solid fa-file-lines"></i> Bài viết</a>
+        <div class="tab-select-wrapper custom-menu-toggle 
+         <?= ($tab === 'public' || $tab === 'waiting' || $tab === 'reject' || $tab === 'report' || $tab === '') ? 'active' : '' ?>">
+            <i class="fa-solid fa-file-lines"></i>
+            <span class="dropdown-display-text" data-current-tab="<?= $tab ?>">
+                <?php
+                if ($tab === 'public') echo 'Công khai';
+                else if ($tab === 'waiting') echo 'Chờ duyệt';
+                else if ($tab === 'reject') echo 'Bị từ chối';
+                else if ($tab === 'report') echo 'Bị báo cáo';
+                else echo 'Bài viết';
+                ?>
+            </span>
+            <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+            <ul class="dropdown-options" style="display: none;">
+                <li data-value="public" <?= $tab === 'public' ? 'class="selected"' : '' ?>>Công khai</li>
+                <li data-value="waiting" <?= $tab === 'waiting' ? 'class="selected"' : '' ?>>Chờ duyệt</li>
+                <li data-value="reject" <?= $tab === 'reject' ? 'class="selected"' : '' ?>>Bị từ chối</li>
+                <li data-value="report" <?= $tab === 'report' ? 'class="selected"' : '' ?>>Bị báo cáo</li>
+            </ul>
+        </div>
         <a href="?id=<?= $profile_id ?>&tab=favorites" class="tab <?= $tab === 'favorites' ? 'active' : '' ?>"><i class="fa-solid fa-heart"></i> Yêu thích</a>
         <a href="?id=<?= $profile_id ?>&tab=saves" class="tab <?= $tab === 'saves' ? 'active' : '' ?>"><i class="fa-solid fa-bookmark"></i> Đã lưu</a>
     </div>
@@ -324,4 +335,39 @@ $result = mysqli_query($conn, $sql);
     function confirmCancel() {
         window.location.href = "home.php";
     }
+    /* =================================
+    XỬ LÝ CUSTOM DROPDOWN MENU
+================================= */
+document.addEventListener("DOMContentLoaded", () => {
+    const toggleButton = document.querySelector('.custom-menu-toggle');
+    const optionsList = toggleButton?.querySelector('.dropdown-options');
+    const profileId = <?= $profile_id ?>;
+
+    if (toggleButton && optionsList) {
+        // 1. Mở/Đóng Menu khi click vào tab
+        toggleButton.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            const isVisible = optionsList.style.display === 'block';
+            optionsList.style.display = isVisible ? 'none' : 'block';
+            const arrow = toggleButton.querySelector('.dropdown-arrow');
+            arrow.style.transform = isVisible ? 'rotate(0deg)' : 'rotate(180deg)';
+        });
+
+        optionsList.addEventListener('click', (e) => {
+            if (e.target.tagName === 'LI' && e.target.dataset.value) {
+                const selectedValue = e.target.dataset.value;
+                window.location.href = `?id=${profileId}&tab=${selectedValue}`;
+                optionsList.style.display = 'none'; 
+            }
+        });
+
+        document.addEventListener('click', () => {
+            optionsList.style.display = 'none';
+            const arrow = toggleButton.querySelector('.dropdown-arrow');
+            if (arrow) {
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        });
+    }
+});
 </script>

@@ -141,7 +141,6 @@
     margin-top: 25px;
     padding-bottom: 10px;
     color: #aaa;
-    
 }
 
 .tabs .active {
@@ -233,17 +232,18 @@
     opacity: 0.8;
 }
 .tabs a {
-  text-decoration: none;        /* Bỏ gạch dưới */
-  color: #aaa;                  /* Màu mặc định */
-  display: flex;
-  align-items: center;
-  gap: 6px;
+    text-decoration: none;
+    color: #aaa;
+    display: flex;
+    align-items: center; /* Giữ icon và chữ căn giữa */
+    gap: 6px;
+    padding-bottom: 4px; /* Đồng bộ với border-bottom của active */
 }
-
-.tabs a.active {
-  color: #fff;
-  border-bottom: 2px solid #fff;
-  padding-bottom: 4px;
+.tabs .active,
+.tabs .tab-select-wrapper.active { 
+    color: #fff;
+    border-bottom: 2px solid #fff;
+    padding-bottom: 4px; 
 }
 
 .tabs a:hover {
@@ -274,8 +274,6 @@
     color: white;
 }
 
-
-/* Trạng thái đã follow — kiểu TikTok (nút xám với icon người + tick) */
 #follow-btn.following {
     background-color: #333;
     border: 1px solid #555;
@@ -287,7 +285,72 @@
     transition: background-color 0.3s, color 0.3s;
    
 }
-/* Icon căn chỉnh */
 #follow-btn i {
     font-size: 1rem;
+}
+.tab-select-wrapper {
+    position: relative; /* QUAN TRỌNG: Để định vị menu con */
+    display: flex;
+    align-items: center; /* Căn giữa icon và chữ */
+    gap: 6px;
+    cursor: pointer;
+    color: #aaa;
+    padding-bottom: 4px; 
+    border-bottom: 2px solid transparent; 
+    transition: all 0.2s;
+    z-index: 10; /* Đảm bảo menu nằm trên các thành phần khác */
+}
+
+.tab-select-wrapper:hover {
+    color: #d33; /* Giống hover của thẻ a */
+}
+
+.tab-select-wrapper select.tab {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+    background-color: #000000; /* 🔥 MÀU NỀN ĐEN theo yêu cầu */
+    color: #fff; /* Màu chữ trắng để nổi bật trên nền đen */
+    font-size: 1rem;
+    font-family: inherit;
+    font-weight: normal; 
+    padding: 0 5px; /* Thêm padding ngang nhẹ */
+    margin-left: -5px; /* Dịch sang trái 1 chút để select dính vào icon hơn */
+    vertical-align: middle; 
+    line-height: normal;
+    transform: translateY(1px); /* Tinh chỉnh nhỏ để căn giữa hoàn hảo */
+    cursor: pointer;
+}
+.dropdown-options {
+    list-style: none;
+    position: absolute;
+    top: 100%; /* Đặt menu bên dưới tab */
+    left: -10px; /* Dịch sang trái 1 chút cho cân đối */
+    min-width: 180px;
+    background-color: #242526; /* Màu nền tối, nổi nhẹ trên nền trang */
+    border: 1px solid #444;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    padding: 5px 0;
+    margin-top: 5px;
+    z-index: 100;
+}
+
+.dropdown-options li {
+    padding: 8px 15px;
+    color: #ccc; /* Màu chữ mặc định */
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+}
+
+.dropdown-options li:hover {
+    background-color: #3a3b3c; /* Màu hover */
+    color: #fff;
+}
+
+.dropdown-options li.selected {
+    color: #ff2d55; /* Màu accent cho mục đang chọn */
 }
