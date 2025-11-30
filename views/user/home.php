@@ -370,7 +370,7 @@ unset($_POST);
         // 1. Xử lý đóng mở Modal
         const modal = document.getElementById('rulesModal');
         const btnOpen = document.getElementById('btnOpenRules');
-        const btnClose = document.querySelector('.close-modal');
+        const btnClose = rulesModal.querySelector('.close-modal');
 
         // Mở modal khi click icon info
         btnOpen.addEventListener('click', function() {
