@@ -409,6 +409,16 @@ unset($_POST);
     });
 </script>
 
+<script>
+// Lưu lại trang hiện tại mỗi khi người dùng ở trang danh sách
+// (chỉ chạy trên trang home, search, tag...)
+if (window.location.pathname.includes('home.php') || 
+    window.location.search.includes('search=') || 
+    window.location.search.includes('tag=')) {
+    sessionStorage.setItem('lastListPage', location.href);
+}
+</script>
+
 
 <script src="../../public/js/user_comments.js"></script>
 <?php include_once __DIR__ . '/layout/footer.php'; ?>

@@ -252,14 +252,25 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
 </script>
 <script>
 function smartGoBack() {
-    // Cách ưu tiên cao nhất: dùng referrer (luôn đúng với cách bạn đang mở link)
-    if (document.referrer && document.referrer.includes('localhost') || document.referrer.includes('127.0.0.1')) {
-        window.location.href = document.referrer;
-    } 
-    // Dự phòng: nếu referrer bị mất (rất hiếm), về trang chủ
-    else {
-        window.location.href = '../user/home.php';
+    // Ưu tiên 1: Dùng sessionStorage (chính xác tuyệt đối - lưu từ trang danh sách)
+    const cameFrom = sessionStorage.getItem('lastListPage');
+    if (cameFrom) {
+        sessionStorage.removeItem('lastListPage'); // dọn rác
+        window.location.href = cameFrom;
+        return;
     }
+
+    // Ưu tiên 2: Dùng referrer (nếu có và cùng domain)
+    if (document.referrer && 
+        (document.referrer.includes(location.hostname) || 
+         document.referrer.includes('localhost') || 
+         document.referrer.includes('127.0.0.1'))) {
+        window.location.href = document.referrer;
+        return;
+    }
+
+    // Ưu tiên 3: Về trang chủ
+    window.location.href = '../user/home.php';
 }
 </script>
 
