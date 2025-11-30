@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Chat View (Messenger style)</title>
     <link rel="stylesheet" href="../../public/css/user/chat_page.css">
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
 <?php include_once __DIR__ . '/../../helpers/chat_page_logic.php' ?>
 
@@ -109,10 +111,13 @@
                     <div id="loadMoreContainer" style="text-align: center; padding: 10px;"></div>
                     <?php renderMessages($mess, $account_id); ?>
                 </main>
-
                 <form class="composer" id="composer" onsubmit="return false;">
                     <div class="input">
-                        <span style="opacity:.6;margin-left:4px">😊</span>
+                        <emoji-picker></emoji-picker>
+                        <button type="button" id="emoji-btn" title="Chọn biểu tượng cảm xúc">
+                            <i class="fa-regular fa-face-grin-squint-tears" style="color:orange;"></i>
+                        </button>
+                        <!-- <span style="opacity:.6;margin-left:4px">😊</span> -->
                         <input id="messageInput" placeholder="Nhập tin nhắn ..." autocomplete="off" />
                     </div>
                     <button class="btn-send" id="sendBtn" aria-label="Gửi">Gửi</button>
@@ -126,6 +131,11 @@
         </div>
     </div>
     <script src="../../public/js/chat_page.js"></script>
+    <!-- <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initEmojiPicker('emoji-btn', 'messageInput');
+        });
+    </script> -->
 </body>
 
 </html>
