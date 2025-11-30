@@ -4,13 +4,13 @@ include_once __DIR__ . '/layout/header.php';
 include_once __DIR__ . '/../../config.php';
 include_once __DIR__ . '/../../Controller/user/prompt.php';
 
-if (!isset($_SESSION['id_user'])) {
+if (!isset($_SESSION['account_id'])) {
     header("Location: ../login/login.php");
     exit;
 }
 
-$id_user = $_SESSION['id_user'];
-$comments = getUserComments($id_user, $conn);  // Lấy list comments (có author info)
+$account_id = $_SESSION['account_id'];
+$comments = getUserComments($account_id, $conn);  // Lấy list comments (có author info)
 ?>
 
 <link rel="stylesheet" href="../../public/css/my_comment.css"> 

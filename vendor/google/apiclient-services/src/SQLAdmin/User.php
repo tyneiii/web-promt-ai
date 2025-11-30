@@ -78,7 +78,7 @@ class User extends \Google\Collection
   /**
    * Microsoft Entra ID user.
    */
-  public const TYPE_ENTRAID_USER = 'ENTRAID_USER';
+  public const TYPE_ENTRAaccount_id = 'ENTRAaccount_id';
   protected $collection_key = 'databaseRoles';
   /**
    * Optional. Role memberships of the user
@@ -395,7 +395,7 @@ class User extends \Google\Collection
    *
    * Accepted values: BUILT_IN, CLOUD_IAM_USER, CLOUD_IAM_SERVICE_ACCOUNT,
    * CLOUD_IAM_GROUP, CLOUD_IAM_GROUP_USER, CLOUD_IAM_GROUP_SERVICE_ACCOUNT,
-   * ENTRAID_USER
+   * ENTRAaccount_id
    *
    * @param self::TYPE_* $type
    */

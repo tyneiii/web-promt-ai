@@ -5,24 +5,24 @@ include_once __DIR__ . '/../../config.php';
 include_once __DIR__ . '/../../Controller/user/prompt.php';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-$id_user = $_SESSION['id_user'] ?? 0;
+$account_id = $_SESSION['account_id'] ?? 0;
 $redirect_url = $_SERVER['REQUEST_URI'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  if ($id_user <= 0) {
+  if ($account_id <= 0) {
     $_SESSION['redirect_after_login'] = $redirect_url;
     header("Location: ../../views/login/login.php");
     exit;
   }
 
   if (isset($_POST['loveBtn'])) {
-    lovePrompt($id_user, $id, $conn);
+    lovePrompt($account_id, $id, $conn);
     header("Location: " . $redirect_url);
     exit;
   }
 
   if (isset($_POST['saveBtn'])) {
-    savePrompt($id_user, $id, $conn);
+    savePrompt($account_id, $id, $conn);
     header("Location: " . $redirect_url);
     exit;
   }
@@ -61,9 +61,9 @@ if (!$prompt) {
 
 // Kiểm tra đã love/save chưa
 $is_loved = $is_saved = false;
-if ($id_user > 0) {
-  $is_loved = $conn->query("SELECT 1 FROM love WHERE prompt_id = $id AND account_id = $id_user AND status = 'OPEN'")->num_rows > 0;
-  $is_saved = $conn->query("SELECT 1 FROM save WHERE prompt_id = $id AND account_id = $id_user")->num_rows > 0;
+if ($account_id > 0) {
+  $is_loved = $conn->query("SELECT 1 FROM love WHERE prompt_id = $id AND account_id = $account_id AND status = 'OPEN'")->num_rows > 0;
+  $is_saved = $conn->query("SELECT 1 FROM save WHERE prompt_id = $id AND account_id = $account_id")->num_rows > 0;
 }
 
 // Chi tiết + tag + bình luận + full_prompt
@@ -87,13 +87,6 @@ $stmt_cmt = $conn->prepare($sql_cmt);
 $stmt_cmt->bind_param("i", $id);
 $stmt_cmt->execute();
 $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
-
-$redirect_url ="";
-if (isset($_SESSION['previous_url']) && !empty($_SESSION['previous_url'])) {
-    $redirect_url = $_SESSION['previous_url'];
-} else {
-    $redirect_url = "home.php"; 
-}
 ?>
 
 <div class="detail-container">
@@ -129,11 +122,11 @@ if (isset($_SESSION['previous_url']) && !empty($_SESSION['previous_url'])) {
     <?php endforeach; ?>
   </div>
 
-<?php if ($id_user > 0): ?>
+<?php if ($account_id > 0): ?>
     <form action="" method="post" style="display: inline;">
     <?php endif; ?>
     <div class="detail-actions">
-      <?php if ($id_user > 0): ?>
+      <?php if ($account_id > 0): ?>
         <button type="submit" name="loveBtn" class="love" title="Thích bài viết" value="<?= $id ?>">
           <i class="fa-heart <?= $is_loved ? 'fa-solid text-red' : 'fa-regular' ?>"></i> <?= (int)$prompt['love_count'] ?>
         </button>
@@ -153,11 +146,11 @@ if (isset($_SESSION['previous_url']) && !empty($_SESSION['previous_url'])) {
       </button>
 
     </div>
-    <?php if ($id_user > 0): ?>
+    <?php if ($account_id > 0): ?>
     </form>
   <?php endif; ?>
 
-<?php if ($id_user > 0): ?>
+<?php if ($account_id > 0): ?>
     <div class="comment-form-new">
         <form method="post" action="../../Controller/user/process_comment.php" class="comment-input-form">
             <input type="hidden" name="action" value="add">
@@ -192,7 +185,7 @@ if (isset($_SESSION['previous_url']) && !empty($_SESSION['previous_url'])) {
               </div>
               <div class="comment-content"><?= nl2br(htmlspecialchars($c['content'])) ?></div>
 
-              <?php if ($id_user == $c['account_id']): ?>
+              <?php if ($account_id == $c['account_id']): ?>
                 <div class="comment-actions">
                   <details>
                     <summary>Sửa</summary>

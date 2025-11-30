@@ -4,7 +4,7 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 include_once __DIR__ . '/../../config.php';
 
-$id_user = $_SESSION['id_user'] ?? '';
+$account_id = $_SESSION['account_id'] ?? '';
 $name_user = $_SESSION['name_user'] ?? '';
 
 $search = $_GET['search'] ?? '';
@@ -13,12 +13,12 @@ $search = $_GET['search'] ?? '';
 include_once __DIR__ . '/../../Controller/user/prompt.php';
 
 // Handle form submits NGAY ĐẦU (trước include header, tránh output)
-if (isset($_POST['loveBtn']) && $id_user) {
+if (isset($_POST['loveBtn']) && $account_id) {
     $id_prompt = (int)$_POST['loveBtn'];
-    $mess = lovePrompt($id_user, $id_prompt, $conn);
+    $mess = lovePrompt($account_id, $id_prompt, $conn);
     header("Location: " . $_SERVER['PHP_SELF'] . "?search=" . urlencode($search));
     exit;
-} elseif (isset($_POST['cmtBtn']) && $id_user) {
+} elseif (isset($_POST['cmtBtn']) && $account_id) {
     $id_prompt = (int)$_POST['cmtBtn'];
     $redirect = "detail_post.php?id=" . $id_prompt;
     if (!empty($search)) {
@@ -26,9 +26,9 @@ if (isset($_POST['loveBtn']) && $id_user) {
     }
     header("Location: $redirect");
     exit;
-} elseif (isset($_POST['saveBtn']) && $id_user) {
+} elseif (isset($_POST['saveBtn']) && $account_id) {
     $id_prompt = (int)$_POST['saveBtn'];
-    $mess = savePrompt($id_user, $id_prompt, $conn);
+    $mess = savePrompt($account_id, $id_prompt, $conn);
     header("Location: " . $_SERVER['PHP_SELF'] . "?search=" . urlencode($search));
     exit;
 }
@@ -41,15 +41,15 @@ include_once __DIR__ . '/layout/header.php';
 
 <?php
 // Guest mode: Optional message (display in main-content if needed)
-// $guest_message = !$id_user ? '<p class="guest-notice">Đăng nhập để like, comment và save prompt!</p>' : '';
+// $guest_message = !$account_id ? '<p class="guest-notice">Đăng nhập để like, comment và save prompt!</p>' : '';
 
 $tag = isset($_GET['tag']) ? (int)$_GET['tag'] : 0;
-$prompts = getPrompts($id_user, $search, $tag, $conn);
+$prompts = getPrompts($account_id, $search, $tag, $conn);
 // Lấy top 5 prompt hot dựa trên lượt like
 $hot_prompts = getHotPrompts($conn, 5);
 $following_users = [];
-if ($id_user) {
-    $following_users = getFollowingUsers($id_user, $conn);
+if ($account_id) {
+    $following_users = getFollowingUsers($account_id, $conn);
 }
 
 
@@ -57,8 +57,8 @@ unset($_POST);
 ?>
 
 <div class="left-sidebar">
-    <?php if (isset($_SESSION['id_user'])): ?>
-        <a href="profile.php?id=<?= $id_user ?>&tab=favorites" title="Danh sách yêu thích" style="color:#FF4D4D">
+    <?php if (isset($_SESSION['account_id'])): ?>
+        <a href="profile.php?id=<?= $account_id ?>&tab=favorites" title="Danh sách yêu thích" style="color:#FF4D4D">
             <i class="fa-solid fa-heart"></i>
         </a>
     <?php else: ?>
@@ -67,7 +67,7 @@ unset($_POST);
         </a>
     <?php endif; ?>
 
-    <?php if (isset($_SESSION['id_user'])): ?>
+    <?php if (isset($_SESSION['account_id'])): ?>
         <a href="create_post.php" class="sidebar-btn" title="Tạo bài viết mới" style="color:yellow">
             <i class="fa-solid fa-pen"></i>
         </a>
@@ -108,7 +108,7 @@ unset($_POST);
 
     <div class="follow-list">
 
-        <?php if (!isset($_SESSION['id_user'])): ?>
+        <?php if (!isset($_SESSION['account_id'])): ?>
 
             <div class="item">Bạn cần đăng nhập để xem.</div>
 
@@ -285,7 +285,7 @@ unset($_POST);
     </div>
 </div>
 <script>
-    const isLoggedIn = <?= isset($_SESSION['id_user']) ? 'true' : 'false' ?>;
+    const isLoggedIn = <?= isset($_SESSION['account_id']) ? 'true' : 'false' ?>;
     let currentPromptId = 0;
 
     /* CLICK CARD → MỞ CHI TIẾT */

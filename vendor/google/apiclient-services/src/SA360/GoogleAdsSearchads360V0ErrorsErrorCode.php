@@ -338,7 +338,7 @@ class GoogleAdsSearchads360V0ErrorsErrorCode extends \Google\Model
   /**
    * The user selected customer ID could not be validated.
    */
-  public const HEADER_ERROR_INVALID_USER_SELECTED_CUSTOMER_ID = 'INVALID_USER_SELECTED_CUSTOMER_ID';
+  public const HEADER_ERROR_INVALaccount_id_SELECTED_CUSTOMER_ID = 'INVALaccount_id_SELECTED_CUSTOMER_ID';
   /**
    * The login customer ID could not be validated.
    */

@@ -56,11 +56,11 @@ function handleLogin($conn)
                         unset($_SESSION['password_error']);
                         unset($_SESSION['login_email_attempt']);
                         $_SESSION["loggedin"] = true;
-                        $_SESSION["id_user"] = $account_id;
-                        $_SESSION["name_user"] = $username;
-                        $_SESSION["avatar"] = $avatar;
-                        $_SESSION["bg_avatar"] = $avatar;
-                        $_SESSION["role"] = $role;
+                        $_SESSION["account_id"] = $account_id;
+                        // $_SESSION["name_user"] = $username;
+                        // $_SESSION["avatar"] = $avatar;
+                        // $_SESSION["bg_avatar"] = $avatar;
+                        // $_SESSION["role"] = $role;
                         header("Location: ../../views/user/home.php");
                         exit;
                     }

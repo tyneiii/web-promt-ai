@@ -166,6 +166,7 @@
 </head>
 <body>
   <?php
+  include_once __DIR__ . '/../../../config.php';
   if (session_status() == PHP_SESSION_NONE) {
     session_start();
   }
@@ -187,7 +188,6 @@
     header("Location: home.php");
     exit();
   }
-  include_once __DIR__ . '/../../../config.php';
   include_once __DIR__ . '/../../../Controller/user/notifications.php';
   ?>
   <?php
@@ -198,10 +198,10 @@
     // Fetch notifications data (chỉ nếu logged in)
     $notifications = [];
     $unread_count = 0;
-    if (isset($_SESSION['id_user']) && !empty($_SESSION['id_user'])) {
-        $id_user = $_SESSION['id_user'];
-        $unread_count = getUnreadCount($id_user, $conn);
-        $notifications = getNotifications($id_user, $conn, 5); // 5 mới nhất
+    if (isset($_SESSION['account_id']) && !empty($_SESSION['account_id'])) {
+        $account_id = $_SESSION['account_id'];
+        $unread_count = getUnreadCount($account_id, $conn);
+        $notifications = getNotifications($account_id, $conn, 5); // 5 mới nhất
     }
   ?>
   <nav class="navbar">
@@ -230,7 +230,7 @@
             <?php endforeach; ?>
         </select>
       </form>
-      <?php if (isset($_SESSION['id_user']) && !empty($_SESSION['id_user'])): ?>
+      <?php if (isset($_SESSION['account_id']) && !empty($_SESSION['account_id'])): ?>
         <!-- Nút bell với badge -->
         <div class="notification-bell" id="notification-bell" title="Thông báo">
           <i class="fa-regular fa-bell icon"></i>

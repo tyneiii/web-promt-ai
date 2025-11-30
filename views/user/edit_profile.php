@@ -3,18 +3,18 @@ include_once __DIR__ . '/../../config.php';
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-if (!isset($_SESSION['id_user'])) {
+if (!isset($_SESSION['account_id'])) {
     header("Location: ../../login.php");
     exit;
 }
-$acc_id = $_SESSION['id_user'];
+$acc_id = $_SESSION['account_id'];
 $sql_user = "SELECT * FROM account WHERE account_id = $acc_id";
 $user_result = mysqli_query($conn, $sql_user);
 $user = mysqli_fetch_assoc($user_result);
 if (isset($_GET['check_username'])) {
     if (session_status() === PHP_SESSION_NONE) session_start();
 
-    $acc_id = $_SESSION['id_user'];
+    $acc_id = $_SESSION['account_id'];
     $username = mysqli_real_escape_string($conn, $_GET['check_username']);
 
     $sql = "SELECT * FROM account 
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $backgroundPath = $user['bg_avatar'] ?? null;
     if (isset($_FILES['background']) && $_FILES['background']['error'] === 0) {
-        $bgName = time() . '_bg_' . basename($_FILES['background']['name']);
+        $bgName = '../../public/img/'.time() . '_bg_' . basename($_FILES['background']['name']);
         $targetDir = __DIR__ . '/../../public/img/';
         if (!is_dir($targetDir)) {
             mkdir($targetDir, 0777, true);
