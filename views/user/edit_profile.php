@@ -123,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="avatar-container">
                             <img
                                 id="avatarPreview"
-                                src="../../public/img/<?= htmlspecialchars($user['avatar'] ?? 'default_avatar.jpg') ?>"
+                                src="<?= htmlspecialchars($user['avatar'] ?? 'default_avatar.jpg') ?>"
                                 alt="Avatar" class="avatar">
                             <label for="avatar" class="edit-icon">✎</label>
                             <input type="file" name="avatar" id="avatar" accept="image/*">
