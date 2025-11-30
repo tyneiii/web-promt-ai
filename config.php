@@ -30,4 +30,10 @@ if ($_SESSION['current_url'] !== $current_page_url) {
     $_SESSION['previous_url'] = $_SESSION['current_url'];
     $_SESSION['current_url'] = $current_page_url;
 }
+$redirect_url ="";
+if (isset($_SESSION['previous_url']) && !empty($_SESSION['previous_url'])) {
+    $redirect_url = $_SESSION['previous_url'];
+} else {
+    $redirect_url = "home.php"; 
+}
 ?>
