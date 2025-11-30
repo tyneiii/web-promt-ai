@@ -73,7 +73,7 @@
     margin-bottom: 10px;
 }
 
-.edit-btn, .add-btn {
+.edit-btn{
     border: none;
     padding: 10px 16px;      /* đồng bộ */
     border-radius: 8px;      /* đồng bộ */
@@ -81,10 +81,6 @@
     font-weight: 600;        /* đồng bộ */
     font-size: 1rem;         /* đồng bộ */
     display: inline-block;
-}
-
-/* Chỉ khác màu */
-.edit-btn {
     background-color: #fae206;
     color: #151515;
 }
@@ -92,9 +88,27 @@
 .add-btn {
     background-color: #e5145d;
     color: #fff;
-    padding: 8.5px 16px;
+     border: none;
+    padding: 10.6px 16px;      /* đồng bộ */
+    border-radius: 8px;      /* đồng bộ */
+    cursor: pointer;
+    font-weight: 600;        /* đồng bộ */
+    font-size: 1rem;         /* đồng bộ */
+    display: inline-block;
 }
 
+.bank-btn {
+    background-color: #202eec;
+    color: #fff;
+     border: none;
+    padding: 10.5px 16px;      /* đồng bộ */
+    border-radius: 8px;      /* đồng bộ */
+    cursor: pointer;
+    font-weight: 600;        /* đồng bộ */
+    font-size: 1rem;         /* đồng bộ */
+    display: inline-block;
+    text-decoration: none;
+}
 
 .setting-btn, .share-btn {
     background-color: #222;
