@@ -1,20 +1,5 @@
  <?php
-    function handlePostActions($conn)
-    {
-        if (isset($_POST["btnSave"])) {
-            $accountId = (int)$_POST["account_id"];
-            $newRole = (int)$_POST["new_role"];
-            return updateRole($conn, $accountId, $newRole);
-        }
-        if (isset($_POST["btnStatus"])) {
-            $accountId = (int)$_POST["account_id"];
-            $actionType = $_POST["action_type"];
-            $newStatus = ($actionType === 'unlock') ? 1 : 0;
-            return updateAccountStatus($conn, $accountId, $newStatus);
-        }
-        return null;
-    }
-    function checkSuccess($execute_success, $stmt, $rows_affected, $account_id)
+    function checkSuccess($execute_success, $stmt, $rows_affected, $account_id,$username)
     {
         if (!$execute_success) {
             error_log("SQL Execute Failed (changeRole): " . $stmt->error . " | Account ID: " . $account_id);
@@ -26,7 +11,7 @@
         if ($rows_affected > 0) {
             return [
                 'success' => true,
-                'message' => "Cập nhật thành công tài khoản có ID={$account_id}."
+                'message' => "Cập nhật thành công tài khoản $username."
             ];
         } else {
             return [
@@ -109,7 +94,7 @@
         ];
     }
 
-    function updateRole($conn, $account_id, $role)
+    function updateRole($conn, $account_id, $username, $role)
     {
         $sql = "UPDATE account SET role_id = ? WHERE account_id = ?";
         $stmt = $conn->prepare($sql);
@@ -124,9 +109,9 @@
         $execute_success = $stmt->execute();
         $rows_affected = $stmt->affected_rows;
         $stmt->close();
-        return checkSuccess($execute_success, $stmt, $rows_affected, $account_id);
+        return checkSuccess($execute_success, $stmt, $rows_affected, $account_id, $username);
     }
-    function updateAccountStatus($conn, $account_id, $status)
+    function updateAccountStatus($conn, $account_id, $username, $status)
     {
         $sql = "UPDATE account SET is_active = ? WHERE account_id = ?";
         $stmt = $conn->prepare($sql);
@@ -141,6 +126,6 @@
         $execute_success = $stmt->execute();
         $rows_affected = $stmt->affected_rows;
         $stmt->close();
-        return checkSuccess($execute_success, $stmt, $rows_affected, $account_id);
+        return checkSuccess($execute_success, $stmt, $rows_affected, $account_id, $username);
     }
     ?>

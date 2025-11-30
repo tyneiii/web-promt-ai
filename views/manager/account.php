@@ -12,8 +12,8 @@
 <body>
   <div class="container">
     <?php include_once __DIR__ . '/layout/sidebar.php';
-          include_once __DIR__ . '/../../helpers/helper.php'; 
-          include_once __DIR__ . '/../../helpers/manager_account_logic.php';      
+    include_once __DIR__ . '/../../helpers/helper.php';
+    include_once __DIR__ . '/../../helpers/manager_account_logic.php';
     ?>
     <div class="main">
       <fieldset class="account-fieldset">
@@ -115,16 +115,19 @@
                     </td>
                     <td class="actions">
                       <input type="hidden" name="account_id" value="<?= $acc['account_id'] ?>">
+                      <input type="hidden" name="username" value="<?= $acc['username'] ?>">
 
                       <?php if ($acc['is_active'] == 1): ?>
                         <button class="btn-action btn-lock" type="button"
-                          data-account-id="<?= $acc['account_id'] ?>" data-action="lock">
-                          <i class="fa-solid fa-lock"></i> Block
+                          data-account-id="<?= $acc['account_id'] ?>"
+                          data-action="lock"
+                          data-username="<?= $acc['username'] ?>"> <i class="fa-solid fa-lock"></i> Block
                         </button>
                       <?php else: ?>
                         <button class="btn-action btn-unlock" type="button"
-                          data-account-id="<?= $acc['account_id'] ?>" data-action="unlock">
-                          <i class="fa-solid fa-lock-open"></i> Open
+                          data-account-id="<?= $acc['account_id'] ?>"
+                          data-action="unlock"
+                          data-username="<?= htmlspecialchars($acc['username']) ?>"> <i class="fa-solid fa-lock-open"></i> Open
                         </button>
                       <?php endif; ?>
 
@@ -146,6 +149,7 @@
 
   <form id="status-action-form" method="POST" style="display: none;">
     <input type="hidden" name="account_id" id="action-account-id">
+    <input type="hidden" name="username" id="action-username">
     <input type="hidden" name="action_type" id="action-type">
     <button type="submit" name="btnStatus" id="submit-status-action"></button>
   </form>
@@ -154,6 +158,7 @@
     document.addEventListener('DOMContentLoaded', function() {
       const actionForm = document.getElementById('status-action-form');
       const accountIdInput = document.getElementById('action-account-id');
+      const usernameInput = document.getElementById('action-username');
       const actionTypeInput = document.getElementById('action-type');
       const submitButton = document.getElementById('submit-status-action');
 
@@ -161,10 +166,12 @@
         button.addEventListener('click', function() {
           const accountId = this.getAttribute('data-account-id');
           const action = this.getAttribute('data-action');
+          const username = this.getAttribute('data-username');
           const actionText = (action === 'lock') ? 'khóa (Block)' : 'mở khóa (Open)';
           const confirmMessage = `Bạn có chắc chắn muốn ${actionText} tài khoản có ID = ${accountId} không?`;
           if (confirm(confirmMessage)) {
             accountIdInput.value = accountId;
+            usernameInput.value = username;
             actionTypeInput.value = action;
             submitButton.click();
           }

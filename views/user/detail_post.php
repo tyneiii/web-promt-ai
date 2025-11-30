@@ -132,6 +132,7 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
         </button>
 
         <button><i class="fa-regular fa-comment"></i> <?= (int)$prompt['comment_count'] ?></button>
+        
         <button type="submit" name="saveBtn" class="save" title="Lưu bài viết" value="<?= $id ?>">
           <i class="fa-bookmark <?= $is_saved ? 'fa-solid text-blue' : 'fa-regular' ?>"></i> <?= (int)$prompt['save_count'] ?>
         </button>

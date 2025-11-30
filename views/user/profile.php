@@ -64,9 +64,6 @@ $user_result = mysqli_query($conn, $sql_user);
 $user = mysqli_fetch_assoc($user_result);
 
 $avatar = $user['avatar'];
-if (!$avatar || strtolower($avatar) === "null" || !file_exists(__DIR__ . "/../../public/img/$avatar")) {
-    $avatar = "default_avatar.png";
-}
 
 // Kiểm tra đã follow?
 $sql_check_follow = "SELECT * FROM follow WHERE follower_id = $acc_id AND following_id = $profile_id";
@@ -162,7 +159,7 @@ $result = mysqli_query($conn, $sql);
 
 <div class="profile-container">
     <div class="header" style="background-image: url('../../public/img/<?= $user['bg_avatar'] ?? 'bg.png' ?>');">
-        <img src="../../public/img/<?= $avatar ?>" class="avatar">
+        <img src="<?= $avatar ?>" class="avatar">
     </div>
 
     <div class="profile-info">
@@ -220,7 +217,7 @@ $result = mysqli_query($conn, $sql);
             ?>
             <a href="detail_post.php?id=<?= $row['prompt_id'] ?>" class="write-item" style="text-decoration:none;">
                 <div class="card-mini-header">
-                    <img src="../../public/img/<?= $post_avatar ?>" alt="ava" style="width:35px; height:35px; border-radius:50%;">
+                    <img src="<?= $post_avatar ?>" alt="ava" style="width:35px; height:35px; border-radius:50%;">
                     <strong><?= $row['username'] ?></strong>
                 </div>
                 <div class="card-divider"></div>

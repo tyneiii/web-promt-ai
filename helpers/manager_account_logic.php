@@ -1,4 +1,5 @@
 <?php
+include_once __DIR__ ."/../Controller/account.php";
 $search = $_GET['search'] ?? '';
 $role = $_GET["role"] ?? '';
 $is_active = $_GET["is_active"] ?? '';
@@ -32,4 +33,21 @@ if ($action_result) {
 }
 
 $mess = getMess();
+function handlePostActions($conn)
+    {
+        if (isset($_POST["btnSave"])) {
+            $accountId = (int)$_POST["account_id"];
+            $username = $_POST["username"];
+            $newRole = (int)$_POST["new_role"];
+            return updateRole($conn, $accountId, $username, $newRole);
+        }
+        if (isset($_POST["btnStatus"])) {
+            $accountId = (int)$_POST["account_id"];
+            $username = $_POST["username"];
+            $actionType = $_POST["action_type"];
+            $newStatus = ($actionType === 'unlock') ? 1 : 0;
+            return updateAccountStatus($conn, $accountId, $username, $newStatus);
+        }
+        return null;
+    }
 ?>

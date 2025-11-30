@@ -266,7 +266,7 @@
         <!-- Dropdown profile -->
         <div class="dropdown">
           <button class="dropbtn">
-            <img src="../../public/img/<?=($_SESSION['avatar'])?? 'default_avatar.png'; ?>"
+            <img src="<?=($_SESSION['avatar'])?>"
               alt="Ảnh đại diện"
               class="avatar-image">
           </button>

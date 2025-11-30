@@ -101,7 +101,7 @@
   
   <form class="form-card" action="create_post.php" method="POST" enctype="multipart/form-data">
     <div class="user-info">
-      <img src="../../public/img/<?= $user['avatar'] ?? 'avatar.png' ?>" class="avatar">
+      <img src="<?= $user['avatar'] ?? 'avatar.png' ?>" class="avatar">
     <div class="name"><?= $user['username'] ?></div>
       <div class="topic-container">
         <input type="text" class="topic-input" placeholder="Chọn chủ đề...">
