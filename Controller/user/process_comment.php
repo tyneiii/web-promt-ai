@@ -17,13 +17,13 @@ if ($prompt_id <= 0 || $action === '') {
     exit;
 }
 
-// Kiểm tra đăng nhập: DÙNG id_user theo login của bạn
-if (!isset($_SESSION['id_user'])) {
+// Kiểm tra đăng nhập: DÙNG account_id theo login của bạn
+if (!isset($_SESSION['account_id'])) {
     echo "<script>alert('Bạn cần đăng nhập để thực hiện thao tác này'); window.location.href='../login/login.php';</script>";
     exit;
 }
 
-$account_id = (int)$_SESSION['id_user'];
+$account_id = (int)$_SESSION['account_id'];
 
 switch ($action) {
     // THÊM BÌNH LUẬN

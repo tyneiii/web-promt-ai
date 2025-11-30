@@ -19,7 +19,7 @@ if (!checkCsrfToken($data['csrf_token'])) {
     echo json_encode(['success' => false, 'error' => 'CSRF Token mismatch or missing.', 'step' => 'CSRF_CHECK']);
     exit;
 }
-$account_id = (int)($_SESSION['id_user'] ?? 0);
+$account_id = (int)($_SESSION['account_id'] ?? 0);
 $message = trim($data['message']);
 $chat_id = (int)($data['chat_id'] ?? 0);
 if ($account_id === 0) {

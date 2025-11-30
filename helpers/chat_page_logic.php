@@ -3,7 +3,7 @@ include_once __DIR__ . "/../Controller/user/chat.php";
 include_once __DIR__ . "/../config.php";
 define('MESSAGE_LIMIT', 5);
 $role = (int)$_SESSION['role'];
-$account_id = (int)$_SESSION['id_user'];
+$account_id = (int)$_SESSION['account_id'];
 $username = $_SESSION['name_user'];
 $user_avatar= $_SESSION['avatar'];
 $searchName= $_GET['username'] ?? '';

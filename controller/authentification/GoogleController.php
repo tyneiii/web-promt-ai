@@ -42,7 +42,7 @@
                     $stmtUpdate->bind_param("ssi", $google_id, $avatar, $user['account_id']);
                     $stmtUpdate->execute();
                 }
-                $_SESSION['id_user'] = $user['account_id'];
+                $_SESSION['account_id'] = $user['account_id'];
                 $_SESSION['name_user'] = $user['username'];
                 $_SESSION['role'] = $user['role_id'];
                 $_SESSION['avatar'] = $user['avatar'];
@@ -72,7 +72,7 @@
                     if ($stmtInsert->execute()) {
                         // Đăng ký xong thì Login luôn
                         $new_user_id = $conn->insert_id;
-                        $_SESSION['id_user'] = $new_user_id;
+                        $_SESSION['account_id'] = $new_user_id;
                         $_SESSION['name_user'] = $username;
                         $_SESSION['role'] = $role_id;
                         $_SESSION['avatar'] = $avatar;
