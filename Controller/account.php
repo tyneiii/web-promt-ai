@@ -128,4 +128,10 @@
         $stmt->close();
         return checkSuccess($execute_success, $stmt, $rows_affected, $account_id, $username);
     }
+
+    function getInfoAccount($conn, $account_id){
+        $sql = "SELECT * FROM account WHERE account.account_id=$account_id";
+        $result= $conn->query($sql);    
+        return $result->fetch_assoc();
+    }
     ?>

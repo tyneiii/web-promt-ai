@@ -1,6 +1,6 @@
 <?php
     include_once __DIR__ . '/../../config.php';
-    if (!isset($_SESSION['id_user'])) {
+    if (!isset($_SESSION['account_id'])) {
         header("Location: ../login/login.php");
         exit;
     }
@@ -22,7 +22,7 @@
         exit;
     }
 
-    $acc_id = $_SESSION['id_user'];
+    $acc_id = $_SESSION['account_id'];
     $imageName = "";
 
     // Upload image
@@ -67,7 +67,7 @@
     exit;
 }
 
-    $acc_id = $_SESSION['id_user'] ;
+    $acc_id = $_SESSION['account_id'] ;
     $sql_user = "SELECT * FROM account WHERE account_id = $acc_id ";
     // Lấy danh sách tag từ DB
     $tag_query = "SELECT tag_id, tag_name FROM tag ORDER BY tag_name ASC";

@@ -3,14 +3,14 @@ include_once __DIR__ . '/layout/header.php';
 include_once __DIR__ . '/../../Controller/user/prompt.php';
 include_once __DIR__ . '/../../Controller/user/notifications.php';
 
-$id_user = $_SESSION['id_user'] ?? 0;
-if (!$id_user) {
+$account_id = $_SESSION['account_id'] ?? 0;
+if (!$account_id) {
     header("Location: login/login.php");
     exit;
 }
 
-$notifications = getNotifications($id_user, $conn, 20);  // Lấy 20
-markAsRead($id_user, $conn);  // Tự động mark all khi vào trang
+$notifications = getNotifications($account_id, $conn, 20);  // Lấy 20
+markAsRead($account_id, $conn);  // Tự động mark all khi vào trang
 ?>
 
 <div class="main-content">

@@ -2,7 +2,7 @@
     session_start();
     include_once __DIR__ . '/../../config.php';
 
-    if (!isset($_SESSION['id_user'])) {
+    if (!isset($_SESSION['account_id'])) {
         die("Bạn phải đăng nhập để báo cáo.");
     }
 
@@ -11,7 +11,7 @@
     }
 
     $prompt_id  = (int)$_POST['id'];
-    $account_id = $_SESSION['id_user'];
+    $account_id = $_SESSION['account_id'];
     $reason     = trim($_POST['reason']);
 
     // Lưu vào bảng report

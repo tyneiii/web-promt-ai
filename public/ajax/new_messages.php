@@ -9,7 +9,7 @@ if (!isset($conn) || $conn->connect_error) {
 }
 $chat_id = filter_input(INPUT_GET, 'chat_id', FILTER_VALIDATE_INT);
 $last_id = filter_input(INPUT_GET, 'last_id', FILTER_VALIDATE_INT);
-$account_id = $_SESSION['id_user'] ?? null;
+$account_id = $_SESSION['account_id'] ?? null;
 $new_messages = [];
 $sql = "SELECT chat_detail_id, sender_id, message, sent_at 
         FROM chat_detail 

@@ -5,12 +5,12 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-if (!isset($_SESSION['id_user'])) {
+if (!isset($_SESSION['account_id'])) {
     header("Location: ../../login.php");
     exit;
 }
 
-$acc_id = $_SESSION['id_user'];
+$acc_id = $_SESSION['account_id'];
 
 /* ======================
    Lấy thông tin Bank Info
