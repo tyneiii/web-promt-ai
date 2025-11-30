@@ -18,10 +18,30 @@ $acc_id = $_SESSION['id_user'];
 $sql_user = "SELECT * FROM account WHERE account_id = $acc_id";
 $user_result = mysqli_query($conn, $sql_user);
 $user = mysqli_fetch_assoc($user_result);
+// ===============================================
+// AJAX CHECK USERNAME LIVE
+// ===============================================
+if (isset($_GET['check_username'])) {
+    if (session_status() === PHP_SESSION_NONE) session_start();
+
+    $acc_id = $_SESSION['id_user'];
+    $username = mysqli_real_escape_string($conn, $_GET['check_username']);
+
+    $sql = "SELECT * FROM account 
+            WHERE username = '$username'
+           AND account_id != $acc_id";
+    $res = mysqli_query($conn, $sql);
+
+    echo (mysqli_num_rows($res) > 0) ? "exists" : "ok";
+    exit;  // rất quan trọng! kết thúc AJAX, không chạy code phía dưới
+}
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fullname = mysqli_real_escape_string($conn, $_POST['name']);
     $description = mysqli_real_escape_string($conn, $_POST['bio']);
+    $username = mysqli_real_escape_string($conn, $_POST['username']);
+
 
     // Giữ ảnh cũ nếu không tải ảnh mới
     $avatarPath = $user['avatar'];
@@ -37,9 +57,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $targetFile = $targetDir . $fileName;
         if (move_uploaded_file($_FILES['avatar']['tmp_name'], $targetFile)) {
-            $avatarPath = $fileName; // chỉ lưu tên file
+            $avatarPath = $targetDir . $fileName; // chỉ lưu tên file
         }
-        $_SESSION['avatar'] = $targetFile ;
+        $_SESSION['avatar'] = $targetFile;
     }
 
 
@@ -65,9 +85,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Cập nhật thông tin vào CSDL
+
+
+    // Không trùng -> tiếp tục update
     $updateSql = "UPDATE account 
-        SET fullname = '$fullname',
+        SET username = '$username',
+            fullname = '$fullname',
             description = '$description',
             avatar = '$avatarPath',
             bg_avatar = '$backgroundPath'
@@ -99,11 +122,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h2>Sửa hồ sơ</h2>
                 <button class="close-btn" onclick="confirmCancel()">✕</button>
             </div>
-
-            <?php if (isset($error)): ?>
-                <p style="color:red;text-align:center;"><?= htmlspecialchars($error) ?></p>
-            <?php endif; ?>
-
             <form method="POST" enctype="multipart/form-data">
                 <div class="modal-body">
                     <label>Ảnh hồ sơ</label>
@@ -131,6 +149,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
+                    <label for="username">Tên User</label>
+                    <input type="text" id="username" name="username"
+                        value="<?= htmlspecialchars($user['username'] ?? '') ?>">
+
+                    <p id="usernameError" style="color:red; margin:4px 0;"></p>
                     <label for="name">Tên</label>
                     <input type="text" id="name" name="name"
                         value="<?= htmlspecialchars($user['fullname'] ?? '') ?>">
@@ -145,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <div class="modal-footer">
                     <button type="button" class="cancel" onclick="confirmCancel()">Hủy</button>
-                    <button type="submit" class="save">Lưu</button>
+                    <button type="submit" class="save" id="saveBtn">Lưu</button>
                 </div>
             </form>
         </div>
@@ -180,9 +203,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         function confirmCancel() {
             const confirmExit = confirm("Bạn có chắc muốn hủy chỉnh sửa và quay lại trang hồ sơ?");
             if (confirmExit) {
-                window.location.href = "profile.php";
+                window.history.back();
             }
+        };
+        // ================================
+        // LIVE CHECK USERNAME
+        // ================================
+        const saveBtn = document.getElementById("saveBtn");
+
+        function setButtonState(enabled) {
+            saveBtn.disabled = !enabled; // disabled khi false
+            saveBtn.style.opacity = enabled ? 1 : 0.5; // mờ khi disabled
         }
+
+        document.getElementById("username").addEventListener("input", function() {
+            const username = this.value.trim();
+            const errorBox = document.getElementById("usernameError");
+
+            if (username === "") {
+                errorBox.textContent = "";
+                setButtonState(true);
+                return;
+            }
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "edit_profile.php?check_username=" + encodeURIComponent(username), true);
+
+            xhr.onload = function() {
+                if (this.responseText === "exists") {
+                    errorBox.textContent = "⚠️ Username đã tồn tại!";
+                    errorBox.style.color = "red";
+                    setButtonState(false); // mờ + khóa nút
+                } else {
+                    errorBox.textContent = "✔ Username hợp lệ";
+                    errorBox.style.color = "green";
+                    setButtonState(true); // bật nút
+                }
+            };
+
+            xhr.send();
+        });
     </script>
 
 </body>

@@ -153,7 +153,7 @@ $result = mysqli_query($conn, $sql);
 
 <link rel="stylesheet" href="../../public/css/user/profile.css">
 
-<button id="back-btn" class="back-btn" onclick="window.history.back()">
+<button id="back-btn" class="back-btn" onclick="confirmCancel()">
     <i class="fa-solid fa-arrow-left"></i>
 </button>
 
@@ -298,4 +298,7 @@ $result = mysqli_query($conn, $sql);
                     }, 0);
         });
     });
+    function confirmCancel() {
+            window.location.href = "home.php";
+    }
 </script>
