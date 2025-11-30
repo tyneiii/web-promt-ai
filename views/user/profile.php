@@ -9,7 +9,7 @@ include_once __DIR__ . '/../../config.php';
 if (isset($_POST['action']) && $_POST['action'] === "follow_toggle") {
     header("Content-Type: application/json");
 
-    $follower = intval($_SESSION['id_user']);
+    $follower = intval($_SESSION['account_id']);
     $following = intval($_POST['following_id']);
 
     if ($follower == $following) {
@@ -49,13 +49,7 @@ if (isset($_POST['action']) && $_POST['action'] === "follow_toggle") {
     exit;
 }
 
-
-
-/* ==========================
-        LẤY DỮ LIỆU PROFILE
-    ========================== */
-
-$acc_id = intval($_SESSION['id_user']);
+$acc_id = intval($_SESSION['account_id']);
 $profile_id = isset($_GET['id']) ? intval($_GET['id']) : $acc_id;
 
 // Lấy thông tin user
