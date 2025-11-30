@@ -14,35 +14,35 @@ session_start();
 
 <body>
     <?php
-        if (isset($_SESSION['register_success'])) {
-            echo '<div id="toast-success" class="toast toast-success">';
-            echo '<span><i class="fas fa-check-circle"></i> ' . htmlspecialchars($_SESSION['register_success']) . '</span>';
-            echo '</div>';
-            unset($_SESSION['register_success']);
-        }
-        if (isset($_GET['require_login']) && $_GET['require_login'] === 'favorites') {
-            echo '<div class="toast toast-error">'; 
-            echo '<span><i class="fas fa-exclamation-circle"></i> Vui lòng đăng nhập để xem danh sách yêu thích!</span>';
-            echo '</div>';
-        }
-        if (isset($_SESSION['inactive_error'])) {
-            echo '<div class="toast toast-error">'; 
-            echo '<span><i class="fas fa-exclamation-circle"></i> ' . htmlspecialchars($_SESSION['inactive_error']) . '</span>'; // Icon lỗi
-            echo '</div>';
-            unset($_SESSION['inactive_error']);
-        }
-        if (isset($_SESSION['activate_success'])) {
-            echo '<div id="toast-success" class="toast toast-success">';
-            echo '<span><i class="fas fa-check-circle"></i> ' . htmlspecialchars($_SESSION['activate_success']) . '</span>';
-            echo '</div>';
-            unset($_SESSION['activate_success']);
-        }
-        if (isset($_SESSION['activate_error'])) {
-            echo '<div class="toast toast-error">'; 
-            echo '<span><i class="fas fa-exclamation-circle"></i> ' . htmlspecialchars($_SESSION['activate_error']) . '</span>';
-            echo '</div>';
-            unset($_SESSION['activate_error']);
-        }
+    if (isset($_SESSION['register_success'])) {
+        echo '<div id="toast-success" class="toast toast-success">';
+        echo '<span><i class="fas fa-check-circle"></i> ' . htmlspecialchars($_SESSION['register_success']) . '</span>';
+        echo '</div>';
+        unset($_SESSION['register_success']);
+    }
+    if (isset($_GET['require_login']) && $_GET['require_login'] === 'favorites') {
+        echo '<div class="toast toast-error">';
+        echo '<span><i class="fas fa-exclamation-circle"></i> Vui lòng đăng nhập để xem danh sách yêu thích!</span>';
+        echo '</div>';
+    }
+    if (isset($_SESSION['inactive_error'])) {
+        echo '<div class="toast toast-error">';
+        echo '<span><i class="fas fa-exclamation-circle"></i> ' . htmlspecialchars($_SESSION['inactive_error']) . '</span>'; // Icon lỗi
+        echo '</div>';
+        unset($_SESSION['inactive_error']);
+    }
+    if (isset($_SESSION['activate_success'])) {
+        echo '<div id="toast-success" class="toast toast-success">';
+        echo '<span><i class="fas fa-check-circle"></i> ' . htmlspecialchars($_SESSION['activate_success']) . '</span>';
+        echo '</div>';
+        unset($_SESSION['activate_success']);
+    }
+    if (isset($_SESSION['activate_error'])) {
+        echo '<div class="toast toast-error">';
+        echo '<span><i class="fas fa-exclamation-circle"></i> ' . htmlspecialchars($_SESSION['activate_error']) . '</span>';
+        echo '</div>';
+        unset($_SESSION['activate_error']);
+    }
     ?>
     <a href="../user/home.php" class="back-home-btn" title="Về trang chủ">
         <i class="fas fa-arrow-left"></i>
@@ -55,7 +55,7 @@ session_start();
             $email_attempt = '';
             if (isset($_SESSION['login_email_attempt'])) {
                 $email_attempt = htmlspecialchars($_SESSION['login_email_attempt']);
-                unset($_SESSION['login_email_attempt']); 
+                unset($_SESSION['login_email_attempt']);
             }
             $email_error = isset($_SESSION['email_error']) ? $_SESSION['email_error'] : null;
             $password_error = isset($_SESSION['password_error']) ? $_SESSION['password_error'] : null;
@@ -80,12 +80,12 @@ session_start();
                     ?>
                 </div>
                 <div class="form-options">
-                     <label for="showPassword" class="show-password-label">
+                    <label for="showPassword" class="show-password-label">
                         <input type="checkbox" id="showPassword"> Hiển thị mật khẩu
                     </label>
                     <a href="forgot_password.php" class="forgot-password">Quên mật khẩu?</a>
                 </div>
-                <button type="submit" class="auth-btn" name ="btnlogin">Đăng nhập</button>
+                <button type="submit" class="auth-btn" name="btnlogin">Đăng nhập</button>
             </form>
             <div class="divider">
                 <span>hoặc</span>
@@ -108,19 +108,19 @@ session_start();
                 // Hiển thị toast
                 setTimeout(() => {
                     toast.classList.add('show');
-                }, 100 * (index + 1)); 
+                }, 100 * (index + 1));
                 setTimeout(() => {
                     toast.classList.remove('show');
                     // Xóa hẳn khỏi DOM sau khi mờ đi
-                     setTimeout(() => {
+                    setTimeout(() => {
                         if (toast.parentNode) {
                             toast.parentNode.removeChild(toast);
                         }
-                    }, 500); 
+                    }, 500);
                 }, 5100 * (index + 1));
             });
             const passwordInput = document.getElementById('password');
-            const showPasswordCheckbox = document.getElementById('showPassword'); 
+            const showPasswordCheckbox = document.getElementById('showPassword');
 
             if (showPasswordCheckbox && passwordInput) {
                 showPasswordCheckbox.addEventListener('change', function() {
@@ -135,4 +135,5 @@ session_start();
         });
     </script>
 </body>
+
 </html>

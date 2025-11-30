@@ -36,7 +36,7 @@ if (isset($_SESSION['previous_url']) && !empty($_SESSION['previous_url'])) {
 } else {
     $redirect_url = "home.php";
 }
-if (!empty($_SESSION['loggedin'])) {
+if (isset($_SESSION['account_id'])) {
     $account = getInfoAccount($conn, $_SESSION['account_id']);
     $_SESSION["loggedin"] = true;
     $_SESSION["account_id"] = $account['account_id'];

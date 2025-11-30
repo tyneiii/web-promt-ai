@@ -73,9 +73,8 @@ $followingCountQuery->bind_result($followingCount);
 $followingCountQuery->fetch();
 $followingCountQuery->close();
 
-/* ==========================
-   LẤY THU NHẬP THÁNG HIỆN TẠI
-========================== */
+// LẤY THU NHẬP THÁNG HIỆN TẠI
+
 $sql_bank = "SELECT * FROM userpayoutinfo WHERE account_id = $acc_id";
 $bank_res = mysqli_query($conn, $sql_bank);
 $bankInfo = mysqli_fetch_assoc($bank_res);
@@ -96,25 +95,9 @@ $payoutQuery->close();
 if (!$earnedMoney) {
     $earnedMoney = 0;
 }
-// Tab
-$tab = isset($_GET['tab']) ? $_GET['tab'] : 'public';
 
-// Lấy bài viết
-// if ($tab === 'favorites') {
-//     $sql = "SELECT p.* 
-//                 FROM love l 
-//                 JOIN prompt p ON l.prompt_id = p.prompt_id 
-//                 WHERE l.account_id = $profile_id AND l.status = 'OPEN'
-//                 ORDER BY l.love_at DESC ";
-// } else if ($tab === 'posts') {
-//     $sql = "SELECT * FROM prompt WHERE account_id = $profile_id ORDER BY prompt_id DESC";
-// } else {
-//     $sql = "SELECT p.* 
-//                 FROM save s 
-//                 JOIN prompt p ON s.prompt_id = p.prompt_id 
-//                 WHERE s.account_id = $profile_id 
-//                 ORDER BY s.save_id DESC ";
-// }
+$tab = isset($_GET['tab']) ? $_GET['tab'] : '';
+
 if ($tab === 'favorites') {
     $sql = "SELECT p.*, a.username, a.avatar 
                 FROM love l 
@@ -196,11 +179,9 @@ $result = mysqli_query($conn, $sql);
         <div class="stats" style="margin-top: 10px; font-size: 18px;">
 
             <?php if ($bankInfo): ?>
-                <!-- ĐÃ CÓ THÔNG TIN NGÂN HÀNG -->
                 <span>💰 <strong><?= number_format($earnedMoney, 2) ?> USD</strong> / tháng này</span>
 
             <?php else: ?>
-                <!-- CHƯA CÓ BANK INFO → ĐIỀN NGAY -->
                 <a href="edit_bank_info.php" style="text-decoration:none; color: #2e2c2c" class="item-link">
                     <div class="item">
                         🔔 Bạn chưa cập nhật thông tin ngân hàng – Nhấn để điền
@@ -220,6 +201,7 @@ $result = mysqli_query($conn, $sql);
                 <?php
                 if ($tab === 'public') echo 'Công khai';
                 else if ($tab === 'waiting') echo 'Chờ duyệt';
+                else if ($tab === '') echo 'Bài viết';
                 else if ($tab === 'reject') echo 'Bị từ chối';
                 else if ($tab === 'report') echo 'Bị báo cáo';
                 else echo 'Bài viết';
@@ -292,7 +274,7 @@ $result = mysqli_query($conn, $sql);
         followBtn.addEventListener("click", function(e) {
             e.preventDefault();
 
-            // 🔥 Đổi UI ngay lập tức
+            // Đổi UI ngay lập tức
             isFollowing = !isFollowing;
             updateButton();
 
@@ -335,39 +317,38 @@ $result = mysqli_query($conn, $sql);
     function confirmCancel() {
         window.location.href = "home.php";
     }
-    /* =================================
-    XỬ LÝ CUSTOM DROPDOWN MENU
-================================= */
-document.addEventListener("DOMContentLoaded", () => {
-    const toggleButton = document.querySelector('.custom-menu-toggle');
-    const optionsList = toggleButton?.querySelector('.dropdown-options');
-    const profileId = <?= $profile_id ?>;
+    // XỬ LÝ CUSTOM DROPDOWN MENU
 
-    if (toggleButton && optionsList) {
-        // 1. Mở/Đóng Menu khi click vào tab
-        toggleButton.addEventListener('click', (e) => {
-            e.stopPropagation(); 
-            const isVisible = optionsList.style.display === 'block';
-            optionsList.style.display = isVisible ? 'none' : 'block';
-            const arrow = toggleButton.querySelector('.dropdown-arrow');
-            arrow.style.transform = isVisible ? 'rotate(0deg)' : 'rotate(180deg)';
-        });
+    document.addEventListener("DOMContentLoaded", () => {
+        const toggleButton = document.querySelector('.custom-menu-toggle');
+        const optionsList = toggleButton?.querySelector('.dropdown-options');
+        const profileId = <?= $profile_id ?>;
 
-        optionsList.addEventListener('click', (e) => {
-            if (e.target.tagName === 'LI' && e.target.dataset.value) {
-                const selectedValue = e.target.dataset.value;
-                window.location.href = `?id=${profileId}&tab=${selectedValue}`;
-                optionsList.style.display = 'none'; 
-            }
-        });
+        if (toggleButton && optionsList) {
+            // 1. Mở/Đóng Menu khi click vào tab
+            toggleButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isVisible = optionsList.style.display === 'block';
+                optionsList.style.display = isVisible ? 'none' : 'block';
+                const arrow = toggleButton.querySelector('.dropdown-arrow');
+                arrow.style.transform = isVisible ? 'rotate(0deg)' : 'rotate(180deg)';
+            });
 
-        document.addEventListener('click', () => {
-            optionsList.style.display = 'none';
-            const arrow = toggleButton.querySelector('.dropdown-arrow');
-            if (arrow) {
-                arrow.style.transform = 'rotate(0deg)';
-            }
-        });
-    }
-});
+            optionsList.addEventListener('click', (e) => {
+                if (e.target.tagName === 'LI' && e.target.dataset.value) {
+                    const selectedValue = e.target.dataset.value;
+                    window.location.href = `?id=${profileId}&tab=${selectedValue}`;
+                    optionsList.style.display = 'none';
+                }
+            });
+
+            document.addEventListener('click', () => {
+                optionsList.style.display = 'none';
+                const arrow = toggleButton.querySelector('.dropdown-arrow');
+                if (arrow) {
+                    arrow.style.transform = 'rotate(0deg)';
+                }
+            });
+        }
+    });
 </script>

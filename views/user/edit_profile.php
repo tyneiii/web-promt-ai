@@ -23,7 +23,7 @@ if (isset($_GET['check_username'])) {
     $res = mysqli_query($conn, $sql);
 
     echo (mysqli_num_rows($res) > 0) ? "exists" : "ok";
-    exit;  // rất quan trọng! kết thúc AJAX, không chạy code phía dưới
+    exit;  // kết thúc AJAX, không chạy code phía dưới
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $backgroundPath = $user['bg_avatar'] ?? null;
     if (isset($_FILES['background']) && $_FILES['background']['error'] === 0) {
-        $bgName = '../../public/img/'.time() . '_bg_' . basename($_FILES['background']['name']);
+        $bgName = '../../public/img/' . time() . '_bg_' . basename($_FILES['background']['name']);
         $targetDir = __DIR__ . '/../../public/img/';
         if (!is_dir($targetDir)) {
             mkdir($targetDir, 0777, true);
@@ -145,6 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <script>
         const redirectUrl = "<?php echo htmlspecialchars($redirect_url); ?>";
+
         function smartGoBack() {
             window.location.href = redirectUrl;
         }
@@ -155,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 preview.src = URL.createObjectURL(file);
             }
         });
-        // ✅ Preview ảnh nền khi chọn (background)
+        // Preview ảnh nền khi chọn (background)
         document.getElementById('background').addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
@@ -193,7 +194,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             xhr.onload = function() {
                 if (this.responseText === "exists") {
-                    errorBox.textContent = "⚠️ Username đã tồn tại!";
+                    errorBox.textContent = "Username đã tồn tại!";
                     errorBox.style.color = "red";
                     setButtonState(false); // mờ + khóa nút
                 } else {

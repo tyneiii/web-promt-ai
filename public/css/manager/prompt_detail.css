@@ -515,14 +515,22 @@ body {
   align-items: center;
   justify-content: center;
   border: 3px solid #18191a;
-  box-shadow: 0 0 4px 10px rgba(0,0,0,0.5);
+  box-shadow: 0 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 /* Hiệu ứng nhấp nhô nhẹ */
 @keyframes pulse {
-  0% { box-shadow: 0 8px 25px rgba(231, 76, 60, 0.6); }
-  50% { box-shadow: 0 8px 35px rgba(231, 76, 60, 0.9); }
-  100% { box-shadow: 0 8px 25px rgba(231, 76, 60, 0.6); }
+  0% {
+    box-shadow: 0 8px 25px rgba(231, 76, 60, 0.6);
+  }
+
+  50% {
+    box-shadow: 0 8px 35px rgba(231, 76, 60, 0.9);
+  }
+
+  100% {
+    box-shadow: 0 8px 25px rgba(231, 76, 60, 0.6);
+  }
 }
 
 /* Popup báo cáo */
@@ -530,7 +538,7 @@ body {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.92);
+  background: rgba(0, 0, 0, 0.92);
   backdrop-filter: blur(8px);
   justify-content: center;
   align-items: center;
@@ -550,7 +558,7 @@ body {
   max-width: 560px;
   max-height: 85vh;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
   border: 1px solid #444;
 }
 
@@ -634,7 +642,7 @@ body {
 }
 
 .report-reason {
-  background: rgba(0,0,0,0.4);
+  background: rgba(0, 0, 0, 0.4);
   padding: 10px;
   border-radius: 8px;
   font-size: 14.5px;
@@ -653,11 +661,12 @@ body {
 .report-popup-body::-webkit-scrollbar {
   width: 8px;
 }
+
 .report-popup-body::-webkit-scrollbar-track {
   background: #111;
 }
+
 .report-popup-body::-webkit-scrollbar-thumb {
   background: #e74c3c;
   border-radius: 4px;
 }
-

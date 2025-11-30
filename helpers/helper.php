@@ -47,7 +47,7 @@ function getFlexiblePaginationUrl($page, $rows_per_page, $extra_params)
     ];
     $all_params = array_merge($params, $extra_params);
     $search_columns = $all_params['search_columns'] ?? [];
-    unset($all_params['search_columns']); 
+    unset($all_params['search_columns']);
     $query_string = http_build_query(array_filter($all_params, function ($value) {
         return $value !== '' && $value !== null;
     }));
@@ -58,7 +58,7 @@ function getFlexiblePaginationUrl($page, $rows_per_page, $extra_params)
     }
     return '?' . $query_string;
 }
-function renderPagination($current_page,$total_pages,$rows_per_page,$extra_params = []) 
+function renderPagination($current_page, $total_pages, $rows_per_page, $extra_params = [])
 {
     if ($total_pages <= 1) {
         return '';

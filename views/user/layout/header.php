@@ -30,8 +30,8 @@
       display: inline-block;
     }
     #sticky-ad-banner img {
-      height: 150px;
-      width: 950px;
+      height: 100px;
+      width: 750px;
       max-width: 200vw;
       border-radius: 6px;
     }

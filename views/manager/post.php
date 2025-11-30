@@ -13,28 +13,29 @@
 
 <body>
     <div class="container">
-        <?php 
-            include_once __DIR__ . '/layout/sidebar.php';
+        <?php
+        include_once __DIR__ . '/layout/sidebar.php';
         ?>
         <div class="main">
-            <?php 
-                include_once __DIR__ . '/../../helpers/helper.php';
-                include_once __DIR__ . '/../../config.php';
-                include_once __DIR__ . '/../../Controller/user/report.php';
-                include_once __DIR__ . '/../../helpers/manager_prompt_logic.php'; 
+            <?php
+            include_once __DIR__ . '/../../helpers/helper.php';
+            include_once __DIR__ . '/../../config.php';
+            include_once __DIR__ . '/../../Controller/user/report.php';
+            include_once __DIR__ . '/../../helpers/manager_prompt_logic.php';
 
-                // Đếm bài viết đang chờ duyệt
-                $waiting_count = $conn->query(" SELECT COUNT(*) AS total FROM prompt WHERE status = 'waiting' ")->fetch_assoc()['total'];
+            // Đếm bài viết đang chờ duyệt
+            $waiting_count = $conn->query(" SELECT COUNT(*) AS total FROM prompt WHERE status = 'waiting' ")->fetch_assoc()['total'];
 
-                // Đếm bài bị báo cáo
-                $report_count = $conn->query(" SELECT COUNT(*) AS total FROM prompt WHERE status = 'report' ")->fetch_assoc()['total'];
+            // Đếm bài bị báo cáo
+            $report_count = $conn->query(" SELECT COUNT(*) AS total FROM prompt WHERE status = 'report' ")->fetch_assoc()['total'];
 
-                function getReportCount($conn, $prompt_id, $status){
-                    if(strtolower($status) === 'report'){
-                        return getReportOfPrompt($conn, $prompt_id);
-                    }
-                    return "";
+            function getReportCount($conn, $prompt_id, $status)
+            {
+                if (strtolower($status) === 'report') {
+                    return getReportOfPrompt($conn, $prompt_id);
                 }
+                return "";
+            }
             ?>
             <fieldset class="account-fieldset">
                 <legend>Quản lý bài đăng</legend>
