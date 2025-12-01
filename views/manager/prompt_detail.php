@@ -26,7 +26,7 @@
   $reports = getReports($conn, $prompt_id);
 
   // Tạo full prompt
-  $details = $conn->query("SELECT content FROM promptdetail WHERE prompt_id = $prompt_id ORDER BY component_order")->fetch_all(MYSQLI_ASSOC);
+  $details = $conn->query("SELECT content FROM promptdetail WHERE prompt_id = $prompt_id")->fetch_all(MYSQLI_ASSOC);
   $full_prompt = $prompt['short_description'] ?? '';
   foreach ($details as $d) $full_prompt .= "\n" . $d['content'];
   ?>
