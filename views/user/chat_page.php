@@ -125,7 +125,7 @@
                     <input type="hidden" id="activeChatId" value="<?= htmlspecialchars($chat_id ?? '') ?>">
                 </form>
             <?php else: ?>
-                <div style="text-align:center; color: #8e8e8e; padding-top: 50px; font-style: italic;">Không có tin nhắn!</div>
+                <div style="text-align:center; color: #8e8e8e; padding-top: 50px; font-style: italic;">Vui lòng chọn một đoạn chat để bắt đầu.</div>
             <?php endif ?>
         </div>
     </div>

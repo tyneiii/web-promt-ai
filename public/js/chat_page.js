@@ -71,6 +71,12 @@ function getDisplayDate(timestamp) {
 }
 
 function appendMessage(text, who = 'mine', prepend = false, messageId = null, timestamp = new Date().toISOString()) {
+    if (!prepend) { 
+        const emptyMessageEl = messagesEl.querySelector('div[style*="text-align:center"]');
+        if (emptyMessageEl && emptyMessageEl.textContent.includes('Chưa có tin nhắn nào')) {
+            emptyMessageEl.remove();
+        }
+    }
     const el = document.createElement('div');
     el.className = 'bubble ' + (who === 'mine' ? 'mine' : 'other');
     if (messageId !== null) {
@@ -358,10 +364,19 @@ window.addEventListener('load', () => {
     }
     
     const totalMessages = messagesEl.querySelectorAll('.bubble').length;
-    if (totalMessages >= 2) { 
+    const MESSAGE_LOAD_LIMIT = 5; 
+
+    if (totalMessages >= MESSAGE_LOAD_LIMIT) { 
         updateLoadMoreButton(true);
     } else {
         updateLoadMoreButton(false);
+    }
+    if (totalMessages === 0) {
+        loadMoreContainer.innerHTML = ''; 
+    } else if (totalMessages < MESSAGE_LOAD_LIMIT) {
+        updateLoadMoreButton(false);
+    } else {
+        updateLoadMoreButton(true); 
     }
     if (currentChatId) {
         startPolling();

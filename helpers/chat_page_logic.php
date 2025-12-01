@@ -8,7 +8,7 @@ if ($role == 1) {
     exit();
 }
 $account_id = (int)$_SESSION['account_id'];
-$username = $_SESSION['name_user'];
+$username = $_SESSION['name_user']; 
 $user_avatar= $_SESSION['avatar'];
 $searchName= $_GET['username'] ?? '';
 $chatList = getChatList($conn, $account_id, $role, $searchName);
@@ -59,7 +59,7 @@ function printBubble(array $message, string $bubble_class): void
 function renderMessages(array $messages, string $current_user_id): void
 {
     if (empty($messages)) {
-        echo '<div style="text-align:center; color: #8e8e8e; padding-top: 50px;">Chưa có tin nhắn nào trong đoạn chat này.</div>';
+        echo '<div style="text-align:center; color: #8e8e8e; padding-top: 50px; font-style: italic;">Chưa có tin nhắn nào trong đoạn chat này.</div>';
         return;
     }
     $current_date = '';
