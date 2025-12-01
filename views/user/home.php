@@ -209,9 +209,8 @@ unset($_POST);
             </div>
         </div>
     </div>
-    <?php echo renderPagination($current_page, $total_pages, $rows_per_page, $pagination_params); ?>
-
 </div>
+<?php echo renderPagination($current_page, $total_pages, $rows_per_page, $pagination_params); ?>
 
 
 <div id="rulesModal" class="modal-overlay">
