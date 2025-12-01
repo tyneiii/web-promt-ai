@@ -67,9 +67,10 @@ function renderPagination($current_page, $total_pages, $rows_per_page, $extra_pa
     ob_start();
 ?>
     <div class="pagination-container">
-        <p>Trang <?= $current_page ?> / <?= $total_pages ?></p>
-        <div class="pagination-links">
-            <?php if ($current_page > 1): ?>
+        <div style="display: flex;align-items: center;">
+            <span style="margin-right:15px">Trang <?= $current_page ?> / <?= $total_pages ?></span>
+            <div class="pagination-links">
+                <?php if ($current_page > 1): ?>
                 <a href="<?= $get_url(1, $rows_per_page, $extra_params) ?>"
                     class="page-link">
                     <i class="fa-solid fa-angles-left"></i>
@@ -100,6 +101,7 @@ function renderPagination($current_page, $total_pages, $rows_per_page, $extra_pa
                 </a>
             <?php endif ?>
         </div>
+                </div>
     </div>
 <?php
     return ob_get_clean();
