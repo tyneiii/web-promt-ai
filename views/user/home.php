@@ -161,11 +161,7 @@ unset($_POST);
                         </div>
                     <?php endif; ?>
                     <p>
-                        <?php
-                        if (is_array($prompt['details']) && !empty($prompt['details'])) {
-                            echo implode('<br><br>', array_map('htmlspecialchars', $prompt['details']));
-                        }
-                        ?>
+                        <?= htmlspecialchars($prompt['short_description']) ?>
                     </p>
                     <div class="card-buttons">
                         <button type="submit" name="loveBtn" id="loveBtn" title="Thích bài viết" value="<?= $prompt['prompt_id'] ?>">

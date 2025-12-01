@@ -13,6 +13,7 @@ function getPrompts($account_id, $searchString, $tag_id, $conn) {
             COALESCE(p.title, p.short_description, '') AS description,
             p.love_count,
             p.comment_count,
+            p.short_description,
             p.save_count,
             a.username,
             a.avatar,
@@ -85,10 +86,13 @@ function getPrompts($account_id, $searchString, $tag_id, $conn) {
             'username' => $row['username'],
             'avatar' => $row['avatar'] ?? 'default-avatar.png',
             'description' => $row['description'],
+            'short_description' => $row['short_description'],  // ⭐ THÊM DÒNG NÀY ⭐
+            
             'love_count' => (int)$row['love_count'],
             'comment_count' => (int)$row['comment_count'],
             'save_count' => (int)$row['save_count'],
             'is_loved' => $row['is_loved'] == 1,
+
             'details' => [],
             'tags' => []
         ];
@@ -119,7 +123,6 @@ function getPrompts($account_id, $searchString, $tag_id, $conn) {
             SELECT content 
             FROM promptdetail 
             WHERE prompt_id = ?
-            ORDER BY component_order ASC
         ";
         $detail_stmt = $conn->prepare($detail_sql);
         $detail_stmt->bind_param("i", $prompt_id);
