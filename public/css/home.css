@@ -255,7 +255,6 @@ select {
   overflow: hidden;
 }
 
-/* Viền trái */
 .box-decor::before {
   content: "";
   position: absolute;
@@ -268,7 +267,6 @@ select {
   z-index: 11;
 }
 
-/* Viền dưới */
 .box-decor::after {
   content: "";
   position: absolute;
@@ -281,7 +279,7 @@ select {
   z-index: 11;
 }
 
-/* Tiêu đề gradient */
+
 .box-decor h3 {
   margin-top: 0;
   margin-bottom: 3px;
@@ -293,13 +291,11 @@ select {
 
 .follow-list {
   max-height: 260px;
-  /* chiều cao scroll */
   overflow-y: auto;
-  /* chỉ phần này scroll */
   padding-right: 5px;
 }
 
-/* Scrollbar đẹp */
+
 .follow-list::-webkit-scrollbar {
   width: 6px;
 }
@@ -309,31 +305,16 @@ select {
 }
 
 
-.item {
-  display: flex;
-  align-items: center;
-  /* Căn giữa chữ với ảnh */
-  gap: 8px;
-  /* khoảng cách giữa avatar và chữ */
-  padding: 8px 10px;
-  border-radius: 8px;
-  color: #fff;
-  transition: 0.25s ease;
-  text-decoration: none;
-
-}
-
 .item img {
   width: 28px;
   height: 28px;
   border-radius: 50%;
   object-fit: cover;
-  /* ép ảnh về đúng tỷ lệ, không méo */
   flex-shrink: 0;
-  /* không cho ảnh bị co lại */
+
 }
 
-/* Hover */
+
 .item-link:hover .item {
   background: #333;
   transform: translateX(4px);
@@ -341,7 +322,12 @@ select {
 }
 
 .item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin: 10px 0;
+  padding: 8px 10px;
+  border-radius: 8px;
   padding: 8px;
   background-color: #111;
   border-radius: 8px;
@@ -362,7 +348,6 @@ select {
 
 .main-content {
   margin-top: 0;
-  /* FIX: Bù trừ padding-top 80px từ body, giảm từ 70px xuống 0 */
   margin-left: 60px;
   margin-right: 280px;
   padding: 20px;
@@ -484,7 +469,6 @@ select {
   transition: all 0.25s ease;
 }
 
-/* Nền mờ full màn hình */
 .report-modal {
   position: fixed;
   top: 0;
@@ -499,7 +483,6 @@ select {
   animation: fadeIn 0.2s ease-out;
 }
 
-/* Hộp popup */
 .report-box {
   width: 380px;
   padding: 25px;
@@ -509,7 +492,7 @@ select {
   animation: scaleIn 0.25s ease-out;
 }
 
-/* Tiêu đề */
+
 .report-box h3 {
   margin: 0 0 18px;
   color: #fff;
@@ -517,7 +500,7 @@ select {
   font-weight: bold;
 }
 
-/* Dropdown */
+
 #report-reason {
   width: 100%;
   padding: 10px;
@@ -534,7 +517,6 @@ select {
   border-color: #00aaff;
 }
 
-/* Ô nhập lý do khác */
 #report-custom {
   width: 100%;
   min-height: 65px;
@@ -552,14 +534,14 @@ select {
   border-color: #00aaff;
 }
 
-/* Footer nút */
+
 .report-actions {
   display: flex;
   justify-content: space-between;
   margin-top: 18px;
 }
 
-/* Nút Hủy */
+
 #cancelReport {
   padding: 8px 18px;
   background: #444;
@@ -574,7 +556,7 @@ select {
   background: #666;
 }
 
-/* Nút Gửi báo cáo */
+
 #submitReport {
   padding: 8px 18px;
   background: #ff4d4d;
@@ -589,7 +571,7 @@ select {
   background: #ff6666;
 }
 
-/* Hiệu ứng fade + scale */
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -656,7 +638,7 @@ select {
 
   .main-content {
     margin: 0 10px 20px 10px;
-    /* FIX: Bù trừ padding-top 160px từ body, giảm từ 130px xuống 0 */
+    
     grid-template-columns: 1fr;
   }
 }
@@ -688,7 +670,7 @@ select {
   padding-bottom: 3px;
 }
 
-/* Hover avatar */
+
 .card-header .user-info img:hover {
   background-color: #000;
   border-color: red;
@@ -777,10 +759,9 @@ select {
   border-color: #666;
 }
 
-/* Nền tối làm mờ phía sau khi mở modal */
+
 .modal-overlay {
   display: none;
-  /* Mặc định ẩn */
   position: fixed !important;
   z-index: 1000;
   left: 0;
@@ -863,10 +844,9 @@ select {
   color: #fff;
 }
 
-/* Nội dung xổ xuống (Mặc định ẩn) */
+
 .accordion-content {
   display: none;
-  /* Ẩn */
   padding: 15px;
   border-top: 1px solid #3e3e3e;
   background-color: #252525;
@@ -883,14 +863,13 @@ select {
   margin-bottom: 8px;
 }
 
-/* Class active để hiện nội dung */
 .accordion-card.active .accordion-content {
   display: block;
 }
 
 .accordion-card.active .accordion-header i {
   transform: rotate(180deg);
-  /* Xoay mũi tên */
+
 }
 
 .example-box {
@@ -921,7 +900,7 @@ select {
   padding: 10px 0;
   font-style: Nunito, sans-serif;
   color: #ccc;
-  /* chữ tổng thể màu sáng cho dark theme */
+
 }
 
 .pagination-container p {
@@ -946,7 +925,6 @@ select {
   text-decoration: none;
   color: #ccc;
   background-color: #222;
-  /* nền tối hài hòa với trang */
   border: 1px solid #555;
   border-radius: 6px;
   font-size: 0.95em;
@@ -963,7 +941,6 @@ select {
 .page-link.active {
   color: #fff;
   background-color: #e63946;
-  /* màu nổi bật nhưng vẫn hợp dark theme */
   border-color: #e63946;
   font-weight: bold;
   pointer-events: none;
