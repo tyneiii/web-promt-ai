@@ -30,6 +30,7 @@ if (empty($API_TOKEN)) {
 }
 
 $model = "openai/gpt-oss-120b";
+//$model = "Llava-1.5";
 $endpoint = "https://router.huggingface.co/v1/chat/completions";
 
 $payload = [

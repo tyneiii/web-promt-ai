@@ -238,12 +238,12 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
 <!-- Modal Run Prompt -->
 <div id="prompt-modal" style="display:none;">
-  <div class="modal-overlay" onclick="closeRunModal()"></div>
+  <div class="modal-overlay" onclick="closePromptModal()"></div>
   <div class="modal-content">
     <h3>Xác nhận chạy Prompt</h3>
     <textarea id="promptInput" rows="10"><?= htmlspecialchars($full_prompt) ?></textarea>
     <div class="modal-actions">
-      <button class="cancel" onclick="closeRunModal()">Hủy</button>
+      <button class="cancel" onclick="closePromptModal()">Hủy</button>
       <button class="confirm" onclick="confirmRunPrompt()">Chạy ngay</button>
     </div>
   </div>
