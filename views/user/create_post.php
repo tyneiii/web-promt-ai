@@ -478,6 +478,7 @@ $user = mysqli_fetch_assoc($user_result);
 </html>
 
 <script>
+  const redirectUrl = "<?php echo htmlspecialchars($redirect_url); ?>";
   document.addEventListener('DOMContentLoaded', function() {
     const collapsibleGroups = document.querySelectorAll('.collapsible-group');
 
@@ -521,7 +522,7 @@ $user = mysqli_fetch_assoc($user_result);
   /*  Các hàm cũ giữ nguyên  */
   function confirmCancel() {
     if (confirm("Bạn có chắc chắn muốn hủy bài viết này không?")) {
-      history.back();
+      window.location.href = redirectUrl;
     }
   }
 

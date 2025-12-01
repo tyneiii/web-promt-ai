@@ -2,7 +2,7 @@ body {
   background-color: #1f1f1f;
   color: white;
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
 .navbar {
@@ -919,7 +919,7 @@ select {
   align-items: center;
   margin-top: 20px;
   padding: 10px 0;
-  font-family: Nubito, sans-serif;
+  font-style: Nunito, sans-serif;
   color: #ccc;
   /* chữ tổng thể màu sáng cho dark theme */
 }

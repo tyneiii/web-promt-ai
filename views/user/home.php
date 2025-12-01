@@ -140,7 +140,6 @@ unset($_POST);
     </div>
 </div>
 
-
 <div class="main-content">
     <?php if (empty($prompts)): ?>
         <p>Không có prompt nào phù hợp. Thử tìm kiếm khác!</p>
@@ -213,7 +212,6 @@ unset($_POST);
 </div>
 <?php echo renderPagination($current_page, $total_pages, $rows_per_page, $pagination_params); ?>
 
-
 <div id="rulesModal" class="modal-overlay">
     <div class="modal-container">
         <div class="modal-header">
@@ -255,7 +253,6 @@ unset($_POST);
                     </ul>
                 </div>
             </div>
-
             <div class="accordion-card">
                 <div class="accordion-header">
                     <h3>II. Hướng dẫn soạn nội dung (Prompt)</h3>
@@ -291,7 +288,7 @@ unset($_POST);
 
             <div class="accordion-card">
                 <div class="accordion-header">
-                    <h3 >IV. Hướng dẫn nhận Hoa hồng & Chia sẻ doanh thu</h3>
+                    <h3>IV. Hướng dẫn nhận Hoa hồng & Chia sẻ doanh thu</h3>
                     <i class="fa-solid fa-chevron-down"></i>
                 </div>
                 <div class="accordion-content">
