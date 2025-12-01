@@ -267,6 +267,14 @@
               if (e.key === 'Escape' && modal.style.display === 'block') closeModal();
             });
           });
+          document.querySelectorAll('.short-desc, .info-block textarea').forEach(textarea => {
+            const autoGrow = () => {
+              textarea.style.height = 'auto';
+              textarea.style.height = textarea.scrollHeight + 'px';
+            };
+            textarea.addEventListener('input', autoGrow);
+            autoGrow();
+          });
         </script>
 
         <style>
