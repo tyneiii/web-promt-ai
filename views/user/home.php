@@ -54,6 +54,22 @@ if ($account_id) {
     $following_users = getFollowingUsers($account_id, $conn);
 }
 $prompts = getPrompts($account_id, $search, $tag, $conn, $rows_per_page, $offset);
+function is_saved($conn, $account_id, $prompt_id) {
+    $account_id = (int)$account_id;
+    $prompt_id  = (int)$prompt_id;
+    $sql = "SELECT save_id 
+            FROM `save` 
+            WHERE account_id = $account_id 
+              AND prompt_id = $prompt_id
+            LIMIT 1";
+
+    $result = mysqli_query($conn, $sql);
+    if ($result && mysqli_num_rows($result) > 0) {
+        return true;
+    }
+    return false; // chưa lưu
+}
+
 unset($_POST);
 ?>
 
@@ -116,7 +132,7 @@ unset($_POST);
 
             <?php if (!isset($_SESSION['account_id'])): ?>
 
-                <div class="item" >Bạn cần đăng nhập để xem.</div>
+                <div class="item">Bạn cần đăng nhập để xem.</div>
 
             <?php elseif (empty($following_users)): ?>
 
@@ -182,7 +198,8 @@ unset($_POST);
                             <i class="fa-regular fa-comment"></i> <?= $prompt['comment_count'] ?>
                         </button>
                         <button type="submit" name="saveBtn" title="Lưu bài viết" id="saveBtn" value="<?= $prompt['prompt_id'] ?>">
-                            <i class="fa-regular fa-bookmark"></i> <?= $prompt['save_count'] ?>
+                            <i class="<?= is_saved($conn, $account_id, $prompt['prompt_id']) ? 'fa-solid' : 'fa-regular' ?> fa-bookmark"></i>
+                            <?= $prompt['save_count'] ?>
                         </button>
                     </div>
                 </div>
