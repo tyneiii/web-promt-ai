@@ -31,20 +31,28 @@ if (isset($_POST['loveBtn']) && $account_id) {
 }
 
 include_once __DIR__ . '/layout/header.php';
+include_once __DIR__ . '/../../helpers/helper.php';
 ?>
 
 <link rel="stylesheet" href="../../public/css/run_prompt.css">
 
 <?php
 $tag = isset($_GET['tag']) ? (int)$_GET['tag'] : 0;
-$prompts = getPrompts($account_id, $search, $tag, $conn);
+$rows_per_page = 10;
+$current_page = (int)($_GET['page'] ?? 1);
+$offset = ($current_page - 1) * $rows_per_page;
+$pagination_params = [
+    'search' => $search,
+    'tag' => $tag,
+];
+$total_rows = totalPrompts($search, $tag, $conn);
+$total_pages = ceil($total_rows / $rows_per_page);
 $hot_prompts = getHotPrompts($conn, 5);
 $following_users = [];
 if ($account_id) {
     $following_users = getFollowingUsers($account_id, $conn);
 }
-
-
+$prompts = getPrompts($account_id, $search, $tag, $conn, $rows_per_page, $offset);
 unset($_POST);
 ?>
 
@@ -201,7 +209,10 @@ unset($_POST);
             </div>
         </div>
     </div>
+    <?php echo renderPagination($current_page, $total_pages, $rows_per_page, $pagination_params); ?>
+
 </div>
+
 
 <div id="rulesModal" class="modal-overlay">
     <div class="modal-container">

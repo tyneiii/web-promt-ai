@@ -1,11 +1,49 @@
 <?php
 
-function getPrompts($account_id, $searchString, $tag_id, $conn) {
+function totalPrompts($searchString, $tag_id, $conn) {
+    $search = trim($searchString ?? '');
+    $tag_id = (int)$tag_id;
+    $sql = "SELECT COUNT(DISTINCT p.prompt_id) AS total
+            FROM prompt p";
+    if ($tag_id > 0) {
+        $sql .= " 
+            JOIN prompttag pt ON pt.prompt_id = p.prompt_id 
+            AND pt.tag_id = ?";
+    }
+
+    $sql .= " WHERE p.status = 'public' ";
+    $params = [];
+    $types = "";
+    if (!empty($search)) {
+        $sql .= " AND (p.title LIKE ? OR p.short_description LIKE ?)";
+        $like = "%$search%";
+        $params[] = $like;
+        $params[] = $like;
+        $types .= "ss";
+    }
+    if ($tag_id > 0) {
+        array_unshift($params, $tag_id);
+        $types = "i" . $types;
+    }
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        error_log("Prepare failed: ".$conn->error);
+        return 0;
+    }
+    if (!empty($params)) {
+        $stmt->bind_param($types, ...$params);
+    }
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    return (int)($row['total'] ?? 0);
+}
+
+
+function getPrompts($account_id, $searchString, $tag_id, $conn, $rows_per_page, $offset) {
     $account_id = (int)$account_id;
     $search = trim($searchString ?? '');
     $tag_id = (int)$tag_id;
-
-    // Tạo SQL cơ bản
     $prompt_sql = "
         SELECT 
             p.prompt_id,
@@ -23,7 +61,6 @@ function getPrompts($account_id, $searchString, $tag_id, $conn) {
         LEFT JOIN love l ON l.prompt_id = p.prompt_id AND l.account_id = ?
     ";
 
-    // Nếu lọc theo tag
     if ($tag_id > 0) {
         $prompt_sql .= " 
             JOIN prompttag pt ON pt.prompt_id = p.prompt_id 
@@ -44,7 +81,7 @@ function getPrompts($account_id, $searchString, $tag_id, $conn) {
 
     $prompt_sql .= " 
         ORDER BY p.create_at DESC
-        LIMIT 50
+        LIMIT $offset, $rows_per_page
     ";
 
     // BUILD BIND PARAM 
