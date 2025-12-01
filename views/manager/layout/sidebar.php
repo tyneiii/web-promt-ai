@@ -1,7 +1,7 @@
-<?php 
+<?php
 include_once __DIR__ . '/../../../config.php';
-include_once __DIR__ . '/../../../Controller/user/prompt.php'; 
-include_once __DIR__ . '/../../../Controller/account.php'; 
+include_once __DIR__ . '/../../../Controller/user/prompt.php';
+include_once __DIR__ . '/../../../Controller/account.php';
 include_once __DIR__ . '/../../../helpers/admin_notification.php';
 $notif = getAdminNotificationCount($conn);
 // Đếm số bài chờ duyệt
@@ -20,51 +20,52 @@ $report_count = $conn->query("
 
 $admin_notif_total = $waiting_count + $report_count;
 
-$currentPage = basename($_SERVER['PHP_SELF']); 
-function isActive($page){
+$currentPage = basename($_SERVER['PHP_SELF']);
+function isActive($page)
+{
     global $currentPage;
     return $currentPage === $page ? 'active' : '';
 }
 ?>
 
 <div class="sidebar">
-  <h2>
-    <form action="../user/home.php">
-      <input type="submit" value="Về trang chủ">
-    </form>
-  </h2>
+    <h2>
+        <form action="../user/home.php">
+            <input type="submit" value="Về trang chủ">
+        </form>
+    </h2>
 
-  <ul>
-      <li>
-          <a href="../manager/account.php" class="menu-link <?= isActive('account.php') ?>">
-              <i class="fa-solid fa-users"></i> Quản lý tài khoản
-          </a>
-      </li>
+    <ul>
+        <li>
+            <a href="../manager/account.php" class="menu-link <?= isActive('account.php') ?>">
+                <i class="fa-solid fa-users"></i> Quản lý tài khoản
+            </a>
+        </li>
 
-      <li>
-          <a href="../manager/post.php" class="menu-link <?= isActive('post.php') ?>">
-              <i class="fa-solid fa-file-lines"></i> Quản lý bài đăng
-              <?php if($admin_notif_total > 0): ?>
-                <span class="badge-notif"><?= $notif['total'] ?></span>
-              <?php endif; ?>
-          </a>
-      </li>
+        <li>
+            <a href="../manager/post.php" class="menu-link <?= isActive('post.php') ?>">
+                <i class="fa-solid fa-file-lines"></i> Quản lý bài đăng
+                <?php if ($admin_notif_total > 0): ?>
+                    <span class="badge-notif"><?= $notif['total'] ?></span>
+                <?php endif; ?>
+            </a>
+        </li>
 
-      <li>
-          <a href="../manager/notifications.php" class="menu-link <?= isActive('notifications.php') ?>">
-              <i class="fa-solid fa-bell"></i> Thông báo
-              <?php if($admin_notif_total > 0): ?>
-                <span class="badge-notif"><?= $admin_notif_total ?></span>
-              <?php endif; ?>
-          </a>
-      </li>
+        <li>
+            <a href="../manager/notifications.php" class="menu-link <?= isActive('notifications.php') ?>">
+                <i class="fa-solid fa-bell"></i> Thông báo
+                <?php if ($admin_notif_total > 0): ?>
+                    <span class="badge-notif"><?= $admin_notif_total ?></span>
+                <?php endif; ?>
+            </a>
+        </li>
 
-      <li>
-          <a href="../manager/revenue.php" class="menu-link <?= isActive('revenue.php') ?>">
-              <i class="fa-solid fa-money-bill"></i> Doanh thu
-          </a>
-      </li>
-  </ul>
+        <li>
+            <a href="../manager/revenue.php" class="menu-link <?= isActive('revenue.php') ?>">
+                <i class="fa-solid fa-money-bill"></i> Doanh thu
+            </a>
+        </li>
+    </ul>
     <script>
         function updateAdminNotifs() {
             fetch("../../public/ajax/admin_notif_api.php")

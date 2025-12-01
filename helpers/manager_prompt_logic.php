@@ -18,4 +18,3 @@ $pagination_params = [
     'selectedStatus' => $selectedStatus,
     'search_columns' => $search_columns,
 ];
-?>

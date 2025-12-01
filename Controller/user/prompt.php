@@ -46,7 +46,7 @@ function getPrompts($account_id, $searchString, $tag_id, $conn) {
         LIMIT 50
     ";
 
-    // ===== BUILD BIND PARAM =====
+    // BUILD BIND PARAM 
     $types = "i";     // 1: account_id cho love check
     $params = [$account_id];
 
@@ -75,7 +75,7 @@ function getPrompts($account_id, $searchString, $tag_id, $conn) {
     $prompt_stmt->execute();
     $prompt_result = $prompt_stmt->get_result();
 
-    // ===== Build kết quả =====
+    // Build kết quả 
     $prompts = [];
     while ($row = $prompt_result->fetch_assoc()) {
         $prompt_id = $row['prompt_id'];
@@ -94,7 +94,7 @@ function getPrompts($account_id, $searchString, $tag_id, $conn) {
             'tags' => []
         ];
 
-        // ===== LẤY TAG =====
+        //  LẤY TAG 
         $tag_sql = "
             SELECT t.tag_id, t.tag_name 
             FROM prompttag pt
@@ -115,7 +115,7 @@ function getPrompts($account_id, $searchString, $tag_id, $conn) {
 
         }
 
-        // ===== LẤY DETAILS =====
+        // LẤY DETAILS 
         $detail_sql = "
             SELECT content 
             FROM promptdetail 
@@ -156,13 +156,13 @@ function lovePrompt($account_id, $prompt_id, $conn) {
     $result = $checkStmt->get_result();
     
     if ($result->num_rows > 0) {
-        // Đã thả tim → bỏ tim
+        // Đã thả tim -> bỏ tim
         $deleteSql = "DELETE FROM love WHERE prompt_id = ? AND account_id = ?";
         $deleteStmt = $conn->prepare($deleteSql);
         if (!$deleteStmt) {
             return "Lỗi chuẩn bị query delete: " . $conn->error;
         }
-        $deleteStmt->bind_param("ii", $prompt_id, $account_id);  // FIXED: Add bind_param here
+        $deleteStmt->bind_param("ii", $prompt_id, $account_id);  
         if (!$deleteStmt->execute()) {
             return "Lỗi execute delete: " . $deleteStmt->error;
         }
@@ -178,7 +178,7 @@ function lovePrompt($account_id, $prompt_id, $conn) {
         }
         return "Bạn đã bỏ tim bài viết";
     } else {
-        // Chưa thả tim → thêm tim
+        // Chưa thả tim -> thêm tim
         $love_at = date('Y-m-d');
         $insertSql = "INSERT INTO love (prompt_id, account_id, status, love_at) VALUES (?, ?, 'OPEN', ?)";
         $insertStmt = $conn->prepare($insertSql);
@@ -241,7 +241,7 @@ function savePrompt($account_id, $prompt_id, $conn) {
     $result = $checkStmt->get_result();
     
     if ($result->num_rows > 0) {
-        // Đã save → bỏ save
+        // Đã save -> bỏ save
         $deleteSql = "DELETE FROM save WHERE prompt_id = ? AND account_id = ?";
         $deleteStmt = $conn->prepare($deleteSql);
         if (!$deleteStmt) {
@@ -278,7 +278,7 @@ function savePrompt($account_id, $prompt_id, $conn) {
         }
         return "Bạn đã bỏ lưu bài viết";
     } else {
-        // Chưa save → thêm save
+        // Chưa save -> thêm save
         $insertSql = "INSERT INTO save (prompt_id, account_id) VALUES (?, ?)";
         $insertStmt = $conn->prepare($insertSql);
         if (!$insertStmt) {
@@ -301,7 +301,7 @@ function savePrompt($account_id, $prompt_id, $conn) {
         return "Bạn đã lưu bài viết thành công";
     }
 }
-// Thêm vào prompt.php
+
 function getUserComments($account_id, $conn) {
     $account_id = (int)$account_id;
     if ($account_id <= 0) {
@@ -341,9 +341,9 @@ function getUserComments($account_id, $conn) {
             'created_at' => $row['created_at'],
             'title' => $row['title'] ?? $row['prompt_desc'] ?? 'Bài viết không có tiêu đề',
             // Người bình luận
-            'username' => $row['commenter_username'],  // Giữ tên cũ cho tương thích
+            'username' => $row['commenter_username'], 
             'avatar' => $row['commenter_avatar'] ?? 'default-avatar.png',
-            // Người đăng bài (mới thêm)
+            // Người đăng bài 
             'author_username' => $row['author_username'],
             'author_avatar' => $row['author_avatar'] ?? 'default-avatar.png'
         ];
@@ -535,7 +535,7 @@ function updateStatus($conn, $prompt_id, $action, $comment) {
     }
 
 
-    /* ======= EXECUTE SQL ======== */
+    // EXECUTE SQL 
     $stmt = $conn->prepare($sql);
     if ($stmt === false) {
         return ['success' => false, 'message' => "Lỗi hệ thống (501)"];
@@ -559,10 +559,7 @@ function updateStatus($conn, $prompt_id, $action, $comment) {
         return ['success' => false, 'message' => "Lỗi khi thực thi truy vấn."];
     }
 
-
-    /* ===============================
-       🎯 XOÁ THÔNG BÁO ADMIN TƯƠNG ỨNG
-    =============================== */
+    // XOÁ THÔNG BÁO ADMIN TƯƠNG ỨNG
 
     if ($action == "approve" || $action == "reject") {
         // Xoá thông báo chờ duyệt
@@ -589,9 +586,7 @@ function updateStatus($conn, $prompt_id, $action, $comment) {
     }
 
 
-    /* ===============================
-       TRẢ VỀ KẾT QUẢ
-    =============================== */
+    // TRẢ VỀ KẾT QUẢ
     if ($rows_affected > 0) {
         return [
             'success' => true,

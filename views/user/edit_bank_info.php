@@ -12,16 +12,14 @@ if (!isset($_SESSION['account_id'])) {
 
 $acc_id = $_SESSION['account_id'];
 
-/* ======================
-   Lấy thông tin Bank Info
-========================= */
+// Lấy thông tin Bank Info
+
 $sql = "SELECT * FROM userpayoutinfo WHERE account_id = $acc_id";
 $res = mysqli_query($conn, $sql);
 $payout = mysqli_fetch_assoc($res);
 
-/* ======================
-   Khi Submit Form
-========================= */
+// Khi Submit Form
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $bank_name = mysqli_real_escape_string($conn, $_POST['bank_name']);
     $bank_account_name = mysqli_real_escape_string($conn, $_POST['bank_account_name']);
@@ -76,25 +74,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <form method="POST" enctype="multipart/form-data">
                 <div class="modal-body">
                     <label>Tên ngân hàng</label>
-        <input type="text" name="bank_name" 
-            value="<?= htmlspecialchars($payout['bank_name'] ?? '') ?>" required>
+                    <input type="text" name="bank_name"
+                        value="<?= htmlspecialchars($payout['bank_name'] ?? '') ?>" required>
 
-        <label>Tên chủ tài khoản</label>
-        <input type="text" name="bank_account_name"
-            value="<?= htmlspecialchars($payout['bank_account_name'] ?? '') ?>" required>
+                    <label>Tên chủ tài khoản</label>
+                    <input type="text" name="bank_account_name"
+                        value="<?= htmlspecialchars($payout['bank_account_name'] ?? '') ?>" required>
 
-        <label>Số tài khoản</label>
-        <input type="text" name="bank_account_number"
-            value="<?= htmlspecialchars($payout['bank_account_number'] ?? '') ?>" required>
+                    <label>Số tài khoản</label>
+                    <input type="text" name="bank_account_number"
+                        value="<?= htmlspecialchars($payout['bank_account_number'] ?? '') ?>" required>
 
-        <label>Chi nhánh</label>
-        <input type="text" name="bank_branch"
-            value="<?= htmlspecialchars($payout['bank_branch'] ?? '') ?>">
+                    <label>Chi nhánh</label>
+                    <input type="text" name="bank_branch"
+                        value="<?= htmlspecialchars($payout['bank_branch'] ?? '') ?>">
 
-                <div class="modal-footer">
-                    <button type="button" class="cancel" onclick="confirmCancel()">Hủy</button>
-                    <button type="submit" class="save" id="saveBtn">Lưu</button>
-                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="cancel" onclick="confirmCancel()">Hủy</button>
+                        <button type="submit" class="save" id="saveBtn">Lưu</button>
+                    </div>
             </form>
         </div>
     </div>

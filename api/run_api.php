@@ -69,7 +69,7 @@ if ($response === false || !empty($curlError)) {
 // Tách Header + Body
 list($rawHeader, $rawBody) = explode("\r\n\r\n", $response, 2);
 
-// Nếu HuggingFace trả về HTTP lỗi → gửi lại nguyên body để debug
+// Nếu HuggingFace trả về HTTP lỗi -> gửi lại nguyên body để debug
 if ($httpCode >= 400) {
     http_response_code($httpCode);
     echo json_encode([

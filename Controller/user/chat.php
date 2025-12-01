@@ -78,7 +78,7 @@ function getChatList($conn, $account_id, $role, $username)
     $params = [];
     $types = "";
     $like_username ="%" . $username . "%";
-    if ($role === 1) {
+    if ($role === 3) {
         $sql = "SELECT c.chat_id, a.account_id AS partner_id,a.fullname AS partner_fullname, a.username AS username, a.avatar AS partner_avatar,
                 (SELECT message FROM chat_detail cd WHERE cd.chat_id = c.chat_id ORDER BY sent_at DESC LIMIT 1) AS last_message,
                 (SELECT sent_at FROM chat_detail cd WHERE cd.chat_id = c.chat_id ORDER BY sent_at DESC LIMIT 1) AS last_time
@@ -93,7 +93,7 @@ function getChatList($conn, $account_id, $role, $username)
                 (SELECT message FROM chat_detail cd WHERE cd.chat_id = c.chat_id ORDER BY sent_at DESC LIMIT 1) AS last_message,
                 (SELECT sent_at FROM chat_detail cd WHERE cd.chat_id = c.chat_id ORDER BY sent_at DESC LIMIT 1) AS last_time
             FROM chat c
-            JOIN account a ON a.role_id = 1
+            JOIN account a ON a.role_id = 3
             WHERE c.account_id = ? 
             LIMIT 1 ";
         $params = [$account_id];
@@ -128,7 +128,7 @@ function getChatList($conn, $account_id, $role, $username)
 
 function getInfoUserFromChat($conn, int $chat_id, $role)
 {
-    if($role === 1){
+    if($role === 3){
     $sql= "SELECT a.* 
            FROM chat c 
            JOIN account a ON a.account_id = c.account_id 
@@ -136,7 +136,7 @@ function getInfoUserFromChat($conn, int $chat_id, $role)
     else{
         $sql= "SELECT a.* 
            FROM account a 
-           WHERE a.role_id = 1";
+           WHERE a.role_id = 3";
     }
     $result = $conn->query($sql);
     return $result->fetch_assoc();

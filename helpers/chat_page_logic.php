@@ -3,8 +3,12 @@ include_once __DIR__ . "/../Controller/user/chat.php";
 include_once __DIR__ . "/../config.php";
 define('MESSAGE_LIMIT', 5);
 $role = (int)$_SESSION['role'];
+if ($role == 1) {
+    header("Location: home.php");
+    exit();
+}
 $account_id = (int)$_SESSION['account_id'];
-$username = $_SESSION['name_user'];
+$username = $_SESSION['name_user']; 
 $user_avatar= $_SESSION['avatar'];
 $searchName= $_GET['username'] ?? '';
 $chatList = getChatList($conn, $account_id, $role, $searchName);
@@ -12,7 +16,7 @@ $chat_id=null;
 if ($role === 2) {
     $chat_id = (int)getIDChat($conn, $account_id);
     $chatList = getChatList($conn, $account_id, $role, $searchName);
-} else {
+} elseif( $role === 3) {
     if (isset($_GET['chat_id']) && is_numeric($_GET['chat_id'])) {
         $chat_id = (int)$_GET['chat_id'];
     } elseif (!empty($chatList)) {
@@ -55,7 +59,7 @@ function printBubble(array $message, string $bubble_class): void
 function renderMessages(array $messages, string $current_user_id): void
 {
     if (empty($messages)) {
-        echo '<div style="text-align:center; color: #8e8e8e; padding-top: 50px;">Chưa có tin nhắn nào trong đoạn chat này.</div>';
+        echo '<div style="text-align:center; color: #8e8e8e; padding-top: 50px; font-style: italic;">Chưa có tin nhắn nào trong đoạn chat này.</div>';
         return;
     }
     $current_date = '';

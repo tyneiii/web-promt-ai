@@ -23,7 +23,31 @@
             $google_id = $google_account_info->id;
             $email = $google_account_info->email;
             $name = $google_account_info->name;
-            $avatar = $google_account_info->picture;
+            //$avatar = $google_account_info->picture;
+            $google_avatar_url = $google_account_info->picture;
+            $upload_dir = __DIR__ . '/../../public/img/';
+            // if (!file_exists($upload_dir)) {
+            //     mkdir($upload_dir, 0777, true);
+            // }
+            $file_name = 'google_' . $google_id . '_' . time() . '.jpg';
+            $save_path = $upload_dir . $file_name;
+
+            // Cấu hình SSL để tránh lỗi không tải được trên Localhost (XAMPP)
+            $arrContextOptions = array(
+                "ssl" => array(
+                    "verify_peer" => false,
+                    "verify_peer_name" => false,
+                ),
+            );
+            $image_content = file_get_contents($google_avatar_url, false, stream_context_create($arrContextOptions));
+            if ($image_content !== false) {
+                // Lưu file vào thư mục
+                file_put_contents($save_path, $image_content);
+                //$avatar = "../../public/img/" . $file_name; 
+                $avatar =  "../../public/img/" .$file_name; 
+            } else {
+                $avatar = "../../public/img/default_avatar.png";
+            } 
 
             // 3. Kiểm tra xem user này đã tồn tại trong DB chưa?
             // Ưu tiên check theo google_id trước, sau đó check theo email
@@ -61,8 +85,9 @@
                 }
                 $role_id = 2;
                 $create_at = date('Y-m-d H:i:s');
-                $avatar = "default_avatar.png";
+                //$avatar = "default_avatar.png";
                 $bg_avatar = "bg.png"; 
+                
 
                 $insertSql = "INSERT INTO account (username, email, google_id, fullname, avatar, role_id, create_at, bg_avatar) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
                 

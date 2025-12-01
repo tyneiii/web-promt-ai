@@ -20,4 +20,3 @@ if (empty($action) || empty($promptId)) {
 }
 $result = updateStatus($conn, $promptId, $action, $comment);
 sendResponse($result['success'], $result['message']);
-?>

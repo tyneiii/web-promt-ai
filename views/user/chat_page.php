@@ -117,7 +117,6 @@
                         <button type="button" id="emoji-btn" title="Chọn biểu tượng cảm xúc">
                             <i class="fa-regular fa-face-grin-squint-tears" style="color:orange;"></i>
                         </button>
-                        <!-- <span style="opacity:.6;margin-left:4px">😊</span> -->
                         <input id="messageInput" placeholder="Nhập tin nhắn ..." autocomplete="off" />
                     </div>
                     <button class="btn-send" id="sendBtn" aria-label="Gửi">Gửi</button>
@@ -126,7 +125,7 @@
                     <input type="hidden" id="activeChatId" value="<?= htmlspecialchars($chat_id ?? '') ?>">
                 </form>
             <?php else: ?>
-                <div style="text-align:center; color: #8e8e8e; padding-top: 50px; font-style: italic;">Không có tin nhắn!</div>
+                <div style="text-align:center; color: #8e8e8e; padding-top: 50px; font-style: italic;">Vui lòng chọn một đoạn chat để bắt đầu.</div>
             <?php endif ?>
         </div>
     </div>

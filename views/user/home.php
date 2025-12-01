@@ -9,10 +9,7 @@ $name_user = $_SESSION['name_user'] ?? '';
 
 $search = $_GET['search'] ?? '';
 
-// Include prompt.php chỉ khi cần cho handle form (tránh load không cần)
 include_once __DIR__ . '/../../Controller/user/prompt.php';
-
-// Handle form submits NGAY ĐẦU (trước include header, tránh output)
 if (isset($_POST['loveBtn']) && $account_id) {
     $id_prompt = (int)$_POST['loveBtn'];
     $mess = lovePrompt($account_id, $id_prompt, $conn);
@@ -33,19 +30,14 @@ if (isset($_POST['loveBtn']) && $account_id) {
     exit;
 }
 
-// Bây giờ mới include header (sau handle, không redirect nữa)
 include_once __DIR__ . '/layout/header.php';
 ?>
 
 <link rel="stylesheet" href="../../public/css/run_prompt.css">
 
 <?php
-// Guest mode: Optional message (display in main-content if needed)
-// $guest_message = !$account_id ? '<p class="guest-notice">Đăng nhập để like, comment và save prompt!</p>' : '';
-
 $tag = isset($_GET['tag']) ? (int)$_GET['tag'] : 0;
 $prompts = getPrompts($account_id, $search, $tag, $conn);
-// Lấy top 5 prompt hot dựa trên lượt like
 $hot_prompts = getHotPrompts($conn, 5);
 $following_users = [];
 if ($account_id) {
@@ -76,20 +68,25 @@ unset($_POST);
             <i class="fa-solid fa-pen"></i>
         </a>
     <?php endif; ?>
-    <a href="my_comments.php" title="Danh sách bình luận của bạn" class="sidebar-btn" style="color:#4D88FF">
-        <i class="fa-solid fa-comment-dots"></i>
-    </a>
-    <a href="chat_page.php" title="Nhắn tin với quản trị viên" class="sidebar-btn" style="color:#00FF85">
-        <i class="fa-solid fa-comment-sms"></i>
-    </a>
+
+    <?php if (isset($_SESSION['account_id'])): ?>
+        <a href="my_comments.php" title="Danh sách bình luận của bạn" class="sidebar-btn" style="color:#4D88FF">
+            <i class="fa-solid fa-comment-dots"></i>
+        </a>
+    <?php endif; ?>
+
+    <?php if (isset($_SESSION['account_id']) && (($_SESSION['role'] == 2) || ($_SESSION['role'] == 3))): ?>
+        <a href="chat_page.php" title="Nhắn tin với quản trị viên" class="sidebar-btn" style="color:#00FF85">
+            <i class="fa-solid fa-comment-sms"></i>
+        </a>
+    <?php endif; ?>
+
     <a href="javascript:void(0)" id="btnOpenRules" title="Quy định & Hướng dẫn" class="sidebar-btn" style="color:white">
         <i class="fa-solid fa-circle-info"></i>
     </a>
 </div>
 <div class="box-section">
     <div class="right-sidebar">
-        <!-- <div class="border-top"></div>
-    <div class="border-bottom"></div> -->
         <h3>Bảng tin hot 🔥</h3>
         <?php if (empty($hot_prompts)): ?>
             <div class="item">Chưa có bài viết hot nào.</div>
