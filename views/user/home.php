@@ -87,7 +87,7 @@ unset($_POST);
 </div>
 <div class="box-section">
     <div class="right-sidebar">
-        <h3>Bảng tin hot 🔥</h3>
+        <h3>Bảng tin hot <i class="fa-solid fa-fire"></i></h3>
         <?php if (empty($hot_prompts)): ?>
             <div class="item">Chưa có bài viết hot nào.</div>
         <?php else: ?>
@@ -101,7 +101,7 @@ unset($_POST);
 
     <!-- BẢNG ĐANG THEO DÕI -->
     <div class="box-decor">
-        <h3 class="follow-title">Đang theo dõi 👥</h3>
+        <h3 class="follow-title">Đang theo dõi <i class="fa-solid fa-user-group"></i></h3>
 
         <div class="follow-list">
 

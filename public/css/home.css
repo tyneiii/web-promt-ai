@@ -369,7 +369,8 @@ text-decoration: none;
   padding: 15px;
   border-radius: 10px;
   transition: 0.2s;
-  min-height: 220px;
+  min-height: 250px;
+  max-height: 250px;
 }
 
 .card:hover {
