@@ -48,7 +48,7 @@
             $role_id = 2;
             $create_at = date('Y-m-d H:i:s');
             $avatar = "../../public/img/default_avatar.png";
-            $bg_avatar = "bg.png";
+            $bg_avatar = "../../public/img/default_bg.png";
             $sql_insert = "INSERT INTO account (username, email, password, role_id, token, create_at, avatar, bg_avatar) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             try {
                 if ($stmt_insert = $conn->prepare($sql_insert)) {

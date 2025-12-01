@@ -43,7 +43,8 @@ if (isset($_POST['action']) && $_POST['action'] === "follow_toggle") {
     exit;
 }
 
-$acc_id = intval($_SESSION['account_id']);
+$acc_id = isset($_SESSION['account_id']) ? intval($_SESSION['account_id']) : 0;
+
 $profile_id = isset($_GET['id']) ? intval($_GET['id']) : $acc_id;
 
 // Lấy thông tin user
@@ -254,7 +255,7 @@ $result = mysqli_query($conn, $sql);
     document.addEventListener("DOMContentLoaded", function() {
         const followBtn = document.getElementById("follow-btn");
         if (!followBtn) return;
-
+        const isLoggedIn = <?= ($acc_id > 0 ? 'true' : 'false') ?>;
         // Lấy giá trị ban đầu từ data-following (0/1)
         let isFollowing = followBtn.dataset.following === "1";
         const profileId = <?= $profile_id ?>;
@@ -274,6 +275,10 @@ $result = mysqli_query($conn, $sql);
         followBtn.addEventListener("click", function(e) {
             e.preventDefault();
 
+            if (!isLoggedIn) {
+                window.location.href = "../../views/login/login.php";
+                return;
+            }
             // Đổi UI ngay lập tức
             isFollowing = !isFollowing;
             updateButton();

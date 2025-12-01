@@ -13,7 +13,7 @@
             $_SESSION['password_error'] = $password_error;
         }
 
-        // Lưu lại email đã nhập 
+        // Lưu lại email đã nhậpp
         if (isset($_POST['email'])) {
             $_SESSION['login_email_attempt'] = $_POST['email'];
         }

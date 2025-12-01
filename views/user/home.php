@@ -116,7 +116,7 @@ unset($_POST);
 
             <?php if (!isset($_SESSION['account_id'])): ?>
 
-                <div class="item">Bạn cần đăng nhập để xem.</div>
+                <div class="item" >Bạn cần đăng nhập để xem.</div>
 
             <?php elseif (empty($following_users)): ?>
 

@@ -3,7 +3,7 @@ function getIDChat($conn, $account_id) {
     $sql = "SELECT chat_id FROM chat WHERE account_id = ? LIMIT 1";
     $stmt = $conn->prepare($sql);
     if ($stmt === false) {
-        return "Lỗi chuẩn bị truy vấn kiểm tra: " . $conn->error;
+        return "Lỗi chuẩn bị truy vấn kiểm tra:  " . $conn->error;
     }
     $stmt->bind_param("i", $account_id);
     $stmt->execute();
