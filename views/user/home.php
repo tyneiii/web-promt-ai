@@ -104,34 +104,34 @@ unset($_POST);
 
     <!-- BẢNG ĐANG THEO DÕI -->
     <div class="box-decor">
-    <h3 class="follow-title">Đang theo dõi 👥</h3>
+        <h3 class="follow-title">Đang theo dõi 👥</h3>
 
-    <div class="follow-list">
+        <div class="follow-list">
 
-        <?php if (!isset($_SESSION['account_id'])): ?>
+            <?php if (!isset($_SESSION['account_id'])): ?>
 
-            <div class="item">Bạn cần đăng nhập để xem.</div>
+                <div class="item">Bạn cần đăng nhập để xem.</div>
 
-        <?php elseif (empty($following_users)): ?>
+            <?php elseif (empty($following_users)): ?>
 
-            <div class="item">Bạn chưa theo dõi ai.</div>
+                <div class="item">Bạn chưa theo dõi ai.</div>
 
-        <?php else: ?>
+            <?php else: ?>
 
-            <?php foreach ($following_users as $user): ?>
-                <a href="profile.php?id=<?= $user['account_id'] ?>" class="item-link">
-                    <div class="item">
-                        <img src="<?= htmlspecialchars($user['avatar'] ?? 'default-avatar.png') ?>"
-                            style="width:28px; height:28px; border-radius:50%; margin-right:8px;">
-                        <?= htmlspecialchars($user['username']) ?>
-                    </div>
-                </a>
-            <?php endforeach; ?>
+                <?php foreach ($following_users as $user): ?>
+                    <a href="profile.php?id=<?= $user['account_id'] ?>" class="item-link">
+                        <div class="item">
+                            <img src="<?= htmlspecialchars($user['avatar'] ?? 'default-avatar.png') ?>"
+                                style="width:28px; height:28px; border-radius:50%; margin-right:8px;">
+                            <?= htmlspecialchars($user['username']) ?>
+                        </div>
+                    </a>
+                <?php endforeach; ?>
 
-        <?php endif; ?>
+            <?php endif; ?>
 
+        </div>
     </div>
-</div>
 </div>
 
 
@@ -144,10 +144,13 @@ unset($_POST);
                 <div class="card" data-id="<?= $prompt['prompt_id'] ?>">
                     <div class="card-header">
                         <div class="user-info">
-                            <img src="<?= htmlspecialchars($prompt['avatar'] ?? 'default-avatar.png') ?>"
-                                alt="<?= htmlspecialchars($prompt['username']) ?>"
-                                style="width:35px; height:35px; border-radius:50%;">
-                            <strong><?= htmlspecialchars($prompt['username']) ?></strong>
+                            <a href="profile.php?id=<?= $prompt['account_id'] ?>"
+                                style="display:flex; align-items:center; gap:8px; text-decoration:none; color:inherit;">
+                                <img src="<?= htmlspecialchars($prompt['avatar'] ?? 'default-avatar.png') ?>"
+                                    alt="<?= htmlspecialchars($prompt['username']) ?>"
+                                    style="width:35px; height:35px; border-radius:50%;">
+                                <strong><?= htmlspecialchars($prompt['username']) ?></strong>
+                            </a>
                         </div>
                         <button class="report-btn" type="button">
                             <i class="fa-solid fa-flag"></i> Báo cáo
@@ -410,13 +413,13 @@ unset($_POST);
 </script>
 
 <script>
-// Lưu lại trang hiện tại mỗi khi người dùng ở trang danh sách
-// (chỉ chạy trên trang home, search, tag...)
-if (window.location.pathname.includes('home.php') || 
-    window.location.search.includes('search=') || 
-    window.location.search.includes('tag=')) {
-    sessionStorage.setItem('lastListPage', location.href);
-}
+    // Lưu lại trang hiện tại mỗi khi người dùng ở trang danh sách
+    // (chỉ chạy trên trang home, search, tag...)
+    if (window.location.pathname.includes('home.php') ||
+        window.location.search.includes('search=') ||
+        window.location.search.includes('tag=')) {
+        sessionStorage.setItem('lastListPage', location.href);
+    }
 </script>
 
 
