@@ -5,7 +5,8 @@ include_once __DIR__ . '/../../config.php';
 <!DOCTYPE html>
 <html lang="vi">
 
-<head>
+<head> <link rel="icon" href="../../public/img/T1.png" type="image/png" sizes="180x180">
+
     <meta charset="UTF-8">
     <title>Thông báo quản trị</title>
     <link rel="stylesheet" href="../../public/css/manager/sidebar.css">

@@ -99,7 +99,8 @@ $user = mysqli_fetch_assoc($user_result);
 <!DOCTYPE html>
 <html lang="vi">
 
-<head>
+<head> <link rel="icon" href="../../public/img/T1.png" type="image/png" sizes="180x180">
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tạo bài viết - Giao diện mới</title>
@@ -488,6 +489,7 @@ $user = mysqli_fetch_assoc($user_result);
 </html>
 
 <script>
+  const redirectUrl = "<?php echo htmlspecialchars($redirect_url); ?>";
   document.addEventListener('DOMContentLoaded', function() {
     const collapsibleGroups = document.querySelectorAll('.collapsible-group');
 
@@ -531,7 +533,7 @@ $user = mysqli_fetch_assoc($user_result);
   /*  Các hàm cũ giữ nguyên  */
   function confirmCancel() {
     if (confirm("Bạn có chắc chắn muốn hủy bài viết này không?")) {
-      history.back();
+      window.location.href = redirectUrl;
     }
   }
 

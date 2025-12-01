@@ -58,7 +58,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <!DOCTYPE html>
 <html lang="vi">
 
-<head>s
+<head> <link rel="icon" href="../../public/img/T1.png" type="image/png" sizes="180x180">
+s
     <meta charset="UTF-8">
     <title>Chỉnh sửa thông tin ngân hàng</title>
     <link rel="stylesheet" href="../../public/css/user/edit_profile.css">
