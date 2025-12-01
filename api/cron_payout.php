@@ -1,13 +1,13 @@
 <?php
     include_once __DIR__ . "/config.php";
 
-    // 1. Lấy tháng hiện tại 
+    // ======== 1. Lấy tháng hiện tại ========
     $current_month = date("Y-m");
 
     // Kiểm tra tháng này đã chia tiền chưa
     $check = $conn->prepare("
         SELECT COUNT(*) 
-        FROM user_payout 
+        FROM user_payout    
         WHERE month_year = ?
     ");
     $check->bind_param("s", $current_month);
@@ -17,10 +17,10 @@
     $check->close();
 
     if ($exists > 0) {
-        die("Tháng $current_month đã chạy chia tiền trước đó.");
+        die("❌ Tháng $current_month đã chạy chia tiền trước đó.");
     }
 
-    // 2. TÍNH TỔNG DOANH THU
+    // ======== 2. TÍNH TỔNG DOANH THU ========
 
     // Số click trong bảng revenuemetrics
     $res = $conn->query("SELECT current_month_clicks FROM revenuemetrics WHERE metric_id = 1");
@@ -37,7 +37,7 @@
     $adminKeep = $totalRevenue * 0.4;
 
 
-    // 3. LẤY DANH SÁCH USER ĐỦ ĐIỀU KIỆN NHẬN TIỀN
+    // ======== 3. LẤY DANH SÁCH USER ĐỦ ĐIỀU KIỆN ========
     // User đủ điều kiện = tổng love >= 5
     $sql = "
         SELECT 
@@ -60,13 +60,13 @@
     }
 
     if ($totalLove == 0) {
-        die("Không có user đủ điều kiện nhận tiền.");
+        die("❌ Không có user đủ điều kiện nhận tiền.");
     }
 
     $moneyPerLove = $userPool / $totalLove;
 
 
-    // 4. INSERT VÀO BẢNG user_payout 
+    // ======== 4. INSERT VÀO BẢNG user_payout ========
     $insert = $conn->prepare("
         INSERT INTO user_payout (account_id, month_year, love_in_month, money_received, status)
         VALUES (?, ?, ?, ?, 'pending')
@@ -104,7 +104,7 @@
     $insert->close();
 
 
-    // 5. LƯU VÀO revenue_history 
+    // ======== 5. LƯU VÀO revenue_history ========
 
     $saveRev = $conn->prepare("
         INSERT INTO revenue_history (month_year, click_revenue, user_pool, total_revenue)

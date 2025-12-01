@@ -1,31 +1,56 @@
 <?php
+// ======================================
+//  IMPORT CONFIG (lấy $conn)
+// ======================================
 include_once __DIR__ . "/../../config.php";
 
-echo "<pre>";
-echo "=== RESET USER_PAYOUT + SYNC LOVE_MONTHLY ===\n\n";
+// Check kết nối
+if ($conn->connect_error) {
+    die("Kết nối thất bại: " . $conn->connect_error);
+}
 
-/* ============================================================
-   1) XÓA toàn bộ user_payout TRỪ tháng 2025-11 (dữ liệu thật)
-   ============================================================ */
-echo "Đang xoá dữ liệu user_payout cũ...\n";
 
-// Đồng bộ bài waiting -> Thông báo admin
-$conn->query("
-    DELETE FROM user_payout
-    WHERE month_year <> '2025-11'
-");
+// ======================================
+// 1️⃣ THÊM prompt_detail NẾU CÒN THIẾU
+// ======================================
 
-// Đồng bộ bài report -> Thông báo admin
-$conn->query("
-    INSERT INTO admin_notifications (type, prompt_id, message, is_read, created_at)
+$sqlInsert = "
+    INSERT INTO promptdetail (prompt_id, content, created_at)
     SELECT 
-        'report' AS type,
-        prompt_id,
-        CONCAT('Có bài viết bị báo cáo (#', prompt_id, ')') AS message,
-        0 AS is_read,
+        p.prompt_id,
+        CONCAT('Nội dung được tạo tự động cho: ', p.title, ' - ', p.short_description),
         NOW()
-    FROM prompt
-    WHERE status = 'report'
-");
+    FROM prompt p
+    LEFT JOIN promptdetail d ON p.prompt_id = d.prompt_id
+    WHERE d.prompt_id IS NULL
+";
 
-echo "Đã đồng bộ toàn bộ thông báo từ bài viết waiting + report!";
+$conn->query($sqlInsert);
+
+
+// ======================================
+// 2️⃣ CẬP NHẬT DETAIL BỊ RÁC / NGẮN
+// ======================================
+
+$sqlUpdate = "
+    UPDATE promptdetail d
+    JOIN prompt p ON d.prompt_id = p.prompt_id
+    SET 
+        d.content = CONCAT('Nội dung cập nhật tự động cho: ', p.title, ' - ', p.short_description),
+        d.created_at = NOW()
+    WHERE d.content IS NULL 
+       OR d.content = '' 
+       OR LENGTH(d.content) < 5
+";
+
+$conn->query($sqlUpdate);
+
+
+// ======================================
+// 3️⃣ GHI LOG KẾT QUẢ
+// ======================================
+echo "<h3>Đồng bộ thành công!</h3>";
+echo "<p>- Đã thêm các prompt_detail còn thiếu.</p>";
+echo "<p>- Đã cập nhật các dòng dữ liệu rác / nội dung quá ngắn.</p>";
+
+$conn->close();

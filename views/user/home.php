@@ -141,10 +141,13 @@ unset($_POST);
                 <div class="card" data-id="<?= $prompt['prompt_id'] ?>">
                     <div class="card-header">
                         <div class="user-info">
-                            <img src="<?= htmlspecialchars($prompt['avatar'] ?? 'default-avatar.png') ?>"
-                                alt="<?= htmlspecialchars($prompt['username']) ?>"
-                                style="width:35px; height:35px; border-radius:50%;">
-                            <strong><?= htmlspecialchars($prompt['username']) ?></strong>
+                            <a href="profile.php?id=<?= $prompt['account_id'] ?>"
+                                style="display:flex; align-items:center; gap:8px; text-decoration:none; color:inherit;">
+                                <img src="<?= htmlspecialchars($prompt['avatar'] ?? 'default-avatar.png') ?>"
+                                    alt="<?= htmlspecialchars($prompt['username']) ?>"
+                                    style="width:35px; height:35px; border-radius:50%;">
+                                <strong><?= htmlspecialchars($prompt['username']) ?></strong>
+                            </a>
                         </div>
                         <button class="report-btn" type="button">
                             <i class="fa-solid fa-flag"></i> Báo cáo
@@ -161,11 +164,7 @@ unset($_POST);
                         </div>
                     <?php endif; ?>
                     <p>
-                        <?php
-                        if (is_array($prompt['details']) && !empty($prompt['details'])) {
-                            echo implode('<br><br>', array_map('htmlspecialchars', $prompt['details']));
-                        }
-                        ?>
+                        <?= htmlspecialchars($prompt['short_description']) ?>
                     </p>
                     <div class="card-buttons">
                         <button type="submit" name="loveBtn" id="loveBtn" title="Thích bài viết" value="<?= $prompt['prompt_id'] ?>">

@@ -67,7 +67,7 @@ if ($account_id > 0) {
 }
 
 // Chi tiết + tag + bình luận + full_prompt
-$sql_details = "SELECT content FROM promptdetail WHERE prompt_id = ? ORDER BY component_order ASC";
+$sql_details = "SELECT content FROM promptdetail WHERE prompt_id = ? ";
 $stmt2 = $conn->prepare($sql_details);
 $stmt2->bind_param("i", $id);
 $stmt2->execute();
