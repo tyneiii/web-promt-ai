@@ -10,14 +10,23 @@ $redirectUri = $base_url . "/controller/authentification/GoogleController.php";
 $clientID = "957982290942-ps5dku2el8nick62eh49h2e5pd7v1bl6.apps.googleusercontent.com";
 $clientSecret = "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";
 
+// $servername = "ntu307.vpsttt.vn";
+// $username = "ntu307_promt_admin";
+// $password = "admin$$2025";
+// $database = "ntu307_promt_database";
 $servername = "localhost";
 $username = "root";
 $password = "";
 $database = "prompt_database";
+
 $conn = new mysqli($servername, $username, $password, $database);
 if ($conn->error) {
     die('Error');
 }
+
+$conn->set_charset("utf8mb4"); 
+
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }

@@ -75,13 +75,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $acc_id = $_SESSION['account_id'];
 $sql_user = "SELECT * FROM account WHERE account_id = $acc_id ";
 // Lấy danh sách tag từ DB
-$tag_query = "SELECT tag_id, tag_name FROM tag ORDER BY tag_name ASC";
-$tag_result = mysqli_query($conn, $tag_query);
+// $tag_query = "SELECT tag_id, tag_name FROM tag ORDER BY tag_name ASC";
+// $tag_result = mysqli_query($conn, $tag_query);
 
-$tags_list = [];
-while ($row = mysqli_fetch_assoc($tag_result)) {
-  $tags_list[] = $row;
-}
+// $tags_list = [];
+// while ($row = mysqli_fetch_assoc($tag_result)) {
+//   $tags_list[] = $row;
+// }
+$tags_list = [
+    ['tag_id' => 1, 'tag_name' => 'Công nghệ'],
+    ['tag_id' => 2, 'tag_name' => 'Thiết kế'],
+    ['tag_id' => 3, 'tag_name' => 'Lập trình'],
+    ['tag_id' => 4, 'tag_name' => 'Kinh doanh'],
+    ['tag_id' => 5, 'tag_name' => 'Sức khỏe & Sắc đẹp'],
+    ['tag_id' => 6, 'tag_name' => 'Ẩm thực & Du lịch'],
+    ['tag_id' => 7, 'tag_name' => 'Tài chính & Đầu tư'],
+];
+
 $user_result = mysqli_query($conn, $sql_user);
 $user = mysqli_fetch_assoc($user_result);
 ?>
@@ -539,7 +549,19 @@ $user = mysqli_fetch_assoc($user_result);
   const topicInput = document.querySelector(".topic-input");
   const topicDropdown = document.querySelector(".topic-dropdown");
   const selectedTopics = document.querySelector(".selected-topics");
-  const topics = <?= json_encode($tags_list, JSON_UNESCAPED_UNICODE); ?>;
+  const topics = [
+    {"tag_id":1,"tag_name":"Công việc"},
+    {"tag_id":2,"tag_name":"Công nghệ"},
+    {"tag_id":3,"tag_name":"Học tập"},
+    {"tag_id":4,"tag_name":"Sáng tạo nội dung"},
+    {"tag_id":5,"tag_name":"Giải trí"},
+    {"tag_id":6,"tag_name":"Phát triển bản thân"},
+    {"tag_id":7,"tag_name":"Cuộc sống"},
+    {"tag_id":8,"tag_name":"Kinh doanh"},
+    {"tag_id":9,"tag_name":"Công cụ"},
+    {"tag_id":10,"tag_name":"Khác"}
+];
+
   let chosen = [];
   // (Toàn bộ các hàm renderDropdown, selectTopic, removeTopic, renderSelected và event listeners cho topicInput được giữ nguyên như file cũ của bạn)
   function renderDropdown(filter = "") {
