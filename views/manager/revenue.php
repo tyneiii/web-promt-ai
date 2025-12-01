@@ -284,7 +284,8 @@
     <!DOCTYPE html>
     <html lang="vi">
 
-    <head>
+    <head> <link rel="icon" href="../../public/img/T1.png" type="image/png" sizes="180x180">
+
         <meta charset="UTF-8">
         <title>Doanh thu</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
