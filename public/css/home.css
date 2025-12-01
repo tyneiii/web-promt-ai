@@ -369,7 +369,8 @@ text-decoration: none;
   padding: 15px;
   border-radius: 10px;
   transition: 0.2s;
-  min-height: 220px;
+  min-height: 250px;
+  max-height: 250px;
 }
 
 .card:hover {
@@ -756,7 +757,7 @@ text-decoration: none;
 /* Nền tối làm mờ phía sau khi mở modal */
 .modal-overlay {
     display: none; /* Mặc định ẩn */
-    position: fixed;
+    position: fixed  !important;
     z-index: 1000;
     left: 0;
     top: 0;
@@ -767,9 +768,8 @@ text-decoration: none;
     align-items: center;
 }
 
-/* Hộp nội dung Modal */
 .modal-container {
-    background-color: #1e1e1e; /* Màu nền tối giống ảnh */
+    background-color: #1e1e1e;
     color: #e0e0e0;
     width: 90%;
     max-width: 600px;
@@ -780,7 +780,6 @@ text-decoration: none;
     border: 1px solid #333;
 }
 
-/* Header của Modal */
 .modal-header {
     padding: 15px 20px;
     border-bottom: 1px solid #333;
@@ -793,7 +792,7 @@ text-decoration: none;
 .modal-header h2 {
     margin: 0;
     font-size: 18px;
-    color: #ff4d4d; /* Màu đỏ nhấn giống trong ảnh của bạn */
+    color: #ff4d4d;
 }
 
 .close-modal {
@@ -813,7 +812,6 @@ text-decoration: none;
     overflow-y: auto;
 }
 
-/* --- Accordion (Thẻ đóng mở) --- */
 .accordion-card {
     background-color: #2d2d2d;
     margin-bottom: 10px;
@@ -879,4 +877,60 @@ text-decoration: none;
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
+}
+.pagination-container {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    margin-top: 20px;
+    padding: 10px 0;
+    font-family: Arial, sans-serif;
+    color: #ccc; /* chữ tổng thể màu sáng cho dark theme */
+}
+
+.pagination-container p {
+    font-size: 0.9em;
+    color: #aaa;
+    margin: 0;
+}
+
+.pagination-links {
+    display: flex;
+    gap: 8px;
+    margin: 0px auto; 
+}
+
+.page-link {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    text-decoration: none;
+    color: #ccc; 
+    background-color: #222; /* nền tối hài hòa với trang */
+    border: 1px solid #555;
+    border-radius: 6px; 
+    font-size: 0.95em;
+    transition: all 0.2s ease;
+}
+
+.page-link:hover:not(.active) {
+    color: #fff;
+    background-color: #444;
+    border-color: #666;
+    cursor: pointer;
+}
+
+.page-link.active {
+    color: #fff;
+    background-color: #e63946; /* màu nổi bật nhưng vẫn hợp dark theme */
+    border-color: #e63946;
+    font-weight: bold;
+    pointer-events: none;
+}
+
+.page-link i {
+    font-size: 16px;
 }
