@@ -54,6 +54,22 @@ if ($account_id) {
     $following_users = getFollowingUsers($account_id, $conn);
 }
 $prompts = getPrompts($account_id, $search, $tag, $conn, $rows_per_page, $offset);
+function is_saved($conn, $account_id, $prompt_id) {
+    $account_id = (int)$account_id;
+    $prompt_id  = (int)$prompt_id;
+    $sql = "SELECT save_id 
+            FROM `save` 
+            WHERE account_id = $account_id 
+              AND prompt_id = $prompt_id
+            LIMIT 1";
+
+    $result = mysqli_query($conn, $sql);
+    if ($result && mysqli_num_rows($result) > 0) {
+        return true;
+    }
+    return false; // chưa lưu
+}
+
 unset($_POST);
 ?>
 
@@ -108,7 +124,6 @@ unset($_POST);
         <?php endif; ?>
     </div>
 
-    <!-- BẢNG ĐANG THEO DÕI -->
     <div class="box-decor">
         <h3 class="follow-title">Đang theo dõi <i class="fa-solid fa-user-group"></i></h3>
 
@@ -116,11 +131,19 @@ unset($_POST);
 
             <?php if (!isset($_SESSION['account_id'])): ?>
 
-                <div class="item" >Bạn cần đăng nhập để xem.</div>
+<<<<<<< Updated upstream
+                <div class="item">Bạn cần đăng nhập để xem.</div>
 
+=======
+                <a href="" class="item-link">
+                    <div class="item">Bạn cần đăng nhập để xem.</div>
+                </a>
+>>>>>>> Stashed changes
             <?php elseif (empty($following_users)): ?>
 
-                <div class="item">Bạn chưa theo dõi ai.</div>
+                <a href="" class="item-link">
+                    <div class="item">Bạn chưa theo dõi ai.</div>
+                </a>
 
             <?php else: ?>
 
@@ -139,6 +162,7 @@ unset($_POST);
         </div>
     </div>
 </div>
+
 
 <div class="main-content">
     <?php if (empty($prompts)): ?>
@@ -182,7 +206,8 @@ unset($_POST);
                             <i class="fa-regular fa-comment"></i> <?= $prompt['comment_count'] ?>
                         </button>
                         <button type="submit" name="saveBtn" title="Lưu bài viết" id="saveBtn" value="<?= $prompt['prompt_id'] ?>">
-                            <i class="fa-regular fa-bookmark"></i> <?= $prompt['save_count'] ?>
+                            <i class="<?= is_saved($conn, $account_id, $prompt['prompt_id']) ? 'fa-solid' : 'fa-regular' ?> fa-bookmark"></i>
+                            <?= $prompt['save_count'] ?>
                         </button>
                     </div>
                 </div>
@@ -211,6 +236,7 @@ unset($_POST);
     </div>
 </div>
 <?php echo renderPagination($current_page, $total_pages, $rows_per_page, $pagination_params); ?>
+
 
 <div id="rulesModal" class="modal-overlay">
     <div class="modal-container">
@@ -253,6 +279,7 @@ unset($_POST);
                     </ul>
                 </div>
             </div>
+
             <div class="accordion-card">
                 <div class="accordion-header">
                     <h3>II. Hướng dẫn soạn nội dung (Prompt)</h3>
@@ -318,8 +345,6 @@ unset($_POST);
 <script>
     const isLoggedIn = <?= isset($_SESSION['account_id']) ? 'true' : 'false' ?>;
     let currentPromptId = 0;
-
-    /* CLICK CARD → MỞ CHI TIẾT */
     document.querySelectorAll('.card').forEach(card => {
         card.addEventListener('click', function(e) {
             if (e.target.closest('button') || e.target.closest('.run-btn')) return;
@@ -328,13 +353,10 @@ unset($_POST);
         });
     });
 
-
-    /* MỞ POPUP BÁO CÁO (CÓ KIỂM TRA ĐĂNG NHẬP + RESET FORM) */
     document.querySelectorAll(".report-btn").forEach(btn => {
         btn.addEventListener("click", function(e) {
             e.stopPropagation();
 
-            // KIỂM TRA ĐĂNG NHẬP
             if (!isLoggedIn) {
                 alert("Bạn phải đăng nhập để báo cáo!");
                 window.location.href = "../login/login.php?require_login=report";
@@ -344,7 +366,6 @@ unset($_POST);
             const card = this.closest(".card");
             currentPromptId = card.getAttribute("data-id");
 
-            // RESET LÝ DO MỖI LẦN MỞ POPUP
             document.getElementById("report-reason").value = "Nội dung không phù hợp";
             document.getElementById("report-custom").value = "";
             document.getElementById("report-custom").style.display = "none";
@@ -353,21 +374,15 @@ unset($_POST);
         });
     });
 
-
-    /* SHOW/HIDE COMMENT WHEN SELECT "Khác" */
     document.getElementById("report-reason").addEventListener("change", function() {
         document.getElementById("report-custom").style.display =
             (this.value === "Khác") ? "block" : "none";
     });
 
-
-    /* HỦY POPUP */
     document.getElementById("cancelReport").onclick = () => {
         document.getElementById("report-modal").style.display = "none";
     };
 
-
-    /* GỬI BÁO CÁO */
     document.getElementById("submitReport").onclick = () => {
         let reason = document.getElementById("report-reason").value;
 
@@ -398,24 +413,20 @@ unset($_POST);
             });
     };
     document.addEventListener('DOMContentLoaded', function() {
-        // 1. Xử lý đóng mở Modal
         const modal = document.getElementById('rulesModal');
         const btnOpen = document.getElementById('btnOpenRules');
         const btnClose = rulesModal.querySelector('.close-modal');
 
-        // Mở modal khi click icon info
         btnOpen.addEventListener('click', function() {
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
         });
 
-        // Đóng modal khi click dấu X
         btnClose.addEventListener('click', function() {
             modal.style.display = 'none';
             document.body.style.overflow = 'auto';
         });
 
-        // Đóng modal khi click ra ngoài vùng nội dung
         window.addEventListener('click', function(e) {
             if (e.target == modal) {
                 modal.style.display = 'none';
@@ -423,29 +434,22 @@ unset($_POST);
             }
         });
 
-        // 2. Xử lý Accordion (Xổ nội dung)
         const accordions = document.querySelectorAll('.accordion-header');
 
         accordions.forEach(acc => {
             acc.addEventListener('click', function() {
-                // Tìm thẻ cha (card)
+
                 const card = this.parentElement;
 
-                // Toggle class 'active' để hiện/ẩn content
                 card.classList.toggle('active');
 
-                // (Tuỳ chọn) Đóng các thẻ khác khi mở thẻ này (Accordian một chiều)
-                // document.querySelectorAll('.accordion-card').forEach(c => {
-                //     if (c !== card) c.classList.remove('active');
-                // });
+
             });
         });
     });
 </script>
 
 <script>
-    // Lưu lại trang hiện tại mỗi khi người dùng ở trang danh sách
-    // (chỉ chạy trên trang home, search, tag...)
     if (window.location.pathname.includes('home.php') ||
         window.location.search.includes('search=') ||
         window.location.search.includes('tag=')) {
