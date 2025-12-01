@@ -1,7 +1,7 @@
 <?php
 include_once __DIR__ . '/../../../config.php';
-include_once __DIR__ . '/../../../Controller/user/prompt.php';
-include_once __DIR__ . '/../../../Controller/account.php';
+include_once __DIR__ . '/../../../controller/user/prompt.php';
+include_once __DIR__ . '/../../../controller/account.php';
 include_once __DIR__ . '/../../../helpers/admin_notification.php';
 $notif = getAdminNotificationCount($conn);
 // Đếm số bài chờ duyệt

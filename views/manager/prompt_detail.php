@@ -14,8 +14,8 @@
 
   <?php
   include_once __DIR__ . "/../../config.php";
-  include_once __DIR__ . "/../../Controller/user/prompt.php";
-  include_once __DIR__ . "/../../Controller/user/report.php";
+  include_once __DIR__ . "/../../controller/user/prompt.php";
+  include_once __DIR__ . "/../../controller/user/report.php";
 
   $prompt_id = (int)($_GET['id'] ?? 0);
   if ($prompt_id <= 0) die("ID không hợp lệ");

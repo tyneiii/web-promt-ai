@@ -20,7 +20,7 @@
             <?php
             include_once __DIR__ . '/../../helpers/helper.php';
             include_once __DIR__ . '/../../config.php';
-            include_once __DIR__ . '/../../Controller/user/report.php';
+            include_once __DIR__ . '/../../controller/user/report.php';
             include_once __DIR__ . '/../../helpers/manager_prompt_logic.php';
 
             // Đếm bài viết đang chờ duyệt

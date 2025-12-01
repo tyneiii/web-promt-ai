@@ -29,7 +29,7 @@ if (empty($API_TOKEN)) {
     exit;
 }
 
-$model = "openai/gpt-oss-120b";
+$model = "Qwen/Qwen2.5-72B-Instruct";
 //$model = "Llava-1.5";
 $endpoint = "https://router.huggingface.co/v1/chat/completions";
 

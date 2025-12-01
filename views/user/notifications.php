@@ -1,7 +1,7 @@
 <?php
 include_once __DIR__ . '/layout/header.php';
-include_once __DIR__ . '/../../Controller/user/prompt.php';
-include_once __DIR__ . '/../../Controller/user/notifications.php';
+include_once __DIR__ . '/../../controller/user/prompt.php';
+include_once __DIR__ . '/../../controller/user/notifications.php';
 
 $account_id = $_SESSION['account_id'] ?? 0;
 if (!$account_id) {

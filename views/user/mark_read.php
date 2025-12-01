@@ -1,7 +1,7 @@
 <?php
 session_start();
 include_once __DIR__ . '/../../config.php';  
-include_once __DIR__ . '/../../Controller/user/notifications.php';
+include_once __DIR__ . '/../../controller/user/notifications.php';
 
 header('Content-Type: application/json');
 if (!isset($_SESSION['account_id'])) {

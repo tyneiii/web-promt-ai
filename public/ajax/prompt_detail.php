@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json');
 include_once __DIR__ . "/../../config.php";
-include_once __DIR__ . "/../../Controller/user/prompt.php";
+include_once __DIR__ . "/../../controller/user/prompt.php";
 function sendResponse($success, $message)
 {
     echo json_encode(['success' => $success, 'message' => $message]);

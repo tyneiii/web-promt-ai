@@ -9,7 +9,7 @@ $name_user = $_SESSION['name_user'] ?? '';
 
 $search = $_GET['search'] ?? '';
 
-include_once __DIR__ . '/../../Controller/user/prompt.php';
+include_once __DIR__ . '/../../controller/user/prompt.php';
 if (isset($_POST['loveBtn']) && $account_id) {
     $id_prompt = (int)$_POST['loveBtn'];
     $mess = lovePrompt($account_id, $id_prompt, $conn);

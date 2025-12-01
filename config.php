@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__ . "/Controller/account.php";
+include_once __DIR__ . "/controller/account.php";
 $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
 $host = $_SERVER['HTTP_HOST'];
 $root_dir = str_replace('\\', '/', __DIR__);

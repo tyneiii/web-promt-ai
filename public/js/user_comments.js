@@ -57,7 +57,7 @@ function loadUserComments() {
     }
     list.innerHTML = '<p style="text-align: center; color: #999;">Đang tải...</p>';
 
-    fetch('../../Controller/user/get_comments.php')
+    fetch('../../controller/user/get_comments.php')
         .then(response => {
             console.log('Fetch response:', response.status);  // ← Debug: 200 OK?
             if (!response.ok) throw new Error('HTTP ' + response.status);
@@ -128,7 +128,7 @@ function viewDetail(promptId) {
 function deleteComment(commentId, promptId) {
     if (!confirm('Bạn chắc chắn muốn xóa bình luận này?')) return;
     
-    fetch('../../Controller/user/process_comment.php', {
+    fetch('../../controller/user/process_comment.php', {
         method: 'POST',
         headers: { 
             'Content-Type': 'application/x-www-form-urlencoded',
