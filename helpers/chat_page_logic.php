@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__ . "/../Controller/user/chat.php";
+include_once __DIR__ . "/../controller/user/chat.php";
 include_once __DIR__ . "/../config.php";
 define('MESSAGE_LIMIT', 5);
 $role = (int)$_SESSION['role'];

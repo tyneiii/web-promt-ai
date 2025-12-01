@@ -757,7 +757,7 @@ text-decoration: none;
 /* Nền tối làm mờ phía sau khi mở modal */
 .modal-overlay {
     display: none; /* Mặc định ẩn */
-    position: fixed;
+    position: fixed  !important;
     z-index: 1000;
     left: 0;
     top: 0;
@@ -768,9 +768,8 @@ text-decoration: none;
     align-items: center;
 }
 
-/* Hộp nội dung Modal */
 .modal-container {
-    background-color: #1e1e1e; /* Màu nền tối giống ảnh */
+    background-color: #1e1e1e;
     color: #e0e0e0;
     width: 90%;
     max-width: 600px;
@@ -781,7 +780,6 @@ text-decoration: none;
     border: 1px solid #333;
 }
 
-/* Header của Modal */
 .modal-header {
     padding: 15px 20px;
     border-bottom: 1px solid #333;
@@ -794,7 +792,7 @@ text-decoration: none;
 .modal-header h2 {
     margin: 0;
     font-size: 18px;
-    color: #ff4d4d; /* Màu đỏ nhấn giống trong ảnh của bạn */
+    color: #ff4d4d;
 }
 
 .close-modal {
@@ -814,7 +812,6 @@ text-decoration: none;
     overflow-y: auto;
 }
 
-/* --- Accordion (Thẻ đóng mở) --- */
 .accordion-card {
     background-color: #2d2d2d;
     margin-bottom: 10px;

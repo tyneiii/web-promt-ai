@@ -2,7 +2,7 @@
 session_start();
 include_once __DIR__ . '/layout/header.php';
 include_once __DIR__ . '/../../config.php';
-include_once __DIR__ . '/../../Controller/user/prompt.php';
+include_once __DIR__ . '/../../controller/user/prompt.php';
 
 if (!isset($_SESSION['account_id'])) {
     header("Location: ../login/login.php");

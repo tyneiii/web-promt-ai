@@ -188,7 +188,7 @@
     header("Location: home.php");
     exit();
   }
-  include_once __DIR__ . '/../../../Controller/user/notifications.php';
+  include_once __DIR__ . '/../../../controller/user/notifications.php';
   ?>
   <?php
     // Lấy danh sách tag từ DB

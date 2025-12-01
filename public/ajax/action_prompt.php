@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/../../config.php';
-require_once __DIR__ . '/../../Controller/user/prompt.php'; // chứa lovePrompt(), savePrompt()
+require_once __DIR__ . '/../../controller/user/prompt.php'; // chứa lovePrompt(), savePrompt()
 
 header('Content-Type: application/json');
 

@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__ . "/../../Controller/user/chat.php";
+include_once __DIR__ . "/../../controller/user/chat.php";
 include_once __DIR__ . "/../../config.php";
 header('Content-Type: application/json');
 $json_data = file_get_contents('php://input');

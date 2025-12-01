@@ -2,7 +2,7 @@
 
 session_start();
 include_once __DIR__ . '/../../config.php';
-include_once __DIR__ . '/../../Controller/user/prompt.php';
+include_once __DIR__ . '/../../controller/user/prompt.php';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $account_id = $_SESSION['account_id'] ?? 0;
@@ -175,7 +175,7 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
   </div>
   <?php if ($account_id > 0): ?>
     <div class="comment-form-new">
-      <form method="post" action="../../Controller/user/process_comment.php" class="comment-input-form">
+      <form method="post" action="../../controller/user/process_comment.php" class="comment-input-form">
         <input type="hidden" name="action" value="add">
         <input type="hidden" name="prompt_id" value="<?= $id ?>">
 
@@ -212,7 +212,7 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
               <div class="comment-actions">
                 <details>
                   <summary>Sửa</summary>
-                  <form method="post" action="../../Controller/user/process_comment.php" class="edit-comment-form">
+                  <form method="post" action="../../controller/user/process_comment.php" class="edit-comment-form">
                     <input type="hidden" name="action" value="edit">
                     <input type="hidden" name="prompt_id" value="<?= $id ?>">
                     <input type="hidden" name="comment_id" value="<?= $c['comment_id'] ?>">
@@ -220,7 +220,7 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
                     <button type="submit">Lưu</button>
                   </form>
                 </details>
-                <form method="post" action="../../Controller/user/process_comment.php" onsubmit="return confirm('Xóa bình luận này?')">
+                <form method="post" action="../../controller/user/process_comment.php" onsubmit="return confirm('Xóa bình luận này?')">
                   <input type="hidden" name="action" value="delete">
                   <input type="hidden" name="prompt_id" value="<?= $id ?>">
                   <input type="hidden" name="comment_id" value="<?= $c['comment_id'] ?>">

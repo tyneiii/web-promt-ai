@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__ . "/../Controller/account.php";
+include_once __DIR__ . "/../controller/account.php";
 $search = $_GET['search'] ?? '';
 $role = $_GET["role"] ?? '';
 $is_active = $_GET["is_active"] ?? '';
