@@ -45,6 +45,7 @@ $pagination_params = [
     'search' => $search,
     'tag' => $tag,
 ];
+/** @var int $total_rows */
 $total_rows = totalPrompts($search, $tag, $conn);
 $total_pages = ceil($total_rows / $rows_per_page);
 $hot_prompts = getHotPrompts($conn, 5);
@@ -288,6 +289,33 @@ unset($_POST);
                     </div>
                 </div>
             </div>
+
+            <div class="accordion-card">
+                <div class="accordion-header">
+                    <h3 >IV. Hướng dẫn nhận Hoa hồng & Chia sẻ doanh thu</h3>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Để khuyến khích cộng đồng chia sẻ Prompt chất lượng, Ban quản trị (Admin) sẽ trích một phần doanh thu từ quảng cáo trên website để chia sẻ lại cho người dùng.</p>
+                    <strong>1. Nguyên tắc hoạt động:</strong>
+                    <ul>
+                        <li>Website hiển thị quảng cáo. Doanh thu của website phụ thuộc vào lượt hiển thị và click vào quảng cáo trong tháng đó.</li>
+                        <li>Doanh thu này <strong>không cố định</strong> (tháng này có thể cao hơn hoặc thấp hơn tháng trước).</li>
+                    </ul>
+                    <strong>2. Điều kiện nhận thưởng:</strong>
+                    <ul>
+                        <li>Hệ thống sẽ tổng kết vào <strong>ngày cuối cùng của tháng</strong>.</li>
+                        <li>Các tài khoản có bài đăng nằm trong <strong>Top Tương tác</strong> (nhiều lượt Thích/Tim và Save nhất) sẽ đủ điều kiện nhận hoa hồng.</li>
+                        <li>Các bài đăng vi phạm quy tắc cộng đồng sẽ bị loại bỏ khỏi danh sách tính thưởng.</li>
+                    </ul>
+                    <strong>3. Yêu cầu bắt buộc:</strong>
+                    <ul>
+                        <li>Người dùng PHẢI cập nhật đầy đủ <strong>Thông tin ngân hàng</strong> trong phần "Cài đặt tài khoản" (Profile).</li>
+                        <li>Thông tin bao gồm: <em>Tên ngân hàng, Số tài khoản, Tên chủ tài khoản</em>.</li>
+                        <li>Admin không chịu trách nhiệm nếu người dùng cung cấp sai thông tin dẫn đến chuyển khoản thất bại.</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -382,17 +410,20 @@ unset($_POST);
         // Mở modal khi click icon info
         btnOpen.addEventListener('click', function() {
             modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
         });
 
         // Đóng modal khi click dấu X
         btnClose.addEventListener('click', function() {
             modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
         });
 
         // Đóng modal khi click ra ngoài vùng nội dung
         window.addEventListener('click', function(e) {
             if (e.target == modal) {
                 modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
             }
         });
 
