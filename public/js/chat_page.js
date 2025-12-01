@@ -211,7 +211,7 @@ function loadMoreMessages() {
 
     const oldestId = getOldestId();
     if (!currentChatId || !oldestId) {
-        updateLoadMoreButton(false);
+        updateLoadMoreButton(false);    
         isLoading = false;
         return;
     }

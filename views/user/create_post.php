@@ -48,9 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // INSERT promptdetail
   $order = 1;
-  $detailStmt = $conn->prepare("INSERT INTO promptdetail (prompt_id, component_order, content) VALUES (?, ?, ?)");
+  $detailStmt = $conn->prepare("INSERT INTO promptdetail (prompt_id, content) VALUES (?, ?)");
   foreach ($contents as $ct) {
-    $detailStmt->bind_param("iis", $prompt_id, $order, $ct);
+    $detailStmt->bind_param("is", $prompt_id, $ct);
     $detailStmt->execute();
     $order++;
   }
