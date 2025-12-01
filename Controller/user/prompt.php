@@ -83,6 +83,7 @@ function getPrompts($account_id, $searchString, $tag_id, $conn) {
 
         $prompts[$prompt_id] = [
             'prompt_id' => $prompt_id,
+            'account_id' => (int)$row['account_id'],
             'username' => $row['username'],
             'avatar' => $row['avatar'] ?? 'default-avatar.png',
             'description' => $row['description'],
