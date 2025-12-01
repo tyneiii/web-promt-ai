@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function openPromptModal(btn) {
   const promptText = btn.dataset.prompt || '';
   if (!promptText.trim()) {
-    alert("Không có prompt!");
+    alert("Bạn chưa đăng nhập, vui lòng đăng nhập!");
     return;
   }
   currentPrompt = promptText;

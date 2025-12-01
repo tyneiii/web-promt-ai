@@ -244,7 +244,10 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
     <textarea id="promptInput" rows="10"><?= htmlspecialchars($full_prompt) ?></textarea>
     <div class="modal-actions">
       <button class="cancel" onclick="closePromptModal()">Hủy</button>
-      <button class="confirm" onclick="confirmRunPrompt()">Chạy ngay</button>
+      <button class="confirm" 
+              onclick="document.getElementById('promptInput').value.trim() ? confirmRunPrompt() : (alert('Prompt đang trống! Vui lòng nhập nội dung trước khi chạy.'), false)">
+        Chạy ngay
+      </button>
     </div>
   </div>
 </div>
