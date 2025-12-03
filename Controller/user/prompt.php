@@ -1,29 +1,38 @@
 <?php
-
-function totalPrompts($searchString, $tag_id, $conn) {
+function totalPrompts($account_id, $searchString, $tag_id, $conn, $view_status) {
+    $account_id = (int)$account_id;
     $search = trim($searchString ?? '');
     $tag_id = (int)$tag_id;
     $sql = "SELECT COUNT(DISTINCT p.prompt_id) AS total
             FROM prompt p";
+    $where_conditions = " WHERE p.status = 'public' ";
+    $params = [];
+    $types = "";
+    if ($account_id > 0 && ($view_status === 'unread' || $view_status === 'seen')) {
+        $sql .= "
+            LEFT JOIN seen_prompt sp 
+            ON sp.prompt_id = p.prompt_id 
+            AND sp.account_id = {$account_id}
+        ";
+        if ($view_status === 'unread') {
+            $where_conditions .= " AND sp.prompt_id IS NULL ";
+        } elseif ($view_status === 'seen') {
+            $where_conditions .= " AND sp.prompt_id IS NOT NULL ";
+        }
+    }
     if ($tag_id > 0) {
         $sql .= " 
             JOIN prompttag pt ON pt.prompt_id = p.prompt_id 
-            AND pt.tag_id = ?";
+            AND pt.tag_id = {$tag_id}
+        ";
     }
-
-    $sql .= " WHERE p.status = 'public' ";
-    $params = [];
-    $types = "";
+    $sql .= $where_conditions;
     if (!empty($search)) {
-        $sql .= " AND (p.title LIKE ? OR p.short_description LIKE ?)";
+        $sql .= " AND (p.title LIKE ? OR p.short_description LIKE ?)"; 
         $like = "%$search%";
         $params[] = $like;
         $params[] = $like;
         $types .= "ss";
-    }
-    if ($tag_id > 0) {
-        array_unshift($params, $tag_id);
-        $types = "i" . $types;
     }
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
@@ -31,7 +40,7 @@ function totalPrompts($searchString, $tag_id, $conn) {
         return 0;
     }
     if (!empty($params)) {
-        $stmt->bind_param($types, ...$params);
+        $stmt->bind_param($types, ...$params); 
     }
     $stmt->execute();
     $result = $stmt->get_result();
@@ -39,60 +48,58 @@ function totalPrompts($searchString, $tag_id, $conn) {
     return (int)($row['total'] ?? 0);
 }
 
-
-function getPrompts($account_id, $searchString, $tag_id, $conn, $rows_per_page, $offset) {
+function getPrompts($account_id, $searchString, $tag_id, $conn, $rows_per_page, $offset, $view_status) {
     $account_id = (int)$account_id;
     $search = trim($searchString ?? '');
     $tag_id = (int)$tag_id;
-    $prompt_sql = "
-        SELECT 
-            p.prompt_id,
-            p.account_id,
-            COALESCE(p.title, p.short_description, '') AS description,
-            p.love_count,
-            p.comment_count,
-            p.short_description,
-            p.save_count,
-            a.username,
-            a.avatar,
-            CASE WHEN l.account_id IS NULL THEN 0 ELSE 1 END AS is_loved
+    $select_cols = "p.prompt_id, p.account_id, COALESCE(p.title, p.short_description, '') AS description,
+                    p.love_count, p.comment_count, p.short_description, p.save_count, a.username, a.avatar,
+                    CASE WHEN l.account_id IS NULL THEN 0 ELSE 1 END AS is_loved";
+    $from_and_joins = "
         FROM prompt p
         LEFT JOIN account a ON a.account_id = p.account_id
         LEFT JOIN love l ON l.prompt_id = p.prompt_id AND l.account_id = ?
     ";
+    $where_conditions = " WHERE p.status = 'public' ";
+    $order_by = " ORDER BY p.create_at DESC "; 
+    if ($account_id > 0) {
+        $from_and_joins .= "
+            LEFT JOIN seen_prompt sp 
+            ON sp.prompt_id = p.prompt_id AND sp.account_id = {$account_id}
+        ";
 
+        if ($view_status === 'unread') {
+            $where_conditions .= " AND sp.prompt_id IS NULL ";
+            $order_by = " ORDER BY RAND() ";
+
+        } elseif ($view_status === 'seen') {
+            $where_conditions .= " AND sp.prompt_id IS NOT NULL ";
+        } elseif ($view_status === 'all') {
+            $order_by = " ORDER BY RAND() ";
+        }
+    }
     if ($tag_id > 0) {
-        $prompt_sql .= " 
+        $from_and_joins .= " 
             JOIN prompttag pt ON pt.prompt_id = p.prompt_id 
-            AND pt.tag_id = ?
+            AND pt.tag_id = {$tag_id}
         ";
     }
-
-    $prompt_sql .= " WHERE p.status = 'public' ";
-
-    // Nếu có search
     if (!empty($search)) {
-        $prompt_sql .= " 
+        $where_conditions .= " 
             AND (p.title LIKE ? 
             OR p.short_description LIKE ?
             OR a.username LIKE ?)
         ";
     }
-
-    $prompt_sql .= " 
-        ORDER BY p.create_at DESC
+    $prompt_sql = "
+        SELECT {$select_cols}
+        {$from_and_joins}
+        {$where_conditions}
+        {$order_by}
         LIMIT $offset, $rows_per_page
     ";
-
-    // BUILD BIND PARAM 
-    $types = "i";     // 1: account_id cho love check
+    $types = "i"; 
     $params = [$account_id];
-
-    if ($tag_id > 0) {
-        $types .= "i";
-        $params[] = $tag_id;
-    }
-
     if (!empty($search)) {
         $types .= "sss";
         $like = "%$search%";
@@ -100,63 +107,47 @@ function getPrompts($account_id, $searchString, $tag_id, $conn, $rows_per_page, 
         $params[] = $like;
         $params[] = $like;
     }
-
-    // Chuẩn bị statement
     $prompt_stmt = $conn->prepare($prompt_sql);
     if (!$prompt_stmt) {
         error_log("Prepare failed: ".$conn->error);
         return [];
     }
-
-    // bind_param động
-    $prompt_stmt->bind_param($types, ...$params);
+    $prompt_stmt->bind_param($types, ...$params); 
     $prompt_stmt->execute();
     $prompt_result = $prompt_stmt->get_result();
-
-    // Build kết quả 
     $prompts = [];
     while ($row = $prompt_result->fetch_assoc()) {
         $prompt_id = $row['prompt_id'];
-
         $prompts[$prompt_id] = [
             'prompt_id' => $prompt_id,
             'account_id' => (int)$row['account_id'],
             'username' => $row['username'],
             'avatar' => $row['avatar'] ?? 'default-avatar.png',
             'description' => $row['description'],
-            'short_description' => $row['short_description'],  // ⭐ THÊM DÒNG NÀY ⭐
-            
+            'short_description' => $row['short_description'],
             'love_count' => (int)$row['love_count'],
             'comment_count' => (int)$row['comment_count'],
             'save_count' => (int)$row['save_count'],
             'is_loved' => $row['is_loved'] == 1,
-
             'details' => [],
             'tags' => []
         ];
-
-        //  LẤY TAG 
         $tag_sql = "
             SELECT t.tag_id, t.tag_name 
             FROM prompttag pt
             JOIN tag t ON t.tag_id = pt.tag_id
             WHERE pt.prompt_id = ?
         ";
-
         $tag_stmt = $conn->prepare($tag_sql);
         $tag_stmt->bind_param("i", $prompt_id);
         $tag_stmt->execute();
         $tags_res = $tag_stmt->get_result();
-
         while ($tag_row = $tags_res->fetch_assoc()) {
             $prompts[$prompt_id]['tags'][] = [
                 'id' => $tag_row['tag_id'],
                 'name' => $tag_row['tag_name']
             ];
-
         }
-
-        // LẤY DETAILS 
         $detail_sql = "
             SELECT content 
             FROM promptdetail 
@@ -166,12 +157,10 @@ function getPrompts($account_id, $searchString, $tag_id, $conn, $rows_per_page, 
         $detail_stmt->bind_param("i", $prompt_id);
         $detail_stmt->execute();
         $dres = $detail_stmt->get_result();
-
         while ($d = $dres->fetch_assoc()) {
             $prompts[$prompt_id]['details'][] = $d['content'];
         }
     }
-
     return array_values($prompts);
 }
 

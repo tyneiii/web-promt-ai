@@ -220,7 +220,21 @@
       </form>
     </div>
     <div class="navbar-right">
-      <form action="home.php" method="get">
+     <form action="home.php" method="get" class="filter-group">
+        <?php if (isset($_GET['search'])): ?>
+            <input type="hidden" name="search" value="<?= htmlspecialchars($_GET['search']) ?>">
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['account_id']) && !empty($_SESSION['account_id'])): 
+            $current_view_status = $_GET['view_status'] ?? 'unread'; // Mặc định là chưa xem
+        ?>
+            <select name="view_status" onchange="this.form.submit()" style="margin-right: 10px;">
+                <option value="unread" <?= $current_view_status == 'unread' ? 'selected' : '' ?>>Chưa xem</option>
+                <option value="all" <?= $current_view_status == 'all' ? 'selected' : '' ?>>Tất cả</option>
+                <option value="seen" <?= $current_view_status == 'seen' ? 'selected' : '' ?>>Đã xem</option>
+            </select>
+        <?php endif; ?>
+
         <select name="tag" onchange="this.form.submit()">
             <option value="">Chủ đề</option>
             <?php foreach ($tags as $tag): ?>

@@ -41,20 +41,22 @@ $tag = isset($_GET['tag']) ? (int)$_GET['tag'] : 0;
 $rows_per_page = 10;
 $current_page = (int)($_GET['page'] ?? 1);
 $offset = ($current_page - 1) * $rows_per_page;
+$view_status = $_GET['view_status'] ?? 'unread';
 $pagination_params = [
     'search' => $search,
     'tag' => $tag,
+    'view_status' => $view_status,
 ];
-/** @var int $total_rows */
-$total_rows = totalPrompts($search, $tag, $conn);
+$total_rows = totalPrompts($account_id, $search, $tag, $conn, $view_status);
 $total_pages = ceil($total_rows / $rows_per_page);
 $hot_prompts = getHotPrompts($conn, 5);
 $following_users = [];
 if ($account_id) {
     $following_users = getFollowingUsers($account_id, $conn);
 }
-$prompts = getPrompts($account_id, $search, $tag, $conn, $rows_per_page, $offset);
-function is_saved($conn, $account_id, $prompt_id) {
+$prompts = getPrompts($account_id, $search, $tag, $conn, $rows_per_page, $offset, $view_status);
+function is_saved($conn, $account_id, $prompt_id)
+{
     $account_id = (int)$account_id;
     $prompt_id  = (int)$prompt_id;
     $sql = "SELECT save_id 
@@ -131,36 +133,37 @@ unset($_POST);
 
             <?php if (!isset($_SESSION['account_id'])): ?>
 
-<<<<<<< Updated upstream
-                <div class="item">Bạn cần đăng nhập để xem.</div>
-
-=======
-                <a href="" class="item-link">
-                    <div class="item">Bạn cần đăng nhập để xem.</div>
-                </a>
->>>>>>> Stashed changes
-            <?php elseif (empty($following_users)): ?>
-
-                <a href="" class="item-link">
-                    <div class="item">Bạn chưa theo dõi ai.</div>
-                </a>
-
-            <?php else: ?>
-
-                <?php foreach ($following_users as $user): ?>
-                    <a href="profile.php?id=<?= $user['account_id'] ?>" class="item-link">
-                        <div class="item">
-                            <img src="<?= htmlspecialchars($user['avatar'] ?? 'default-avatar.png') ?>"
-                                style="width:28px; height:28px; border-radius:50%; margin-right:8px;">
-                            <?= htmlspecialchars($user['username']) ?>
-                        </div>
-                    </a>
-                <?php endforeach; ?>
-
-            <?php endif; ?>
-
+                <<<<<<< Updated upstream
+                    <div class="item">Bạn cần đăng nhập để xem.
         </div>
+
+        =======
+        <a href="" class="item-link">
+            <div class="item">Bạn cần đăng nhập để xem.</div>
+        </a>
+        >>>>>>> Stashed changes
+    <?php elseif (empty($following_users)): ?>
+
+        <a href="" class="item-link">
+            <div class="item">Bạn chưa theo dõi ai.</div>
+        </a>
+
+    <?php else: ?>
+
+        <?php foreach ($following_users as $user): ?>
+            <a href="profile.php?id=<?= $user['account_id'] ?>" class="item-link">
+                <div class="item">
+                    <img src="<?= htmlspecialchars($user['avatar'] ?? 'default-avatar.png') ?>"
+                        style="width:28px; height:28px; border-radius:50%; margin-right:8px;">
+                    <?= htmlspecialchars($user['username']) ?>
+                </div>
+            </a>
+        <?php endforeach; ?>
+
+    <?php endif; ?>
+
     </div>
+</div>
 </div>
 
 
@@ -345,6 +348,8 @@ unset($_POST);
 <script>
     const isLoggedIn = <?= isset($_SESSION['account_id']) ? 'true' : 'false' ?>;
     let currentPromptId = 0;
+    const accountId = <?= $account_id ? (int)$account_id : 'null' ?>; // Lấy account_id từ PHP
+
     document.querySelectorAll('.card').forEach(card => {
         card.addEventListener('click', function(e) {
             if (e.target.closest('button') || e.target.closest('.run-btn')) return;
@@ -362,15 +367,6 @@ unset($_POST);
                 window.location.href = "../login/login.php?require_login=report";
                 return;
             }
-
-            const card = this.closest(".card");
-            currentPromptId = card.getAttribute("data-id");
-
-            document.getElementById("report-reason").value = "Nội dung không phù hợp";
-            document.getElementById("report-custom").value = "";
-            document.getElementById("report-custom").style.display = "none";
-
-            document.getElementById("report-modal").style.display = "flex";
         });
     });
 
@@ -412,6 +408,7 @@ unset($_POST);
                 alert("Lỗi khi báo cáo!");
             });
     };
+    
     document.addEventListener('DOMContentLoaded', function() {
         const modal = document.getElementById('rulesModal');
         const btnOpen = document.getElementById('btnOpenRules');
@@ -438,14 +435,59 @@ unset($_POST);
 
         accordions.forEach(acc => {
             acc.addEventListener('click', function() {
-
                 const card = this.parentElement;
-
                 card.classList.toggle('active');
-
-
             });
         });
+
+        if (isLoggedIn) {
+            function markAsViewed(promptId) {
+                const endpoint = '../../public/ajax/track_view.php'; 
+                fetch(endpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            prompt_id: promptId,
+                            account_id: accountId 
+                        }),
+                        keepalive: true
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            console.error('Track view failed:', response.status);
+                        }
+                        return response.json();
+                    })
+                    .catch(error => {
+                        console.error('Error tracking view:', error);
+                    });
+            }
+
+            const options = {
+                root: null, // Theo dõi trong viewport
+                rootMargin: '0px',
+                threshold: 1.0 // 100% hiển thị
+            };
+            const promptObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const promptElement = entry.target;
+                        const promptId = parseInt(promptElement.getAttribute('data-id'));
+                        if (promptId) {
+                            markAsViewed(promptId);
+                            observer.unobserve(promptElement); 
+                        }
+                    }
+                });
+            }, options);
+
+            document.querySelectorAll('.card').forEach(card => {
+                promptObserver.observe(card);
+            });
+        }
+
     });
 </script>
 
