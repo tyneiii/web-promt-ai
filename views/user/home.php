@@ -133,15 +133,11 @@ unset($_POST);
 
             <?php if (!isset($_SESSION['account_id'])): ?>
 
-                <<<<<<< Updated upstream
-                    <div class="item">Bạn cần đăng nhập để xem.
+                <a href="" class="item-link">
+                    <div class="item">Bạn cần đăng nhập để xem.</div>
+                </a>
         </div>
 
-        =======
-        <a href="" class="item-link">
-            <div class="item">Bạn cần đăng nhập để xem.</div>
-        </a>
-        >>>>>>> Stashed changes
     <?php elseif (empty($following_users)): ?>
 
         <a href="" class="item-link">
@@ -408,7 +404,7 @@ unset($_POST);
                 alert("Lỗi khi báo cáo!");
             });
     };
-    
+
     document.addEventListener('DOMContentLoaded', function() {
         const modal = document.getElementById('rulesModal');
         const btnOpen = document.getElementById('btnOpenRules');
@@ -442,7 +438,7 @@ unset($_POST);
 
         if (isLoggedIn) {
             function markAsViewed(promptId) {
-                const endpoint = '../../public/ajax/track_view.php'; 
+                const endpoint = '../../public/ajax/track_view.php';
                 fetch(endpoint, {
                         method: 'POST',
                         headers: {
@@ -450,7 +446,7 @@ unset($_POST);
                         },
                         body: JSON.stringify({
                             prompt_id: promptId,
-                            account_id: accountId 
+                            account_id: accountId
                         }),
                         keepalive: true
                     })
@@ -477,7 +473,7 @@ unset($_POST);
                         const promptId = parseInt(promptElement.getAttribute('data-id'));
                         if (promptId) {
                             markAsViewed(promptId);
-                            observer.unobserve(promptElement); 
+                            observer.unobserve(promptElement);
                         }
                     }
                 });
