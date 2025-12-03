@@ -1,0 +1,128 @@
+/* Success Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+    padding: 20px;
+    box-sizing: border-box;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+    animation: modalPop 0.4s ease-out;
+    transform: translateY(0);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes modalPop {
+    from {
+        transform: scale(0.8) translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-icon {
+    font-size: 70px;
+    color: #22c55e;
+    margin-bottom: 10px;
+}
+
+.modal-content h2 {
+    margin: 10px 0 16px;
+    color: #22c55e;
+    font-size: 26px;
+    font-weight: 600;
+}
+
+.modal-content p {
+    color: #555;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 28px;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 14px 28px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    min-width: 180px;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: #22c55e;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #16a34a;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.btn-secondary:hover {
+    background: #e5e7eb;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .modal-content {
+        padding: 30px 20px;
+    }
+
+    .modal-icon {
+        font-size: 50px;
+    }
+
+    .modal-content h2 {
+        font-size: 22px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        min-width: 140px;
+        padding: 12px 20px;
+    }
+}
