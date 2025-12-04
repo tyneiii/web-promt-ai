@@ -9,6 +9,21 @@ body {
   height: 100vh;
 }
 
+/* Error Message */
+.error-message {
+  margin: 10px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #ffdddd;
+  color: #b30000;
+  font-weight: 500;
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+}
+
 .form-card {
   width: 90vw;
   height: 90vh;

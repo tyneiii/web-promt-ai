@@ -131,12 +131,21 @@ unset($_POST);
         <div class="follow-list">
 
             <?php if (!isset($_SESSION['account_id'])): ?>
+<<<<<<< HEAD
                     <div class="item">Bạn cần đăng nhập để xem.
         </div>
         <a href="" class="item-link">
             <div class="item">Bạn cần đăng nhập để xem.</div>
         </a>
         >>>>>>> Stashed changes
+=======
+
+                <a href="" class="item-link">
+                    <div class="item">Bạn cần đăng nhập để xem.</div>
+                </a>
+        </div>
+
+>>>>>>> 92e68a3349b0f322008e1618cbf382db109a6541
     <?php elseif (empty($following_users)): ?>
 
         <a href="" class="item-link">
@@ -374,10 +383,120 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.style.overflow = 'auto';
     });
 
+<<<<<<< HEAD
     window.addEventListener('click', e => {
         if (e.target === modal) {
             modal.style.display = 'none';
             document.body.style.overflow = 'auto';
+=======
+    document.getElementById("submitReport").onclick = () => {
+        let reason = document.getElementById("report-reason").value;
+
+        if (reason === "Khác") {
+            let custom = document.getElementById("report-custom").value.trim();
+            if (!custom) {
+                alert("Vui lòng nhập lý do báo cáo!");
+                return;
+            }
+            reason = custom;
+        }
+
+        fetch("report.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "id=" + currentPromptId + "&reason=" + encodeURIComponent(reason)
+            })
+            .then(res => res.text())
+            .then(msg => {
+                alert(msg);
+                document.getElementById("report-modal").style.display = "none";
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Lỗi khi báo cáo!");
+            });
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('rulesModal');
+        const btnOpen = document.getElementById('btnOpenRules');
+        const btnClose = rulesModal.querySelector('.close-modal');
+
+        btnOpen.addEventListener('click', function() {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+
+        btnClose.addEventListener('click', function() {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        window.addEventListener('click', function(e) {
+            if (e.target == modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        const accordions = document.querySelectorAll('.accordion-header');
+
+        accordions.forEach(acc => {
+            acc.addEventListener('click', function() {
+                const card = this.parentElement;
+                card.classList.toggle('active');
+            });
+        });
+
+        if (isLoggedIn) {
+            function markAsViewed(promptId) {
+                const endpoint = '../../public/ajax/track_view.php';
+                fetch(endpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            prompt_id: promptId,
+                            account_id: accountId
+                        }),
+                        keepalive: true
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            console.error('Track view failed:', response.status);
+                        }
+                        return response.json();
+                    })
+                    .catch(error => {
+                        console.error('Error tracking view:', error);
+                    });
+            }
+
+            const options = {
+                root: null, // Theo dõi trong viewport
+                rootMargin: '0px',
+                threshold: 1.0 // 100% hiển thị
+            };
+            const promptObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const promptElement = entry.target;
+                        const promptId = parseInt(promptElement.getAttribute('data-id'));
+                        if (promptId) {
+                            markAsViewed(promptId);
+                            observer.unobserve(promptElement);
+                        }
+                    }
+                });
+            }, options);
+
+            document.querySelectorAll('.card').forEach(card => {
+                promptObserver.observe(card);
+            });
+>>>>>>> 92e68a3349b0f322008e1618cbf382db109a6541
         }
     });
 
