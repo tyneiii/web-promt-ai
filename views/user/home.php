@@ -1,14 +1,16 @@
 <?php
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
 include_once __DIR__ . '/../../config.php';
 
 $account_id = $_SESSION['account_id'] ?? '';
 $name_user = $_SESSION['name_user'] ?? '';
 
 $search = $_GET['search'] ?? '';
-
+if (isset($_POST['cmtBtn'])) {
+    $id_prompt = (int)$_POST['cmtBtn'];
+    $redirect = "detail_post.php?id=" . $id_prompt;
+    header("Location: $redirect");
+    exit;
+}
 include_once __DIR__ . '/../../controller/user/prompt.php';
 
 include_once __DIR__ . '/layout/header.php';
@@ -514,33 +516,7 @@ document.addEventListener('DOMContentLoaded', function () {
             closeReportModal();
         }
     });
-    if (isLoggedIn) {
-        function markAsViewed(promptId) {
-            const endpoint = '../../public/ajax/track_view.php';
-            fetch(endpoint, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt_id: promptId, account_id: accountId }),
-                    keepalive: true
-                })
-                .catch(error => { console.error('Error tracking view:', error); });
-        }
-        const observerOptions = { root: null, rootMargin: '0px', threshold: 1.0 };
-        const promptObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const id = parseInt(entry.target.getAttribute('data-id'));
-                    if (id) {
-                        markAsViewed(id);
-                        observer.unobserve(entry.target);
-                    }
-                }
-            });
-        }, observerOptions);
-        document.querySelectorAll('.card').forEach(card => {
-            promptObserver.observe(card);
-        });
-    }
+   
     if (window.location.pathname.includes('home.php') ||
         window.location.search.includes('search=') ||
         window.location.search.includes('tag=')) {
