@@ -158,15 +158,26 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
     <?php else: ?>
       <!-- Chưa đăng nhập -->
-      <button class="action-btn" onclick="requireLogin()">
-        <i class="fa-regular fa-heart"></i> <?= $prompt['love_count'] ?>
+       <?php 
+    $loginUrl = "../../views/login/login.php?redirect=" . urlencode($_SERVER['REQUEST_URI']);
+  ?>
+      <button class="action-btn" >
+        <a href="<?= $loginUrl ?>" class="action-btn" title="Yêu thích">
+    <i class="fa-regular fa-heart"></i> <?= $prompt['love_count'] ?>
+  </a>
+
       </button>
-      <button class="action-btn" onclick="requireLogin()">
-        <i class="fa-regular fa-bookmark"></i> <?= $prompt['save_count'] ?>
+      <button class="action-btn" >
+        <a href="<?= $loginUrl ?>" class="action-btn" title="Lưu lại">
+    <i class="fa-regular fa-bookmark"></i> <?= $prompt['save_count'] ?>
+  </a>
+
       </button>
-      <a href="../../views/login/login.php?redirect=<?= urlencode($_SERVER['REQUEST_URI']) ?>"
-        class="run-btn">Run Prompt</a>
+      <a href="<?= $loginUrl ?>" class="run-btn">
+    Run Prompt
+  </a>
     <?php endif; ?>
+
   </div>
   <?php if ($account_id > 0): ?>
     <div class="comment-form-new">
