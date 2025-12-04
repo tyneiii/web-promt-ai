@@ -56,6 +56,43 @@ if (isset($_POST['action']) && $_POST['action'] === "follow_toggle") {
 
 $profile_id = isset($_GET['id']) ? intval($_GET['id']) : $acc_id;
 
+// ========== API LẤY DANH SÁCH FOLLOW ==========
+if (isset($_GET['load'])) {
+    header("Content-Type: application/json");
+
+    $type = $_GET['load'];
+
+    if ($type === "followers") {
+        $sql = "SELECT a.account_id, a.username, a.fullname, a.avatar
+                FROM follow f
+                JOIN account a ON f.follower_id = a.account_id
+                WHERE f.following_id = $profile_id";
+    }
+    else if ($type === "following") {
+        $sql = "SELECT a.account_id, a.username, a.fullname, a.avatar
+                FROM follow f
+                JOIN account a ON f.following_id = a.account_id
+                WHERE f.follower_id = $profile_id";
+    }
+    else {
+        echo json_encode([]);
+        exit;
+    }
+
+    $result = mysqli_query($conn, $sql);
+
+    $list = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        if (!$row["avatar"]) {
+            $row["avatar"] = "default_avatar.png";
+        }
+        $list[] = $row;
+    }
+
+    echo json_encode($list);
+    exit;
+}
+
 // Lấy thông tin người dùng
 $sql_user = "SELECT * FROM account WHERE account_id = $profile_id";
 $user = mysqli_fetch_assoc(mysqli_query($conn, $sql_user));
