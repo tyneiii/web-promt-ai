@@ -41,7 +41,6 @@ $tag = isset($_GET['tag']) ? (int)$_GET['tag'] : 0;
 $rows_per_page = 10;
 $current_page = (int)($_GET['page'] ?? 1);
 $offset = ($current_page - 1) * $rows_per_page;
-$view_status = $_GET['view_status'] ?? 'unread';
 $pagination_params = [
     'search' => $search,
     'tag' => $tag,
@@ -132,12 +131,8 @@ unset($_POST);
         <div class="follow-list">
 
             <?php if (!isset($_SESSION['account_id'])): ?>
-
-                <<<<<<< Updated upstream
                     <div class="item">Bạn cần đăng nhập để xem.
         </div>
-
-        =======
         <a href="" class="item-link">
             <div class="item">Bạn cần đăng nhập để xem.</div>
         </a>
@@ -159,9 +154,7 @@ unset($_POST);
                 </div>
             </a>
         <?php endforeach; ?>
-
     <?php endif; ?>
-
     </div>
 </div>
 </div>
@@ -346,12 +339,11 @@ unset($_POST);
     </div>
 </div>
 <script>
+document.addEventListener('DOMContentLoaded', function () {
     const isLoggedIn = <?= isset($_SESSION['account_id']) ? 'true' : 'false' ?>;
-    let currentPromptId = 0;
-    const accountId = <?= $account_id ? (int)$account_id : 'null' ?>; // Lấy account_id từ PHP
-
+    const accountId  = <?= $account_id ? (int)$account_id : 'null' ?>;
     document.querySelectorAll('.card').forEach(card => {
-        card.addEventListener('click', function(e) {
+        card.addEventListener('click', function (e) {
             if (e.target.closest('button') || e.target.closest('.run-btn')) return;
             const id = this.getAttribute('data-id');
             window.location.href = `detail_post.php?id=${id}`;
@@ -359,136 +351,66 @@ unset($_POST);
     });
 
     document.querySelectorAll(".report-btn").forEach(btn => {
-        btn.addEventListener("click", function(e) {
+        btn.addEventListener("click", function (e) {
             e.stopPropagation();
-
             if (!isLoggedIn) {
                 alert("Bạn phải đăng nhập để báo cáo!");
                 window.location.href = "../login/login.php?require_login=report";
-                return;
             }
         });
     });
 
-    document.getElementById("report-reason").addEventListener("change", function() {
-        document.getElementById("report-custom").style.display =
-            (this.value === "Khác") ? "block" : "none";
+    const modal    = document.getElementById('rulesModal');
+    const btnOpen  = document.getElementById('btnOpenRules');
+    const btnClose = modal.querySelector('.close-modal');
+
+    btnOpen.addEventListener('click', () => {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
     });
 
-    document.getElementById("cancelReport").onclick = () => {
-        document.getElementById("report-modal").style.display = "none";
-    };
+    btnClose.addEventListener('click', () => {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    });
 
-    document.getElementById("submitReport").onclick = () => {
-        let reason = document.getElementById("report-reason").value;
-
-        if (reason === "Khác") {
-            let custom = document.getElementById("report-custom").value.trim();
-            if (!custom) {
-                alert("Vui lòng nhập lý do báo cáo!");
-                return;
-            }
-            reason = custom;
-        }
-
-        fetch("report.php", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                body: "id=" + currentPromptId + "&reason=" + encodeURIComponent(reason)
-            })
-            .then(res => res.text())
-            .then(msg => {
-                alert(msg);
-                document.getElementById("report-modal").style.display = "none";
-            })
-            .catch(err => {
-                console.error(err);
-                alert("Lỗi khi báo cáo!");
-            });
-    };
-    
-    document.addEventListener('DOMContentLoaded', function() {
-        const modal = document.getElementById('rulesModal');
-        const btnOpen = document.getElementById('btnOpenRules');
-        const btnClose = rulesModal.querySelector('.close-modal');
-
-        btnOpen.addEventListener('click', function() {
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        });
-
-        btnClose.addEventListener('click', function() {
+    window.addEventListener('click', e => {
+        if (e.target === modal) {
             modal.style.display = 'none';
             document.body.style.overflow = 'auto';
-        });
-
-        window.addEventListener('click', function(e) {
-            if (e.target == modal) {
-                modal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }
-        });
-
-        const accordions = document.querySelectorAll('.accordion-header');
-
-        accordions.forEach(acc => {
-            acc.addEventListener('click', function() {
-                const card = this.parentElement;
-                card.classList.toggle('active');
-            });
-        });
-
-        if (isLoggedIn) {
-            function markAsViewed(promptId) {
-                const endpoint = '../../public/ajax/track_view.php'; 
-                fetch(endpoint, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            prompt_id: promptId,
-                            account_id: accountId 
-                        }),
-                        keepalive: true
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            console.error('Track view failed:', response.status);
-                        }
-                        return response.json();
-                    })
-                    .catch(error => {
-                        console.error('Error tracking view:', error);
-                    });
-            }
-
-            const options = {
-                root: null, // Theo dõi trong viewport
-                rootMargin: '0px',
-                threshold: 1.0 // 100% hiển thị
-            };
-            const promptObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const promptElement = entry.target;
-                        const promptId = parseInt(promptElement.getAttribute('data-id'));
-                        if (promptId) {
-                            markAsViewed(promptId);
-                            observer.unobserve(promptElement); 
-                        }
-                    }
-                });
-            }, options);
-
-            document.querySelectorAll('.card').forEach(card => {
-                promptObserver.observe(card);
-            });
         }
-
     });
+
+    document.querySelectorAll('.accordion-header').forEach(header => {
+        header.addEventListener('click', function () {
+            this.parentElement.classList.toggle('active');
+        });
+    });
+
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 1.0
+    };
+
+    const promptObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const el = entry.target;
+                const id = parseInt(el.getAttribute('data-id'));
+                if (id) {
+                    markAsViewed(id);
+                    observer.unobserve(el);
+                }
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.card').forEach(card => {
+        promptObserver.observe(card);
+    });
+
+});
 </script>
 
 <script>

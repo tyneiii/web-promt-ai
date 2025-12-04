@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head> <link rel="icon" href="../../public/img/T1.png" type="image/png" sizes="180x180">
+
+<head>
+  <link rel="icon" href="../../public/img/T1.png" type="image/png" sizes="180x180">
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,11 +13,13 @@
     body {
       padding-top: 80px !important;
     }
+
     @media (max-width: 768px) {
       body {
         padding-top: 160px !important;
       }
     }
+
     #sticky-ad-banner {
       position: fixed;
       bottom: 0;
@@ -25,17 +29,20 @@
       text-align: center;
       z-index: 1000;
     }
+
     #ad-wrapper,
     .ad-wrapper {
       position: relative;
       display: inline-block;
     }
+
     #sticky-ad-banner img {
       height: 100px;
       width: 750px;
       max-width: 200vw;
       border-radius: 6px;
     }
+
     #close-ad-btn {
       position: absolute;
       top: 5px;
@@ -49,9 +56,11 @@
       cursor: pointer;
       z-index: 10;
     }
+
     #close-ad-btn:hover {
       color: #fff;
     }
+
     .notification-bell {
       position: relative;
       cursor: pointer;
@@ -59,6 +68,7 @@
       font-size: 20px;
       margin-right: 10px;
     }
+
     .notification-badge {
       position: absolute;
       top: -5px;
@@ -72,23 +82,31 @@
       text-align: center;
       font-weight: bold;
     }
+
     /* Modal mới */
     .notification-modal {
-      display: none; /* Ẩn mặc định */
+      display: none;
+      /* Ẩn mặc định */
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0, 0, 0, 0.5); /* Backdrop mờ */
-      z-index: 9999; /* Cao nhất */
-      overflow-y: auto; /* Scroll nếu nhiều notif */
+      background-color: rgba(0, 0, 0, 0.5);
+      /* Backdrop mờ */
+      z-index: 9999;
+      /* Cao nhất */
+      overflow-y: auto;
+      /* Scroll nếu nhiều notif */
     }
+
     .notification-modal.show {
-      display: flex !important; /* Mở bằng class show */
+      display: flex !important;
+      /* Mở bằng class show */
       align-items: center;
       justify-content: center;
     }
+
     .modal-content {
       background: white;
       border-radius: 8px;
@@ -96,9 +114,10 @@
       max-width: 400px;
       max-height: 80vh;
       overflow-y: auto;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
       position: relative;
     }
+
     .modal-header {
       display: flex;
       justify-content: space-between;
@@ -108,6 +127,7 @@
       font-size: 16px;
       font-weight: bold;
     }
+
     .close-modal {
       background: none;
       border: none;
@@ -115,6 +135,7 @@
       color: #666;
       cursor: pointer;
     }
+
     .notification-item {
       display: block;
       padding: 12px 15px;
@@ -122,31 +143,38 @@
       text-decoration: none;
       color: #333;
     }
+
     .notification-item.unread {
       background: #f8f9fa;
       font-weight: bold;
     }
+
     .notification-item.read {
       font-weight: normal;
     }
+
     .notification-item:hover {
       background: #e9ecef;
     }
+
     .notification-time {
       color: #999;
       font-size: 12px;
       display: block;
     }
+
     .modal-footer {
       padding: 10px 15px;
       border-top: 1px solid #eee;
       text-align: center;
     }
+
     .modal-footer a {
       color: #007bff;
       text-decoration: none;
       font-size: 14px;
     }
+
     #mark-all-read {
       background: none;
       border: none;
@@ -156,6 +184,7 @@
       text-decoration: underline;
       margin-right: 10px;
     }
+
     /* Mobile: Modal full width */
     @media (max-width: 768px) {
       .modal-content {
@@ -165,6 +194,7 @@
     }
   </style>
 </head>
+
 <body>
   <?php
   include_once __DIR__ . '/../../../config.php';
@@ -189,21 +219,25 @@
     header("Location: home.php");
     exit();
   }
+  $view_status = $_GET['view_status'] ?? 'unread';
+  $tag = isset($_GET['tag']) ? (int)$_GET['tag'] : 0;
+  $search = $_GET['search'] ?? '';
+
   include_once __DIR__ . '/../../../controller/user/notifications.php';
   ?>
   <?php
-    // Lấy danh sách tag từ DB
-    $tag_query = "SELECT tag_id, tag_name FROM tag ORDER BY tag_name ASC";
-    $tag_result = mysqli_query($conn, $tag_query);
-    $tags = mysqli_fetch_all($tag_result, MYSQLI_ASSOC);
-    // Fetch notifications data (chỉ nếu logged in)
-    $notifications = [];
-    $unread_count = 0;
-    if (isset($_SESSION['account_id']) && !empty($_SESSION['account_id'])) {
-        $account_id = $_SESSION['account_id'];
-        $unread_count = getUnreadCount($account_id, $conn);
-        $notifications = getNotifications($account_id, $conn, 5); // 5 mới nhất
-    }
+  // Lấy danh sách tag từ DB
+  $tag_query = "SELECT tag_id, tag_name FROM tag ORDER BY tag_name ASC";
+  $tag_result = mysqli_query($conn, $tag_query);
+  $tags = mysqli_fetch_all($tag_result, MYSQLI_ASSOC);
+  // Fetch notifications data (chỉ nếu logged in)
+  $notifications = [];
+  $unread_count = 0;
+  if (isset($_SESSION['account_id']) && !empty($_SESSION['account_id'])) {
+    $account_id = $_SESSION['account_id'];
+    $unread_count = getUnreadCount($account_id, $conn);
+    $notifications = getNotifications($account_id, $conn, 5); // 5 mới nhất
+  }
   ?>
   <nav class="navbar">
     <div class="navbar-left">
@@ -214,46 +248,41 @@
         <input type="text" name="search" class="search-bar"
           placeholder="Tìm kiếm prompt..."
           value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
+        <input type="hidden" name="view_status" value="<?= $view_status ?>">
+        <input type="hidden" name="tag" value="<?= $tag ?>">
         <button type="submit" class="search-btn">
           <i class="fa-solid fa-magnifying-glass"></i>
         </button>
       </form>
     </div>
     <div class="navbar-right">
-     <form action="home.php" method="get" class="filter-group">
+      <form action="home.php" method="get" class="filter-group">
         <?php if (isset($_GET['search'])): ?>
-            <input type="hidden" name="search" value="<?= htmlspecialchars($_GET['search']) ?>">
+          <input type="hidden" name="search" value="<?= htmlspecialchars($_GET['search']) ?>">
         <?php endif; ?>
-
-        <?php if (isset($_SESSION['account_id']) && !empty($_SESSION['account_id'])): 
-            $current_view_status = $_GET['view_status'] ?? 'unread'; // Mặc định là chưa xem
-        ?>
-            <select name="view_status" onchange="this.form.submit()" style="margin-right: 10px;">
-                <option value="unread" <?= $current_view_status == 'unread' ? 'selected' : '' ?>>Chưa xem</option>
-                <option value="all" <?= $current_view_status == 'all' ? 'selected' : '' ?>>Tất cả</option>
-                <option value="seen" <?= $current_view_status == 'seen' ? 'selected' : '' ?>>Đã xem</option>
-            </select>
+        <?php if (isset($_SESSION['account_id'])): ?>
+          <select name="view_status" onchange="this.form.submit()">
+            <option value="unread" <?= $view_status == 'unread' ? 'selected' : '' ?>>Chưa xem</option>
+            <option value="all" <?= $view_status == 'all' ? 'selected' : '' ?>>Tất cả</option>
+            <option value="seen" <?= $view_status == 'seen' ? 'selected' : '' ?>>Đã xem</option>
+          </select>
         <?php endif; ?>
-
         <select name="tag" onchange="this.form.submit()">
-            <option value="">Chủ đề</option>
-            <?php foreach ($tags as $tag): ?>
-                <option value="<?= $tag['tag_id'] ?>"
-                    <?= (isset($_GET['tag']) && $_GET['tag'] == $tag['tag_id']) ? 'selected' : '' ?>>
-                    <?= htmlspecialchars($tag['tag_name']) ?>
-                </option>
-            <?php endforeach; ?>
+          <option value="">Chủ đề</option>
+          <?php foreach ($tags as $t): ?>
+            <option value="<?= $t['tag_id'] ?>" <?= ($tag == $t['tag_id']) ? 'selected' : '' ?>>
+              <?= htmlspecialchars($t['tag_name']) ?>
+            </option>
+          <?php endforeach; ?>
         </select>
       </form>
       <?php if (isset($_SESSION['account_id']) && !empty($_SESSION['account_id'])): ?>
-        <!-- Nút bell với badge -->
         <div class="notification-bell" id="notification-bell" title="Thông báo">
           <i class="fa-regular fa-bell icon"></i>
           <?php if ($unread_count > 0): ?>
             <span class="notification-badge"><?= $unread_count > 99 ? '99+' : $unread_count ?></span>
           <?php endif; ?>
         </div>
-        <!-- Modal notifications (thay dropdown) -->
         <div id="notification-modal" class="notification-modal">
           <div class="modal-content">
             <div class="modal-header">
@@ -281,7 +310,7 @@
         <!-- Dropdown profile -->
         <div class="dropdown">
           <button class="dropbtn">
-            <img src="<?=($_SESSION['avatar'])?>"
+            <img src="<?= ($_SESSION['avatar']) ?>"
               alt="Ảnh đại diện"
               class="avatar-image">
           </button>
@@ -309,88 +338,93 @@
     </div>
   </nav>
   <script>
-  document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
       const bell = document.getElementById('notification-bell');
       const modal = document.getElementById('notification-modal');
       const closeBtn = document.getElementById('close-modal');
       const markAllBtn = document.getElementById('mark-all-read');
       if (!bell || !modal) {
-          console.error('Modal elements not found');  // Debug log
-          return;
+        console.error('Modal elements not found'); // Debug log
+        return;
       }
       // Mở modal khi click bell
       bell.addEventListener('click', function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          modal.classList.add('show');
-          document.body.style.overflow = 'hidden'; // Ngăn scroll body khi modal mở
-          console.log('Modal opened');  // Debug log
+        e.preventDefault();
+        e.stopPropagation();
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden'; // Ngăn scroll body khi modal mở
+        console.log('Modal opened'); // Debug log
       });
       // Đóng modal khi click X
       if (closeBtn) {
-          closeBtn.addEventListener('click', function(e) {
-              e.preventDefault();
-              modal.classList.remove('show');
-              document.body.style.overflow = 'auto'; // Khôi phục scroll
-          });
+        closeBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          modal.classList.remove('show');
+          document.body.style.overflow = 'auto'; // Khôi phục scroll
+        });
       }
       // Đóng khi click backdrop (ngoài content)
       modal.addEventListener('click', function(e) {
-          if (e.target === modal) {
-              modal.classList.remove('show');
-              document.body.style.overflow = 'auto';
-          }
+        if (e.target === modal) {
+          modal.classList.remove('show');
+          document.body.style.overflow = 'auto';
+        }
       });
       // Mark all read (AJAX, update UI)
       if (markAllBtn) {
-          markAllBtn.addEventListener('click', function(e) {
-              e.preventDefault();
-              fetch('mark_read.php', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                  body: 'action=mark_all'
-              }).then(response => {
-                  if (!response.ok) throw new Error('Network error');
-                  return response.json();
-              }).then(data => {
-                  if (data.success) {
-                      // Update UI ngay
-                      document.querySelector('.notification-badge')?.remove();
-                      document.getElementById('unread-in-dropdown').textContent = '(0 mới)';
-                      document.querySelectorAll('.notification-item.unread').forEach(item => {
-                          item.classList.remove('unread');
-                          item.classList.add('read');
-                      });
-                      modal.classList.remove('show');
-                      document.body.style.overflow = 'auto';
-                  } else {
-                      alert('Lỗi đánh dấu đã đọc: ' + (data.message || 'Unknown'));
-                  }
-              }).catch(err => {
-                  console.error('Error marking read:', err);
-                  alert('Lỗi kết nối: ' + err.message);
+        markAllBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          fetch('mark_read.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'action=mark_all'
+          }).then(response => {
+            if (!response.ok) throw new Error('Network error');
+            return response.json();
+          }).then(data => {
+            if (data.success) {
+              // Update UI ngay
+              document.querySelector('.notification-badge')?.remove();
+              document.getElementById('unread-in-dropdown').textContent = '(0 mới)';
+              document.querySelectorAll('.notification-item.unread').forEach(item => {
+                item.classList.remove('unread');
+                item.classList.add('read');
               });
+              modal.classList.remove('show');
+              document.body.style.overflow = 'auto';
+            } else {
+              alert('Lỗi đánh dấu đã đọc: ' + (data.message || 'Unknown'));
+            }
+          }).catch(err => {
+            console.error('Error marking read:', err);
+            alert('Lỗi kết nối: ' + err.message);
           });
+        });
       }
       // Mark single khi click item (optional)
       document.querySelectorAll('.notification-item').forEach(item => {
-          item.addEventListener('click', function() {
-              const notifId = this.dataset.notificationId;
-              if (notifId) {
-                  fetch('mark_read.php', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                      body: `action=mark_single&id=${notifId}`
-                  }).then(response => response.json()).then(data => {
-                      if (data.success) {
-                          this.classList.remove('unread');
-                          this.classList.add('read');
-                      }
-                  }).catch(err => console.error('Error marking single:', err));
+        item.addEventListener('click', function() {
+          const notifId = this.dataset.notificationId;
+          if (notifId) {
+            fetch('mark_read.php', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+              },
+              body: `action=mark_single&id=${notifId}`
+            }).then(response => response.json()).then(data => {
+              if (data.success) {
+                this.classList.remove('unread');
+                this.classList.add('read');
               }
-          });
+            }).catch(err => console.error('Error marking single:', err));
+          }
+        });
       });
-  });
+    });
   </script>
 </body>
+
 </html>

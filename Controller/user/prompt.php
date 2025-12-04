@@ -1,5 +1,6 @@
 <?php
-function totalPrompts($account_id, $searchString, $tag_id, $conn, $view_status) {
+function totalPrompts($account_id, $searchString, $tag_id, $conn, $view_status)
+{
     $account_id = (int)$account_id;
     $search = trim($searchString ?? '');
     $tag_id = (int)$tag_id;
@@ -28,7 +29,7 @@ function totalPrompts($account_id, $searchString, $tag_id, $conn, $view_status) 
     }
     $sql .= $where_conditions;
     if (!empty($search)) {
-        $sql .= " AND (p.title LIKE ? OR p.short_description LIKE ?)"; 
+        $sql .= " AND (p.title LIKE ? OR p.short_description LIKE ?)";
         $like = "%$search%";
         $params[] = $like;
         $params[] = $like;
@@ -36,11 +37,11 @@ function totalPrompts($account_id, $searchString, $tag_id, $conn, $view_status) 
     }
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
-        error_log("Prepare failed: ".$conn->error);
+        error_log("Prepare failed: " . $conn->error);
         return 0;
     }
     if (!empty($params)) {
-        $stmt->bind_param($types, ...$params); 
+        $stmt->bind_param($types, ...$params);
     }
     $stmt->execute();
     $result = $stmt->get_result();
@@ -48,7 +49,8 @@ function totalPrompts($account_id, $searchString, $tag_id, $conn, $view_status) 
     return (int)($row['total'] ?? 0);
 }
 
-function getPrompts($account_id, $searchString, $tag_id, $conn, $rows_per_page, $offset, $view_status) {
+function getPrompts($account_id, $searchString, $tag_id, $conn, $rows_per_page, $offset, $view_status)
+{
     $account_id = (int)$account_id;
     $search = trim($searchString ?? '');
     $tag_id = (int)$tag_id;
@@ -61,7 +63,7 @@ function getPrompts($account_id, $searchString, $tag_id, $conn, $rows_per_page, 
         LEFT JOIN love l ON l.prompt_id = p.prompt_id AND l.account_id = ?
     ";
     $where_conditions = " WHERE p.status = 'public' ";
-    $order_by = " ORDER BY p.create_at DESC "; 
+    $order_by = " ORDER BY p.create_at DESC ";
     if ($account_id > 0) {
         $from_and_joins .= "
             LEFT JOIN seen_prompt sp 
@@ -71,7 +73,6 @@ function getPrompts($account_id, $searchString, $tag_id, $conn, $rows_per_page, 
         if ($view_status === 'unread') {
             $where_conditions .= " AND sp.prompt_id IS NULL ";
             $order_by = " ORDER BY RAND() ";
-
         } elseif ($view_status === 'seen') {
             $where_conditions .= " AND sp.prompt_id IS NOT NULL ";
         } elseif ($view_status === 'all') {
@@ -98,7 +99,7 @@ function getPrompts($account_id, $searchString, $tag_id, $conn, $rows_per_page, 
         {$order_by}
         LIMIT $offset, $rows_per_page
     ";
-    $types = "i"; 
+    $types = "i";
     $params = [$account_id];
     if (!empty($search)) {
         $types .= "sss";
@@ -109,10 +110,10 @@ function getPrompts($account_id, $searchString, $tag_id, $conn, $rows_per_page, 
     }
     $prompt_stmt = $conn->prepare($prompt_sql);
     if (!$prompt_stmt) {
-        error_log("Prepare failed: ".$conn->error);
+        error_log("Prepare failed: " . $conn->error);
         return [];
     }
-    $prompt_stmt->bind_param($types, ...$params); 
+    $prompt_stmt->bind_param($types, ...$params);
     $prompt_stmt->execute();
     $prompt_result = $prompt_stmt->get_result();
     $prompts = [];
@@ -164,14 +165,15 @@ function getPrompts($account_id, $searchString, $tag_id, $conn, $rows_per_page, 
     return array_values($prompts);
 }
 
-function lovePrompt($account_id, $prompt_id, $conn) {
+function lovePrompt($account_id, $prompt_id, $conn)
+{
     // Validate inputs
     $account_id = (int)$account_id;
     $prompt_id = (int)$prompt_id;
     if ($account_id <= 0 || $prompt_id <= 0) {
         return "Dữ liệu không hợp lệ";
     }
-    
+
     // Check exists with prepared
     $checkSql = "SELECT love_id FROM love WHERE prompt_id = ? AND account_id = ?";
     $checkStmt = $conn->prepare($checkSql);
@@ -183,7 +185,7 @@ function lovePrompt($account_id, $prompt_id, $conn) {
         return "Lỗi execute check: " . $checkStmt->error;
     }
     $result = $checkStmt->get_result();
-    
+
     if ($result->num_rows > 0) {
         // Đã thả tim -> bỏ tim
         $deleteSql = "DELETE FROM love WHERE prompt_id = ? AND account_id = ?";
@@ -191,12 +193,12 @@ function lovePrompt($account_id, $prompt_id, $conn) {
         if (!$deleteStmt) {
             return "Lỗi chuẩn bị query delete: " . $conn->error;
         }
-        $deleteStmt->bind_param("ii", $prompt_id, $account_id);  
+        $deleteStmt->bind_param("ii", $prompt_id, $account_id);
         if (!$deleteStmt->execute()) {
             return "Lỗi execute delete: " . $deleteStmt->error;
         }
         $deleteStmt->close();
-        
+
         // Decrement count
         $updateSql = "UPDATE prompt SET love_count = GREATEST(love_count - 1, 0) WHERE prompt_id = ?";
         $updateStmt = $conn->prepare($updateSql);
@@ -219,7 +221,7 @@ function lovePrompt($account_id, $prompt_id, $conn) {
             return "Lỗi execute insert: " . $insertStmt->error;
         }
         $insertStmt->close();
-        
+
         // Increment count
         $updateSql = "UPDATE prompt SET love_count = love_count + 1 WHERE prompt_id = ?";
         $updateStmt = $conn->prepare($updateSql);
@@ -228,7 +230,7 @@ function lovePrompt($account_id, $prompt_id, $conn) {
             $updateStmt->execute();
             $updateStmt->close();
         }
-        
+
         // Tạo notification cho owner (nếu không phải chính mình)
         $ownerSql = "SELECT account_id FROM prompt WHERE prompt_id = ?";
         $ownerStmt = $conn->prepare($ownerSql);
@@ -245,18 +247,19 @@ function lovePrompt($account_id, $prompt_id, $conn) {
             $sender_name = $sender['username'] ?? 'Người dùng';
             createNotification($owner['account_id'], $account_id, $prompt_id, $sender_name . ' đã thích bài viết của bạn', $conn);
         }
-        
+
         return "Bạn đã tim bài viết";
     }
 }
-function savePrompt($account_id, $prompt_id, $conn) {
+function savePrompt($account_id, $prompt_id, $conn)
+{
     // Validate inputs
     $account_id = (int)$account_id;
     $prompt_id = (int)$prompt_id;
     if ($account_id <= 0 || $prompt_id <= 0) {
         return "Dữ liệu không hợp lệ";
     }
-    
+
     // Check exists with prepared
     $checkSql = "SELECT save_id FROM save WHERE prompt_id = ? AND account_id = ?";
     $checkStmt = $conn->prepare($checkSql);
@@ -268,7 +271,7 @@ function savePrompt($account_id, $prompt_id, $conn) {
         return "Lỗi execute check: " . $checkStmt->error;
     }
     $result = $checkStmt->get_result();
-    
+
     if ($result->num_rows > 0) {
         // Đã save -> bỏ save
         $deleteSql = "DELETE FROM save WHERE prompt_id = ? AND account_id = ?";
@@ -281,7 +284,7 @@ function savePrompt($account_id, $prompt_id, $conn) {
             return "Lỗi execute delete: " . $deleteStmt->error;
         }
         $deleteStmt->close();
-        
+
         // Decrement count
         $updateSql = "UPDATE prompt SET save_count = GREATEST(save_count - 1, 0) WHERE prompt_id = ?";
         $updateStmt = $conn->prepare($updateSql);
@@ -318,7 +321,7 @@ function savePrompt($account_id, $prompt_id, $conn) {
             return "Lỗi execute insert: " . $insertStmt->error;
         }
         $insertStmt->close();
-        
+
         // Increment count
         $updateSql = "UPDATE prompt SET save_count = save_count + 1 WHERE prompt_id = ?";
         $updateStmt = $conn->prepare($updateSql);
@@ -331,7 +334,8 @@ function savePrompt($account_id, $prompt_id, $conn) {
     }
 }
 
-function getUserComments($account_id, $conn) {
+function getUserComments($account_id, $conn)
+{
     $account_id = (int)$account_id;
     if ($account_id <= 0) {
         return [];
@@ -360,7 +364,7 @@ function getUserComments($account_id, $conn) {
     $stmt->bind_param("i", $account_id);
     $stmt->execute();
     $result = $stmt->get_result();
-    
+
     $comments = [];
     while ($row = $result->fetch_assoc()) {
         $comments[] = [
@@ -370,7 +374,7 @@ function getUserComments($account_id, $conn) {
             'created_at' => $row['created_at'],
             'title' => $row['title'] ?? $row['prompt_desc'] ?? 'Bài viết không có tiêu đề',
             // Người bình luận
-            'username' => $row['commenter_username'], 
+            'username' => $row['commenter_username'],
             'avatar' => $row['commenter_avatar'] ?? 'default-avatar.png',
             // Người đăng bài 
             'author_username' => $row['author_username'],
@@ -403,7 +407,7 @@ function getAlldPrompts($conn, $search, $status, $search_columns, $rows_per_page
             }
         }
     } else {
-        $column_conditions[] = "1=1"; 
+        $column_conditions[] = "1=1";
     }
     $search_where = implode(" OR ", $column_conditions);
     $status_bind_type = "s";
@@ -429,7 +433,7 @@ function getAlldPrompts($conn, $search, $status, $search_columns, $rows_per_page
                    WHERE ($search_where) 
                    AND status LIKE ?
                    LIMIT ? OFFSET ?";
-    $select_bind_types = $count_bind_types . "ii"; 
+    $select_bind_types = $count_bind_types . "ii";
     $select_params = array_merge($params, [$status_param, $rows_per_page, $offset]);
     $select_stmt = $conn->prepare($select_sql);
     if (!$select_stmt) {
@@ -445,7 +449,8 @@ function getAlldPrompts($conn, $search, $status, $search_columns, $rows_per_page
         'prompts' => $prompts_data
     ];
 }
-function changestatus($conn, $prompt_id, $status){
+function changestatus($conn, $prompt_id, $status)
+{
     $sql = "UPDATE prompt SET status = ? WHERE prompt_id = ?";
     $stmt = $conn->prepare($sql);
     if ($stmt === false) {
@@ -473,12 +478,13 @@ function changestatus($conn, $prompt_id, $status){
         ];
     } else {
         return [
-            'success' => true, 
+            'success' => true,
             'message' => "Thao tác trên bài đăng có ID={$prompt_id}, không có thay đổi nào."
         ];
     }
 }
-function getHotPrompts($conn, $limit = 5) {
+function getHotPrompts($conn, $limit = 5)
+{
     $sql = "
         SELECT 
             p.prompt_id,
@@ -497,7 +503,7 @@ function getHotPrompts($conn, $limit = 5) {
     $stmt->bind_param("i", $limit);
     $stmt->execute();
     $result = $stmt->get_result();
-    
+
     $hot_prompts = [];
     while ($row = $result->fetch_assoc()) {
         $hot_prompts[] = [
@@ -508,7 +514,8 @@ function getHotPrompts($conn, $limit = 5) {
     }
     return $hot_prompts;
 }
-function getPromptDetails($conn, $prompt_id) {
+function getPromptDetails($conn, $prompt_id)
+{
     $sql = "SELECT p.title, p.short_description, p.image, pd.content, p.status,
             a.username, a.avatar  
             FROM prompt p
@@ -522,7 +529,8 @@ function getPromptDetails($conn, $prompt_id) {
     return $result;
 }
 
-function createNotification($reciever_id, $sender_id, $prompt_id, $message, $conn) {
+function createNotification($reciever_id, $sender_id, $prompt_id, $message, $conn)
+{
     if ($reciever_id == $sender_id) return;  // Không notify chính mình
 
     $sql = "INSERT INTO notification (reciever_id, sender_id, prompt_id, message, created_at, isRead) 
@@ -537,7 +545,8 @@ function createNotification($reciever_id, $sender_id, $prompt_id, $message, $con
     $stmt->close();
 }
 
-function updateStatus($conn, $prompt_id, $action, $comment) {
+function updateStatus($conn, $prompt_id, $action, $comment)
+{
     $sql = "";
     $target_status = null;
     $is_delete_action = false;
@@ -546,17 +555,14 @@ function updateStatus($conn, $prompt_id, $action, $comment) {
     if ($action == "approve" || $action == "unreport") {
         $target_status = "public";
         $sql = "UPDATE prompt SET status = ? WHERE prompt_id = ?";
-    } 
-    else if ($action == "delete") {
+    } else if ($action == "delete") {
         $is_delete_action = true;
         $sql = "DELETE FROM prompt WHERE prompt_id = ?";
-    } 
-    else if ($action == "reject") {
+    } else if ($action == "reject") {
         $is_reject = true;
         $target_status = "reject";
         $sql = "UPDATE prompt SET status = ?, reason = ? WHERE prompt_id = ?";
-    }
-    else {
+    } else {
         return [
             'success' => false,
             'message' => "Hành động không hợp lệ: {$action}."
@@ -572,11 +578,9 @@ function updateStatus($conn, $prompt_id, $action, $comment) {
 
     if ($is_delete_action) {
         $stmt->bind_param("i", $prompt_id);
-    } 
-    else if ($is_reject) {
+    } else if ($is_reject) {
         $stmt->bind_param("ssi", $target_status, $comment, $prompt_id);
-    }
-    else {
+    } else {
         $stmt->bind_param("si", $target_status, $prompt_id);
     }
 
@@ -623,13 +627,14 @@ function updateStatus($conn, $prompt_id, $action, $comment) {
         ];
     } else {
         return [
-            'success' => true, 
+            'success' => true,
             'message' => "Không có thay đổi nào."
         ];
     }
 }
 
-function getFollowingUsers($user_id, $conn) {
+function getFollowingUsers($user_id, $conn)
+{
     $sql = "
         SELECT u.account_id, u.username, u.avatar
         FROM follow f
@@ -644,3 +649,35 @@ function getFollowingUsers($user_id, $conn) {
     $result = $stmt->get_result();
     return $result->fetch_all(MYSQLI_ASSOC);
 }
+
+function seenPrompt($conn, $account_id, $prompt_id)
+{
+    $check_sql = "SELECT 1 FROM seen_prompt WHERE account_id = ? AND prompt_id = ? LIMIT 1";
+    $stmt = $conn->prepare($check_sql);
+    if (!$stmt) {
+        return "Prepare failed: " . $conn->error;
+    }
+    $stmt->bind_param('ii', $account_id, $prompt_id);
+    $stmt->execute();
+    $stmt->store_result();
+    if ($stmt->num_rows > 0) {
+        $stmt->close();
+        return "EXIST"; // hoặc return true; tùy bạn xử lý
+    }
+    $stmt->close();
+    $insert_sql = "INSERT INTO seen_prompt (account_id, prompt_id) VALUES (?, ?)";
+    $stmt = $conn->prepare($insert_sql);
+    if (!$stmt) {
+        return "Prepare failed: " . $conn->error;
+    }
+    $stmt->bind_param('ii', $account_id, $prompt_id);
+    if ($stmt->execute()) {
+        $stmt->close();
+        return "OK"; // hoặc return true;
+    } else {
+        $err = $stmt->error;
+        $stmt->close();
+        return "ERROR: $err";
+    }
+}
+

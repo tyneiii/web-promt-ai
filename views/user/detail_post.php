@@ -7,7 +7,9 @@ include_once __DIR__ . '/../../controller/user/prompt.php';
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $account_id = $_SESSION['account_id'] ?? 0;
 $url = $_SERVER['REQUEST_URI'];
-
+if($account_id>0){
+  seenPrompt($conn, $account_id, $id);
+}
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($account_id <= 0) {
     $_SESSION['redirect_after_login'] = $url;
@@ -26,13 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: " . $url);
     exit;
   }
-
-  // if (isset($_POST['out-btn'])) {
-  //   $_SESSION = [];
-  //   session_destroy();
-  //   header("Location: home.php");
-  //   exit;
-  // }
 }
 
 if ($id <= 0) {

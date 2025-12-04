@@ -31,14 +31,19 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 $current_page_url = $protocol . "://" . $host . $_SERVER['REQUEST_URI'];
-if (!isset($_SESSION['current_url'])) {
-    $_SESSION['current_url'] = $current_page_url;
-    $_SESSION['previous_url'] = '';
+if (strpos($current_page_url, 'public/ajax') !== false) {
+} else {
+    if (!isset($_SESSION['current_url'])) {
+        $_SESSION['current_url'] = $current_page_url;
+        $_SESSION['previous_url'] = '';
+    }
+
+    if ($_SESSION['current_url'] !== $current_page_url) {
+        $_SESSION['previous_url'] = $_SESSION['current_url'];
+        $_SESSION['current_url'] = $current_page_url;
+    }
 }
-if ($_SESSION['current_url'] !== $current_page_url) {
-    $_SESSION['previous_url'] = $_SESSION['current_url'];
-    $_SESSION['current_url'] = $current_page_url;
-}
+
 $redirect_url = "";
 if (isset($_SESSION['previous_url']) && !empty($_SESSION['previous_url'])) {
     $redirect_url = $_SESSION['previous_url'];
