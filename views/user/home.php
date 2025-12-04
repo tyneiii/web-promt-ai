@@ -131,21 +131,17 @@ unset($_POST);
         <div class="follow-list">
 
             <?php if (!isset($_SESSION['account_id'])): ?>
-<<<<<<< HEAD
                     <div class="item">Bạn cần đăng nhập để xem.
         </div>
         <a href="" class="item-link">
             <div class="item">Bạn cần đăng nhập để xem.</div>
         </a>
-        >>>>>>> Stashed changes
-=======
 
                 <a href="" class="item-link">
                     <div class="item">Bạn cần đăng nhập để xem.</div>
                 </a>
         </div>
 
->>>>>>> 92e68a3349b0f322008e1618cbf382db109a6541
     <?php elseif (empty($following_users)): ?>
 
         <a href="" class="item-link">
@@ -383,12 +379,10 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.style.overflow = 'auto';
     });
 
-<<<<<<< HEAD
     window.addEventListener('click', e => {
         if (e.target === modal) {
             modal.style.display = 'none';
             document.body.style.overflow = 'auto';
-=======
     document.getElementById("submitReport").onclick = () => {
         let reason = document.getElementById("report-reason").value;
 
@@ -496,7 +490,6 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.card').forEach(card => {
                 promptObserver.observe(card);
             });
->>>>>>> 92e68a3349b0f322008e1618cbf382db109a6541
         }
     });
 
@@ -529,7 +522,6 @@ document.addEventListener('DOMContentLoaded', function () {
         promptObserver.observe(card);
     });
 
-});
 </script>
 
 <script>
