@@ -21,7 +21,7 @@ $error = $data["error"];
         <div class="modal">
             <div class="modal-header">
                 <h2>Sửa hồ sơ</h2>
-                <button class="close-btn" onclick="smartGoBack()">✕</button>
+                <button class="close-btn" onclick="confirmCancel()">✕</button>
             </div>
 
             <?php if ($error): ?>
@@ -62,7 +62,7 @@ $error = $data["error"];
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="cancel" onclick="smartGoBack()">Hủy</button>
+                    <button type="button" class="cancel" onclick="confirmCancel()">Hủy</button>
                     <button type="submit" class="save" id="saveBtn">Lưu</button>
                 </div>
             </form>
@@ -70,10 +70,11 @@ $error = $data["error"];
     </div>
 
 <script>
-    const redirectUrl = "<?= $redirect_url ?>";
-
-    function smartGoBack() {
-        window.location.href = redirectUrl;
+    function confirmCancel() {
+        const confirmExit = confirm("Bạn có chắc muốn hủy chỉnh sửa và quay lại trang hồ sơ?");
+        if (confirmExit) {
+            window.history.back();
+        }
     }
 
     document.getElementById('avatar').addEventListener('change', e => {
