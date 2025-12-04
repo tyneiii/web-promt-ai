@@ -406,19 +406,22 @@ select {
   border-radius: 6px;
   cursor: pointer;
   transition: 0.2s;
-  color: white;
 }
 
 .card-buttons button:hover {
   background-color: black;
 }
 
-#loveBtn {
+.love-btn {
   color: red;
 }
 
-#saveBtn {
+.save-btn {
   color: yellow;
+}
+
+.cmtBtn{
+  color:white;
 }
 
 #runBtn {

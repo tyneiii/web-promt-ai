@@ -10,25 +10,6 @@ $name_user = $_SESSION['name_user'] ?? '';
 $search = $_GET['search'] ?? '';
 
 include_once __DIR__ . '/../../controller/user/prompt.php';
-if (isset($_POST['loveBtn']) && $account_id) {
-    $id_prompt = (int)$_POST['loveBtn'];
-    $mess = lovePrompt($account_id, $id_prompt, $conn);
-    header("Location: " . $_SERVER['PHP_SELF'] . "?search=" . urlencode($search));
-    exit;
-} elseif (isset($_POST['cmtBtn']) && $account_id) {
-    $id_prompt = (int)$_POST['cmtBtn'];
-    $redirect = "detail_post.php?id=" . $id_prompt;
-    if (!empty($search)) {
-        $redirect .= "&search=" . urlencode($search);
-    }
-    header("Location: $redirect");
-    exit;
-} elseif (isset($_POST['saveBtn']) && $account_id) {
-    $id_prompt = (int)$_POST['saveBtn'];
-    $mess = savePrompt($account_id, $id_prompt, $conn);
-    header("Location: " . $_SERVER['PHP_SELF'] . "?search=" . urlencode($search));
-    exit;
-}
 
 include_once __DIR__ . '/layout/header.php';
 include_once __DIR__ . '/../../helpers/helper.php';
@@ -37,7 +18,7 @@ include_once __DIR__ . '/../../helpers/helper.php';
 <link rel="stylesheet" href="../../public/css/run_prompt.css">
 
 <?php
-$tag = isset($_GET['tag']) ? (int)$_GET['tag'] : 0;
+$view_status = isset($_GET['view_status']) ? (int)$_GET['view_status'] : 'unread';
 $rows_per_page = 10;
 $current_page = (int)($_GET['page'] ?? 1);
 $offset = ($current_page - 1) * $rows_per_page;
@@ -131,11 +112,11 @@ unset($_POST);
         <div class="follow-list">
 
             <?php if (!isset($_SESSION['account_id'])): ?>
-                    <div class="item">Bạn cần đăng nhập để xem.
-        </div>
-        <a href="" class="item-link">
-            <div class="item">Bạn cần đăng nhập để xem.</div>
-        </a>
+                <div class="item">Bạn cần đăng nhập để xem.
+                </div>
+                <a href="" class="item-link">
+                    <div class="item">Bạn cần đăng nhập để xem.</div>
+                </a>
 
                 <a href="" class="item-link">
                     <div class="item">Bạn cần đăng nhập để xem.</div>
@@ -200,15 +181,18 @@ unset($_POST);
                         <?= htmlspecialchars($prompt['short_description']) ?>
                     </p>
                     <div class="card-buttons">
-                        <button type="submit" name="loveBtn" id="loveBtn" title="Thích bài viết" value="<?= $prompt['prompt_id'] ?>">
-                            <i class="fa-heart <?= $prompt['is_loved'] ? 'fa-solid text-red' : 'fa-regular' ?>"></i> <?= $prompt['love_count'] ?>
+                        <button type="button" class="love-btn" title="Thích bài viết" data-prompt-id="<?= $prompt['prompt_id'] ?>">
+                            <i class="fa-heart <?= $prompt['is_loved'] ? 'fa-solid text-red' : 'fa-regular' ?>"></i>
+                            <span class="love-count"><?= $prompt['love_count'] ?></span>
                         </button>
-                        <button type="submit" name="cmtBtn" title="Bình luận bài viết" value="<?= $prompt['prompt_id'] ?>">
+
+                        <button type="submit" name="cmtBtn" class="cmtBtn" title="Bình luận bài viết" value="<?= $prompt['prompt_id'] ?>">
                             <i class="fa-regular fa-comment"></i> <?= $prompt['comment_count'] ?>
                         </button>
-                        <button type="submit" name="saveBtn" title="Lưu bài viết" id="saveBtn" value="<?= $prompt['prompt_id'] ?>">
-                            <i class="<?= is_saved($conn, $account_id, $prompt['prompt_id']) ? 'fa-solid' : 'fa-regular' ?> fa-bookmark"></i>
-                            <?= $prompt['save_count'] ?>
+
+                        <button type="button" class="save-btn" title="Lưu bài viết" data-prompt-id="<?= $prompt['prompt_id'] ?>">
+                            <i class="fa-bookmark <?= is_saved($conn, $account_id, $prompt['prompt_id']) ? 'fa-solid' : 'fa-regular' ?> fa-bookmark"></i>
+                            <span class="save-count"><?= $prompt['save_count'] ?></span>
                         </button>
                     </div>
                 </div>
@@ -342,186 +326,227 @@ unset($_POST);
             </div>
         </div>
     </div>
-</div>
-<script>
+</div><script>
 document.addEventListener('DOMContentLoaded', function () {
     const isLoggedIn = <?= isset($_SESSION['account_id']) ? 'true' : 'false' ?>;
     const accountId  = <?= $account_id ? (int)$account_id : 'null' ?>;
-    document.querySelectorAll('.card').forEach(card => {
-        card.addEventListener('click', function (e) {
-            if (e.target.closest('button') || e.target.closest('.run-btn')) return;
-            const id = this.getAttribute('data-id');
-            window.location.href = `detail_post.php?id=${id}`;
+    let currentPromptId = null; // Biến lưu ID bài viết đang được thao tác
+    const reportModal = document.getElementById('report-modal');
+    const reportReasonSelect = document.getElementById('report-reason');
+    const reportCustomTextarea = document.getElementById('report-custom');
+    const submitReportBtn = document.getElementById('submitReport');
+    const cancelReportBtn = document.getElementById('cancelReport');
+    const rulesModal = document.getElementById('rulesModal');
+    const btnOpenRules = document.getElementById('btnOpenRules');
+    const btnCloseRules = rulesModal ? rulesModal.querySelector('.close-modal') : null; 
+    function handlePromptAction(event, actionType) {
+        event.preventDefault();
+        event.stopPropagation(); 
+        if (!isLoggedIn) {
+            alert("Bạn phải đăng nhập để thực hiện hành động này!");
+            window.location.href = `../login/login.php?require_login=${actionType}`;
+            return;
+        }
+        const button = event.currentTarget;
+        const promptId = button.getAttribute('data-prompt-id'); 
+        const isLoveAction = actionType === 'love';
+        const icon = button.querySelector(`i.fa-${isLoveAction ? 'heart' : 'bookmark'}`);
+        const countSpan = button.querySelector(`.${actionType}-count`); 
+        let currentAction = '';
+        if (isLoveAction) {
+             currentAction = icon.classList.contains('fa-solid') ? 'unlove' : 'love';
+        } else {
+             currentAction = icon.classList.contains('fa-solid') ? 'unsave' : 'save';
+        }
+        button.disabled = true;
+        const ajaxUrl = '../../public/ajax/action_prompt.php';
+        fetch(ajaxUrl, { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `prompt_id=${promptId}&action=${currentAction}` 
+        })
+        .then(response => {
+            if (response.status === 401) {
+                alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+                window.location.href = "../login/login.php";
+                return;
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data && data.success) {
+                const newCount = isLoveAction ? data.love_count : data.save_count;
+                if (countSpan) {
+                    countSpan.textContent = newCount;
+                }
+                if (icon) {
+                    icon.classList.remove('fa-solid', 'fa-regular', 'text-red');
+                    const isSolid = (data.action === 'loved' || data.action === 'saved');
+                    if (isSolid) {
+                        icon.classList.add('fa-solid');
+                        if (isLoveAction) {
+                            icon.classList.add('text-red');
+                        }
+                    } else {
+                        icon.classList.add('fa-regular');
+                    }
+                }
+            } else {
+                alert(data ? data.message : "Đã xảy ra lỗi khi xử lý yêu cầu.");
+            }
+        })
+        .catch(error => {
+            console.error(`Lỗi AJAX (${actionType}):`, error);
+            alert("Không thể kết nối đến máy chủ.");
+        })
+        .finally(() => {
+            button.disabled = false;
         });
+    }
+    document.querySelectorAll('.love-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => handlePromptAction(e, 'love'));
     });
-
+    document.querySelectorAll('.save-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => handlePromptAction(e, 'save'));
+    });
+    const closeReportModal = () => {
+        if (reportModal) {
+            reportModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            if (reportReasonSelect) reportReasonSelect.value = 'Nội dung không phù hợp';
+            if (reportCustomTextarea) {
+                reportCustomTextarea.value = '';
+                reportCustomTextarea.style.display = 'none';
+            }
+            currentPromptId = null;
+        }
+    };
     document.querySelectorAll(".report-btn").forEach(btn => {
         btn.addEventListener("click", function (e) {
             e.stopPropagation();
             if (!isLoggedIn) {
                 alert("Bạn phải đăng nhập để báo cáo!");
                 window.location.href = "../login/login.php?require_login=report";
+                return;
+            }
+            const card = e.target.closest('.card');
+            if (card && reportModal) {
+                currentPromptId = card.getAttribute('data-id');
+                reportModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
             }
         });
     });
-
-    const modal    = document.getElementById('rulesModal');
-    const btnOpen  = document.getElementById('btnOpenRules');
-    const btnClose = modal.querySelector('.close-modal');
-
-    btnOpen.addEventListener('click', () => {
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    });
-
-    btnClose.addEventListener('click', () => {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    });
-
-    window.addEventListener('click', e => {
-        if (e.target === modal) {
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-    document.getElementById("submitReport").onclick = () => {
-        let reason = document.getElementById("report-reason").value;
-
-        if (reason === "Khác") {
-            let custom = document.getElementById("report-custom").value.trim();
-            if (!custom) {
-                alert("Vui lòng nhập lý do báo cáo!");
-                return;
+    if (reportReasonSelect && reportCustomTextarea) {
+        reportReasonSelect.addEventListener('change', function() {
+            if (this.value === 'Khác') {
+                reportCustomTextarea.style.display = 'block';
+            } else {
+                reportCustomTextarea.style.display = 'none';
             }
-            reason = custom;
-        }
-
-        fetch("report.php", {
+        });
+    }
+    if (cancelReportBtn) {
+        cancelReportBtn.addEventListener('click', closeReportModal);
+    }
+    if (submitReportBtn) {
+        submitReportBtn.addEventListener('click', function() {
+            let reason = reportReasonSelect.value;
+            let customReason = reportCustomTextarea.value.trim();
+            if (!currentPromptId) return;
+            if (reason === 'Khác') {
+                if (customReason === '') {
+                    alert('Vui lòng nhập lý do cụ thể.');
+                    return;
+                }
+                reason = customReason;
+            }
+            submitReportBtn.disabled = true;
+            fetch("report.php", { 
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: "id=" + currentPromptId + "&reason=" + encodeURIComponent(reason)
             })
             .then(res => res.text())
             .then(msg => {
                 alert(msg);
-                document.getElementById("report-modal").style.display = "none";
+                closeReportModal();
             })
             .catch(err => {
                 console.error(err);
                 alert("Lỗi khi báo cáo!");
+            })
+            .finally(() => {
+                submitReportBtn.disabled = false;
             });
-    };
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const modal = document.getElementById('rulesModal');
-        const btnOpen = document.getElementById('btnOpenRules');
-        const btnClose = rulesModal.querySelector('.close-modal');
-
-        btnOpen.addEventListener('click', function() {
-            modal.style.display = 'flex';
+        });
+    }
+    if (btnOpenRules && rulesModal) {
+        btnOpenRules.addEventListener('click', () => {
+            rulesModal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
         });
-
-        btnClose.addEventListener('click', function() {
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-
-        window.addEventListener('click', function(e) {
-            if (e.target == modal) {
-                modal.style.display = 'none';
+        if (btnCloseRules) {
+            btnCloseRules.addEventListener('click', () => {
+                rulesModal.style.display = 'none';
                 document.body.style.overflow = 'auto';
-            }
-        });
-
-        const accordions = document.querySelectorAll('.accordion-header');
-
-        accordions.forEach(acc => {
-            acc.addEventListener('click', function() {
-                const card = this.parentElement;
-                card.classList.toggle('active');
-            });
-        });
-
-        if (isLoggedIn) {
-            function markAsViewed(promptId) {
-                const endpoint = '../../public/ajax/track_view.php';
-                fetch(endpoint, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            prompt_id: promptId,
-                            account_id: accountId
-                        }),
-                        keepalive: true
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            console.error('Track view failed:', response.status);
-                        }
-                        return response.json();
-                    })
-                    .catch(error => {
-                        console.error('Error tracking view:', error);
-                    });
-            }
-
-            const options = {
-                root: null, // Theo dõi trong viewport
-                rootMargin: '0px',
-                threshold: 1.0 // 100% hiển thị
-            };
-            const promptObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const promptElement = entry.target;
-                        const promptId = parseInt(promptElement.getAttribute('data-id'));
-                        if (promptId) {
-                            markAsViewed(promptId);
-                            observer.unobserve(promptElement);
-                        }
-                    }
-                });
-            }, options);
-
-            document.querySelectorAll('.card').forEach(card => {
-                promptObserver.observe(card);
             });
         }
-    });
-
+    }
     document.querySelectorAll('.accordion-header').forEach(header => {
         header.addEventListener('click', function () {
             this.parentElement.classList.toggle('active');
         });
     });
-
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 1.0
-    };
-
-    const promptObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const el = entry.target;
-                const id = parseInt(el.getAttribute('data-id'));
-                if (id) {
-                    markAsViewed(id);
-                    observer.unobserve(el);
-                }
-            }
-        });
-    }, observerOptions);
-
     document.querySelectorAll('.card').forEach(card => {
-        promptObserver.observe(card);
+        card.addEventListener('click', function (e) {
+            if (e.target.closest('button') || e.target.closest('a') || e.target.closest('input')) return; 
+            const id = this.getAttribute('data-id');
+            window.location.href = `detail_post.php?id=${id}`;
+        });
     });
-
+    window.addEventListener('click', e => {
+        if (e.target === rulesModal) {
+            rulesModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        if (e.target === reportModal) {
+            closeReportModal();
+        }
+    });
+    if (isLoggedIn) {
+        function markAsViewed(promptId) {
+            const endpoint = '../../public/ajax/track_view.php';
+            fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt_id: promptId, account_id: accountId }),
+                    keepalive: true
+                })
+                .catch(error => { console.error('Error tracking view:', error); });
+        }
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 1.0 };
+        const promptObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = parseInt(entry.target.getAttribute('data-id'));
+                    if (id) {
+                        markAsViewed(id);
+                        observer.unobserve(entry.target);
+                    }
+                }
+            });
+        }, observerOptions);
+        document.querySelectorAll('.card').forEach(card => {
+            promptObserver.observe(card);
+        });
+    }
+    if (window.location.pathname.includes('home.php') ||
+        window.location.search.includes('search=') ||
+        window.location.search.includes('tag=')) {
+        sessionStorage.setItem('lastListPage', location.href);
+    }
+});
 </script>
 
 <script>
