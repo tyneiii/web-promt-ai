@@ -31,8 +31,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 $current_page_url = $protocol . "://" . $host . $_SERVER['REQUEST_URI'];
-if (strpos($current_page_url, 'public/ajax') !== false) {
-} else {
+$check = 0;
+if (strpos($current_page_url, 'public/ajax') === false && strpos($current_page_url, 'controller') === false) {
     if (!isset($_SESSION['current_url'])) {
         $_SESSION['current_url'] = $current_page_url;
         $_SESSION['previous_url'] = '';
@@ -42,13 +42,16 @@ if (strpos($current_page_url, 'public/ajax') !== false) {
         $_SESSION['previous_url'] = $_SESSION['current_url'];
         $_SESSION['current_url'] = $current_page_url;
     }
+    $check = 1; 
 }
 
 $redirect_url = "";
-if (isset($_SESSION['previous_url']) && !empty($_SESSION['previous_url'])) {
-    $redirect_url = $_SESSION['previous_url'];
-} else {
-    $redirect_url = "home.php";
+if ($check == 1) {
+    if (isset($_SESSION['previous_url']) && !empty($_SESSION['previous_url'])) {
+        $redirect_url = $_SESSION['previous_url'];
+    } else {
+        $redirect_url = "home.php";
+    }
 }
 if (isset($_SESSION['account_id'])) {
     $account = getInfoAccount($conn, $_SESSION['account_id']);

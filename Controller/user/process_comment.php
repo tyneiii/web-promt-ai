@@ -53,80 +53,64 @@ switch ($action) {
 
         break;
 
-    // SỬA BÌNH LUẬN
-    case 'edit':
-        if (!isset($_POST['comment_id'], $_POST['comment_content'])) {
-            echo "<script>alert('Dữ liệu không hợp lệ'); window.history.back();</script>";
-            exit;
-        }
-
-        $comment_id = (int)$_POST['comment_id'];
-        $content    = trim($_POST['comment_content']);
-
-        if ($comment_id <= 0 || $content === '') {
-            echo "<script>alert('Dữ liệu không hợp lệ'); window.history.back();</script>";
-            exit;
-        }
-
-        // Đảm bảo chỉ chủ comment được phép sửa
-        $sql_check = "SELECT account_id FROM comment WHERE comment_id = ? AND prompt_id = ?";
-        $stmt_check = $conn->prepare($sql_check);
-        $stmt_check->bind_param("ii", $comment_id, $prompt_id);
-        $stmt_check->execute();
-        $result_check = $stmt_check->get_result();
-        $row_check = $result_check->fetch_assoc();
-
-        if (!$row_check || (int)$row_check['account_id'] !== $account_id) {
-            echo "<script>alert('Bạn không có quyền sửa bình luận này'); window.history.back();</script>";
-            exit;
-        }
-
-        $sql_update = "UPDATE comment SET content = ? WHERE comment_id = ?";
-        $stmt_update = $conn->prepare($sql_update);
-        $stmt_update->bind_param("si", $content, $comment_id);
-        $stmt_update->execute();
-
-        break;
-
-    // XOÁ BÌNH LUẬN
     case 'delete':
-        if (!isset($_POST['comment_id'])) {
-            echo "<script>alert('Dữ liệu không hợp lệ'); window.history.back();</script>";
-            exit;
-        }
+    header("Content-Type: application/json");
 
-        $comment_id = (int)$_POST['comment_id'];
-        if ($comment_id <= 0) {
-            echo "<script>alert('Dữ liệu không hợp lệ'); window.history.back();</script>";
-            exit;
-        }
+    if (!isset($_POST['comment_id'])) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Thiếu comment_id'
+        ]);
+        exit;
+    }
 
-        // Kiểm tra quyền xoá
-        $sql_check = "SELECT account_id FROM comment WHERE comment_id = ? AND prompt_id = ?";
-        $stmt_check = $conn->prepare($sql_check);
-        $stmt_check->bind_param("ii", $comment_id, $prompt_id);
-        $stmt_check->execute();
-        $result_check = $stmt_check->get_result();
-        $row_check = $result_check->fetch_assoc();
+    $comment_id = (int)$_POST['comment_id'];
+    if ($comment_id <= 0 || $prompt_id <= 0) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Dữ liệu không hợp lệ'
+        ]);
+        exit;
+    }
 
-        if (!$row_check || (int)$row_check['account_id'] !== $account_id) {
-            echo "<script>alert('Bạn không có quyền xoá bình luận này'); window.history.back();</script>";
-            exit;
-        }
+    // Kiểm tra quyền xoá
+    $sql_check = "SELECT account_id FROM comment WHERE comment_id = ? AND prompt_id = ?";
+    $stmt_check = $conn->prepare($sql_check);
+    $stmt_check->bind_param("ii", $comment_id, $prompt_id);
+    $stmt_check->execute();
+    $result_check = $stmt_check->get_result();
+    $row_check = $result_check->fetch_assoc();
 
-        // Xoá bình luận
-        $sql_delete = "DELETE FROM comment WHERE comment_id = ?";
-        $stmt_delete = $conn->prepare($sql_delete);
-        $stmt_delete->bind_param("i", $comment_id);
-        $stmt_delete->execute();
+    if (!$row_check || (int)$row_check['account_id'] !== $account_id) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Bạn không có quyền xoá bình luận này'
+        ]);
+        exit;
+    }
 
-        // Giảm comment_count (tránh âm)
-        $sql_update_count = "UPDATE prompt 
-                             SET comment_count = CASE WHEN comment_count > 0 THEN comment_count - 1 ELSE 0 END
-                             WHERE prompt_id = ?";
-        $stmt_update = $conn->prepare($sql_update_count);
-        $stmt_update->bind_param("i", $prompt_id);
-        $stmt_update->execute();
+    // Xoá bình luận
+    $sql_delete = "DELETE FROM comment WHERE comment_id = ?";
+    $stmt_delete = $conn->prepare($sql_delete);
+    $stmt_delete->bind_param("i", $comment_id);
+    $stmt_delete->execute();
+
+    // Giảm comment_count (tránh âm)
+    $sql_update_count = "UPDATE prompt 
+                         SET comment_count = CASE 
+                             WHEN comment_count > 0 THEN comment_count - 1 
+                             ELSE 0 
+                         END
+                         WHERE prompt_id = ?";
+    $stmt_update = $conn->prepare($sql_update_count);
+    $stmt_update->bind_param("i", $prompt_id);
+    $stmt_update->execute();
+
+    echo json_encode([
+        'success' => true
+    ]);
+    exit;
+
 
         break;
 
