@@ -7,7 +7,7 @@ include_once __DIR__ . '/../../controller/user/prompt.php';
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $account_id = $_SESSION['account_id'] ?? 0;
 $url = $_SERVER['REQUEST_URI'];
-if($account_id>0){
+if ($account_id > 0) {
   seenPrompt($conn, $account_id, $id);
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -158,24 +158,24 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
     <?php else: ?>
       <!-- Chưa đăng nhập -->
-       <?php 
-    $loginUrl = "../../views/login/login.php?redirect=" . urlencode($_SERVER['REQUEST_URI']);
-  ?>
-      <button class="action-btn" >
-        <a href="<?= $loginUrl ?>" class="action-btn" title="Yêu thích">
-    <i class="fa-regular fa-heart"></i> <?= $prompt['love_count'] ?>
-  </a>
+      <?php
+      $loginUrl = "../../views/login/login.php?redirect=" . urlencode($_SERVER['REQUEST_URI']);
+      ?>
+      <button class="action-btn">
+        <a href="<?= $loginUrl ?>" class="action-btn" title="Yêu thích" style="text-decoration: none;">
+          <i class="fa-regular fa-heart"></i> <?= $prompt['love_count'] ?>
+        </a>
 
       </button>
-      <button class="action-btn" >
-        <a href="<?= $loginUrl ?>" class="action-btn" title="Lưu lại">
-    <i class="fa-regular fa-bookmark"></i> <?= $prompt['save_count'] ?>
-  </a>
+      <button class="action-btn">
+        <a href="<?= $loginUrl ?>" class="action-btn" title="Lưu lại" style="text-decoration: none;">
+          <i class="fa-regular fa-bookmark"></i> <?= $prompt['save_count'] ?>
+        </a>
 
       </button>
-      <a href="<?= $loginUrl ?>" class="run-btn">
-    Run Prompt
-  </a>
+      <a href="<?= $loginUrl ?>" class="run-btn" style="text-decoration: none;">
+        Run Prompt
+      </a>
     <?php endif; ?>
 
   </div>
@@ -250,8 +250,8 @@ $comments = $stmt_cmt->get_result()->fetch_all(MYSQLI_ASSOC);
     <textarea id="promptInput" rows="10"><?= htmlspecialchars($full_prompt) ?></textarea>
     <div class="modal-actions">
       <button class="cancel" onclick="closePromptModal()">Hủy</button>
-      <button class="confirm" 
-              onclick="document.getElementById('promptInput').value.trim() ? confirmRunPrompt() : (alert('Prompt đang trống! Vui lòng nhập nội dung trước khi chạy.'), false)">
+      <button class="confirm"
+        onclick="document.getElementById('promptInput').value.trim() ? confirmRunPrompt() : (alert('Prompt đang trống! Vui lòng nhập nội dung trước khi chạy.'), false)">
         Chạy ngay
       </button>
     </div>

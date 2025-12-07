@@ -111,6 +111,7 @@ body {
   justify-content: flex-start;
   gap: 15px;
   margin-top: 25px;
+  text-decoration: none;
 }
 
 .detail-actions button,
@@ -176,10 +177,6 @@ body {
   overflow: hidden;
 }
 
-.run-btn::before {
-  content: "Lightning";
-  font-size: 16px;
-}
 
 .run-btn:hover {
   transform: translateY(-3px);
