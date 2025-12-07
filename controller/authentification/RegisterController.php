@@ -3,7 +3,7 @@
     require_once __DIR__ . '/MailServiceController.php'; 
 
     function handleRegister($conn){
-        // cleanupExpiredAccounts($conn);
+        cleanupExpiredAccounts($conn);
         if ($_SERVER["REQUEST_METHOD"] == "POST" and isset($_POST["btnregister"])) {
             $username = $_POST['username'];
             $email = $_POST['email'];
