@@ -27,7 +27,6 @@ $comments = getUserComments($account_id, $conn);  // Lấy list comments (có au
         <div class="empty-state">
             <i class="fa-regular fa-comment-slash" style="font-size: 48px; color: #666; margin-bottom: 10px;"></i>
             <p>Bạn chưa có bình luận nào. Hãy bắt đầu thảo luận trên các bài viết nhé!</p>
-            <a href="home.php" class="back-btn">Quay về trang chủ</a>
         </div>
     <?php else: ?>
         <div class="comments-grid">
@@ -38,10 +37,10 @@ $comments = getUserComments($account_id, $conn);  // Lấy list comments (có au
                         <img src="../../public/img/<?= htmlspecialchars($cmt['avatar']) ?>"
                             alt="<?= htmlspecialchars($cmt['username']) ?>" class="comment-avatar">
                         <div class="user-info">
-                            <strong>Bình luận của bạn: <?= htmlspecialchars($cmt['username']) ?></strong>
+                            <strong>Bình luận của bạn</strong>
                             <span class="comment-date"><?= date('d/m/Y H:i', strtotime($cmt['created_at'])) ?></span>
                             <br>
-                            <em>Dưới bài viết của: <?= htmlspecialchars($cmt['author_username']) ?></em> <!-- THÊM TÊN AUTHOR -->
+                            <em>Dưới bài viết của: <?= htmlspecialchars($cmt['author_username']) ?></em> 
                         </div>
                     </div>
 

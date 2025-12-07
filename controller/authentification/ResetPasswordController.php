@@ -3,6 +3,7 @@
     require_once __DIR__ . '/MailServiceController.php';
     
     function handleForgotPassword($conn) {
+        date_default_timezone_set('Asia/Ho_Chi_Minh');// Đặt múi giờ
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['forgot'])) {
             $email = trim($_POST['email']);
             $sql = "SELECT account_id FROM account WHERE email = ?";

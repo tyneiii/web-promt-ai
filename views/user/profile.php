@@ -11,6 +11,15 @@ include_once __DIR__ . '/layout/header.php';
 <button id="back-btn" class="back-btn" onclick="confirmCancel()">
     <i class="fa-solid fa-arrow-left"></i>
 </button>
+<!-- ========== POPUP DANH SÁCH FOLLOW ========== -->
+<div id="follow-modal" class="follow-modal" style="display:none;">
+    <div class="follow-modal-content">
+        <h3 id="follow-title"></h3>
+        <span class="close-follow-modal">&times;</span>
+
+        <div id="follow-list" class="follow-list"></div>
+    </div>
+</div>
 
 <div class="profile-container">
     <div class="header" style="background-image: url('<?= $user['bg_avatar'] ?? 'bg.png' ?>');">
@@ -234,5 +243,64 @@ include_once __DIR__ . '/layout/header.php';
                 }
             });
         }
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const modal = document.getElementById("follow-modal");
+        const followList = document.getElementById("follow-list");
+        const followTitle = document.getElementById("follow-title");
+        const closeBtn = document.querySelector(".close-follow-modal");
+
+        const profileId = <?= $profile_id ?>;
+
+        // CLICK XEM FOLLOWER
+        document.getElementById("follower-count").parentElement.addEventListener("click", function() {
+            loadFollowList("followers");
+        });
+
+        // CLICK XEM FOLLOWING
+        document.getElementById("following-count").parentElement.addEventListener("click", function() {
+            loadFollowList("following");
+        });
+
+        function loadFollowList(type) {
+            followList.innerHTML = `<p style="text-align:center;color:white;">Đang tải...</p>`;
+            modal.style.display = "flex";
+            followTitle.textContent = type === "followers" ? "Người theo dõi" : "Đang theo dõi";
+
+            fetch(`profile.php?id=${profileId}&load=${type}`)
+                .then(res => res.json())
+                .then(data => {
+                    followList.innerHTML = "";
+
+                    if (!data.length) {
+                        followList.innerHTML = `<p style="text-align:center;color:#aaa;">Không có người theo dõi.</p>`;
+                        return;
+                    }
+
+                    data.forEach(u => {
+                        const html = `
+                        <div class="follow-item" onclick="window.location.href='profile.php?id=${u.account_id}'">
+                            <img src="${u.avatar}" />
+                            <div>
+                                <div class="username">${u.username}</div>
+                                <div class="fullname">${u.fullname ?? ""}</div>
+                            </div>
+                        </div>
+                    `;
+                        followList.innerHTML += html;
+                    });
+                })
+                .catch(err => {
+                    followList.innerHTML = `<p style="color:red;text-align:center;">Lỗi tải dữ liệu</p>`;
+                });
+        }
+
+        closeBtn.addEventListener("click", () => modal.style.display = "none");
+
+        window.addEventListener("click", (e) => {
+            if (e.target === modal) modal.style.display = "none";
+        });
     });
 </script>

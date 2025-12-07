@@ -114,12 +114,6 @@ unset($_POST);
         <div class="follow-list">
 
             <?php if (!isset($_SESSION['account_id'])): ?>
-                <div class="item">Bạn cần đăng nhập để xem.
-                </div>
-                <a href="" class="item-link">
-                    <div class="item">Bạn cần đăng nhập để xem.</div>
-                </a>
-
                 <a href="" class="item-link">
                     <div class="item">Bạn cần đăng nhập để xem.</div>
                 </a>
@@ -328,201 +322,207 @@ unset($_POST);
             </div>
         </div>
     </div>
-</div><script>
-document.addEventListener('DOMContentLoaded', function () {
-    const isLoggedIn = <?= isset($_SESSION['account_id']) ? 'true' : 'false' ?>;
-    const accountId  = <?= $account_id ? (int)$account_id : 'null' ?>;
-    let currentPromptId = null; // Biến lưu ID bài viết đang được thao tác
-    const reportModal = document.getElementById('report-modal');
-    const reportReasonSelect = document.getElementById('report-reason');
-    const reportCustomTextarea = document.getElementById('report-custom');
-    const submitReportBtn = document.getElementById('submitReport');
-    const cancelReportBtn = document.getElementById('cancelReport');
-    const rulesModal = document.getElementById('rulesModal');
-    const btnOpenRules = document.getElementById('btnOpenRules');
-    const btnCloseRules = rulesModal ? rulesModal.querySelector('.close-modal') : null; 
-    function handlePromptAction(event, actionType) {
-        event.preventDefault();
-        event.stopPropagation(); 
-        if (!isLoggedIn) {
-            alert("Bạn phải đăng nhập để thực hiện hành động này!");
-            window.location.href = `../login/login.php?require_login=${actionType}`;
-            return;
-        }
-        const button = event.currentTarget;
-        const promptId = button.getAttribute('data-prompt-id'); 
-        const isLoveAction = actionType === 'love';
-        const icon = button.querySelector(`i.fa-${isLoveAction ? 'heart' : 'bookmark'}`);
-        const countSpan = button.querySelector(`.${actionType}-count`); 
-        let currentAction = '';
-        if (isLoveAction) {
-             currentAction = icon.classList.contains('fa-solid') ? 'unlove' : 'love';
-        } else {
-             currentAction = icon.classList.contains('fa-solid') ? 'unsave' : 'save';
-        }
-        button.disabled = true;
-        const ajaxUrl = '../../public/ajax/action_prompt.php';
-        fetch(ajaxUrl, { 
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `prompt_id=${promptId}&action=${currentAction}` 
-        })
-        .then(response => {
-            if (response.status === 401) {
-                alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
-                window.location.href = "../login/login.php";
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const isLoggedIn = <?= isset($_SESSION['account_id']) ? 'true' : 'false' ?>;
+        const accountId = <?= $account_id ? (int)$account_id : 'null' ?>;
+        let currentPromptId = null; // Biến lưu ID bài viết đang được thao tác
+        const reportModal = document.getElementById('report-modal');
+        const reportReasonSelect = document.getElementById('report-reason');
+        const reportCustomTextarea = document.getElementById('report-custom');
+        const submitReportBtn = document.getElementById('submitReport');
+        const cancelReportBtn = document.getElementById('cancelReport');
+        const rulesModal = document.getElementById('rulesModal');
+        const btnOpenRules = document.getElementById('btnOpenRules');
+        const btnCloseRules = rulesModal ? rulesModal.querySelector('.close-modal') : null;
+
+        function handlePromptAction(event, actionType) {
+            event.preventDefault();
+            event.stopPropagation();
+            if (!isLoggedIn) {
+                alert("Bạn phải đăng nhập để thực hiện hành động này!");
+                window.location.href = `../login/login.php?require_login=${actionType}`;
                 return;
             }
-            return response.json();
-        })
-        .then(data => {
-            if (data && data.success) {
-                const newCount = isLoveAction ? data.love_count : data.save_count;
-                if (countSpan) {
-                    countSpan.textContent = newCount;
-                }
-                if (icon) {
-                    icon.classList.remove('fa-solid', 'fa-regular', 'text-red');
-                    const isSolid = (data.action === 'loved' || data.action === 'saved');
-                    if (isSolid) {
-                        icon.classList.add('fa-solid');
-                        if (isLoveAction) {
-                            icon.classList.add('text-red');
+            const button = event.currentTarget;
+            const promptId = button.getAttribute('data-prompt-id');
+            const isLoveAction = actionType === 'love';
+            const icon = button.querySelector(`i.fa-${isLoveAction ? 'heart' : 'bookmark'}`);
+            const countSpan = button.querySelector(`.${actionType}-count`);
+            let currentAction = '';
+            if (isLoveAction) {
+                currentAction = icon.classList.contains('fa-solid') ? 'unlove' : 'love';
+            } else {
+                currentAction = icon.classList.contains('fa-solid') ? 'unsave' : 'save';
+            }
+            button.disabled = true;
+            const ajaxUrl = '../../public/ajax/action_prompt.php';
+            fetch(ajaxUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `prompt_id=${promptId}&action=${currentAction}`
+                })
+                .then(response => {
+                    if (response.status === 401) {
+                        alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+                        window.location.href = "../login/login.php";
+                        return;
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && data.success) {
+                        const newCount = isLoveAction ? data.love_count : data.save_count;
+                        if (countSpan) {
+                            countSpan.textContent = newCount;
+                        }
+                        if (icon) {
+                            icon.classList.remove('fa-solid', 'fa-regular', 'text-red');
+                            const isSolid = (data.action === 'loved' || data.action === 'saved');
+                            if (isSolid) {
+                                icon.classList.add('fa-solid');
+                                if (isLoveAction) {
+                                    icon.classList.add('text-red');
+                                }
+                            } else {
+                                icon.classList.add('fa-regular');
+                            }
                         }
                     } else {
-                        icon.classList.add('fa-regular');
+                        alert(data ? data.message : "Đã xảy ra lỗi khi xử lý yêu cầu.");
                     }
-                }
-            } else {
-                alert(data ? data.message : "Đã xảy ra lỗi khi xử lý yêu cầu.");
-            }
-        })
-        .catch(error => {
-            console.error(`Lỗi AJAX (${actionType}):`, error);
-            alert("Không thể kết nối đến máy chủ.");
-        })
-        .finally(() => {
-            button.disabled = false;
-        });
-    }
-    document.querySelectorAll('.love-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => handlePromptAction(e, 'love'));
-    });
-    document.querySelectorAll('.save-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => handlePromptAction(e, 'save'));
-    });
-    const closeReportModal = () => {
-        if (reportModal) {
-            reportModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-            if (reportReasonSelect) reportReasonSelect.value = 'Nội dung không phù hợp';
-            if (reportCustomTextarea) {
-                reportCustomTextarea.value = '';
-                reportCustomTextarea.style.display = 'none';
-            }
-            currentPromptId = null;
+                })
+                .catch(error => {
+                    console.error(`Lỗi AJAX (${actionType}):`, error);
+                    alert("Không thể kết nối đến máy chủ.");
+                })
+                .finally(() => {
+                    button.disabled = false;
+                });
         }
-    };
-    document.querySelectorAll(".report-btn").forEach(btn => {
-        btn.addEventListener("click", function (e) {
-            e.stopPropagation();
-            if (!isLoggedIn) {
-                alert("Bạn phải đăng nhập để báo cáo!");
-                window.location.href = "../login/login.php?require_login=report";
-                return;
-            }
-            const card = e.target.closest('.card');
-            if (card && reportModal) {
-                currentPromptId = card.getAttribute('data-id');
-                reportModal.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            }
+        document.querySelectorAll('.love-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => handlePromptAction(e, 'love'));
         });
-    });
-    if (reportReasonSelect && reportCustomTextarea) {
-        reportReasonSelect.addEventListener('change', function() {
-            if (this.value === 'Khác') {
-                reportCustomTextarea.style.display = 'block';
-            } else {
-                reportCustomTextarea.style.display = 'none';
-            }
+        document.querySelectorAll('.save-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => handlePromptAction(e, 'save'));
         });
-    }
-    if (cancelReportBtn) {
-        cancelReportBtn.addEventListener('click', closeReportModal);
-    }
-    if (submitReportBtn) {
-        submitReportBtn.addEventListener('click', function() {
-            let reason = reportReasonSelect.value;
-            let customReason = reportCustomTextarea.value.trim();
-            if (!currentPromptId) return;
-            if (reason === 'Khác') {
-                if (customReason === '') {
-                    alert('Vui lòng nhập lý do cụ thể.');
+        const closeReportModal = () => {
+            if (reportModal) {
+                reportModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                if (reportReasonSelect) reportReasonSelect.value = 'Nội dung không phù hợp';
+                if (reportCustomTextarea) {
+                    reportCustomTextarea.value = '';
+                    reportCustomTextarea.style.display = 'none';
+                }
+                currentPromptId = null;
+            }
+        };
+        document.querySelectorAll(".report-btn").forEach(btn => {
+            btn.addEventListener("click", function(e) {
+                e.stopPropagation();
+                if (!isLoggedIn) {
+                    alert("Bạn phải đăng nhập để báo cáo!");
+                    window.location.href = "../login/login.php?require_login=report";
                     return;
                 }
-                reason = customReason;
-            }
-            submitReportBtn.disabled = true;
-            fetch("report.php", { 
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: "id=" + currentPromptId + "&reason=" + encodeURIComponent(reason)
-            })
-            .then(res => res.text())
-            .then(msg => {
-                alert(msg);
-                closeReportModal();
-            })
-            .catch(err => {
-                console.error(err);
-                alert("Lỗi khi báo cáo!");
-            })
-            .finally(() => {
-                submitReportBtn.disabled = false;
+                const card = e.target.closest('.card');
+                if (card && reportModal) {
+                    currentPromptId = card.getAttribute('data-id');
+                    reportModal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                }
             });
         });
-    }
-    if (btnOpenRules && rulesModal) {
-        btnOpenRules.addEventListener('click', () => {
-            rulesModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
+        if (reportReasonSelect && reportCustomTextarea) {
+            reportReasonSelect.addEventListener('change', function() {
+                if (this.value === 'Khác') {
+                    reportCustomTextarea.style.display = 'block';
+                } else {
+                    reportCustomTextarea.style.display = 'none';
+                }
+            });
+        }
+        if (cancelReportBtn) {
+            cancelReportBtn.addEventListener('click', closeReportModal);
+        }
+        if (submitReportBtn) {
+            submitReportBtn.addEventListener('click', function() {
+                let reason = reportReasonSelect.value;
+                let customReason = reportCustomTextarea.value.trim();
+                if (!currentPromptId) return;
+                if (reason === 'Khác') {
+                    if (customReason === '') {
+                        alert('Vui lòng nhập lý do cụ thể.');
+                        return;
+                    }
+                    reason = customReason;
+                }
+                submitReportBtn.disabled = true;
+                fetch("report.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: "id=" + currentPromptId + "&reason=" + encodeURIComponent(reason)
+                    })
+                    .then(res => res.text())
+                    .then(msg => {
+                        alert(msg);
+                        closeReportModal();
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert("Lỗi khi báo cáo!");
+                    })
+                    .finally(() => {
+                        submitReportBtn.disabled = false;
+                    });
+            });
+        }
+        if (btnOpenRules && rulesModal) {
+            btnOpenRules.addEventListener('click', () => {
+                rulesModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            });
+            if (btnCloseRules) {
+                btnCloseRules.addEventListener('click', () => {
+                    rulesModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                });
+            }
+        }
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', function() {
+                this.parentElement.classList.toggle('active');
+            });
         });
-        if (btnCloseRules) {
-            btnCloseRules.addEventListener('click', () => {
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (e.target.closest('button') || e.target.closest('a') || e.target.closest('input')) return;
+                const id = this.getAttribute('data-id');
+                window.location.href = `detail_post.php?id=${id}`;
+            });
+        });
+        window.addEventListener('click', e => {
+            if (e.target === rulesModal) {
                 rulesModal.style.display = 'none';
                 document.body.style.overflow = 'auto';
-            });
-        }
-    }
-    document.querySelectorAll('.accordion-header').forEach(header => {
-        header.addEventListener('click', function () {
-            this.parentElement.classList.toggle('active');
+            }
+            if (e.target === reportModal) {
+                closeReportModal();
+            }
         });
-    });
-    document.querySelectorAll('.card').forEach(card => {
-        card.addEventListener('click', function (e) {
-            if (e.target.closest('button') || e.target.closest('a') || e.target.closest('input')) return; 
-            const id = this.getAttribute('data-id');
-            window.location.href = `detail_post.php?id=${id}`;
-        });
-    });
-    window.addEventListener('click', e => {
-        if (e.target === rulesModal) {
-            rulesModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-        if (e.target === reportModal) {
-            closeReportModal();
+
+        if (window.location.pathname.includes('home.php') ||
+            window.location.search.includes('search=') ||
+            window.location.search.includes('tag=')) {
+            sessionStorage.setItem('lastListPage', location.href);
         }
     });
-   
-    if (window.location.pathname.includes('home.php') ||
-        window.location.search.includes('search=') ||
-        window.location.search.includes('tag=')) {
-        sessionStorage.setItem('lastListPage', location.href);
-    }
-});
 </script>
 
 <script>
